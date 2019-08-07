@@ -16,7 +16,6 @@ namespace QandA.Features.Users
 		[HttpGet("users")]
 		public IActionResult Index()
 		{
-			
 			return Ok();
 		}
 
