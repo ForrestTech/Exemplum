@@ -14,9 +14,10 @@ namespace QandA.Features.Users
 		}
 
 		[HttpGet("users")]
-		public IActionResult Index()
+		public async Task<IActionResult> Index([FromQuery]ListUsersRequest request)
 		{
-			return Ok();
+			var response = await _mediator.Send(request);
+			return Ok(response);
 		}
 
 		[HttpPost("users")]
@@ -27,9 +28,16 @@ namespace QandA.Features.Users
 		}
 
 		[HttpPost("users/{userid}")]
-		public IActionResult Get(int userid)
+		public async Task<IActionResult> Get([FromRoute]GetUserRequest request)
 		{
-			return Ok();
+			var response = await _mediator.Send(request);
+
+			if (response != null)
+			{
+				return Ok(response);
+			}
+
+			return NotFound();
 		}
 	}
 }
