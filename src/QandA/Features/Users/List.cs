@@ -8,9 +8,9 @@ namespace QandA.Features.Users
 {
 	public class List : IRequestHandler<ListUsersRequest, IPagedList<User>>
 	{
-		private readonly QandAContext _context;
+		private readonly DatabaseContext _context;
 
-		public List(QandAContext context)
+		public List(DatabaseContext context)
 		{
 			_context = context;
 		}

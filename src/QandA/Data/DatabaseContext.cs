@@ -8,9 +8,9 @@ using QandA.Features.Users;
 
 namespace QandA.Data
 {
-	public class QandAContext : DbContext
+	public class DatabaseContext : DbContext
 	{
-		public QandAContext(DbContextOptions options)
+		public DatabaseContext(DbContextOptions options)
 			: base(options)
 		{
 		}

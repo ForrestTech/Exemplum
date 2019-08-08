@@ -45,7 +45,7 @@ namespace QandA
 
 			services.AddMediatR(Assembly.GetAssembly(typeof(Startup)));
 
-			services.AddDbContext<QandAContext>
+			services.AddDbContext<DatabaseContext>
 				(options => options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Exemplum.QandA;Trusted_Connection=True;ConnectRetryCount=0"));
 		}
 

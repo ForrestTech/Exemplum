@@ -8,9 +8,9 @@ namespace QandA.Features.Users
 {
 	public class Get : IRequestHandler<GetUserRequest, User>
 	{
-		private readonly QandAContext _context;
+		private readonly DatabaseContext _context;
 
-		public Get(QandAContext context)
+		public Get(DatabaseContext context)
 		{
 			_context = context;
 		}

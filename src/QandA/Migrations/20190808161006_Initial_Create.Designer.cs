@@ -9,7 +9,7 @@ using QandA.Data;
 
 namespace qanda.Migrations
 {
-    [DbContext(typeof(QandAContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20190808161006_Initial_Create")]
     partial class Initial_Create
     {

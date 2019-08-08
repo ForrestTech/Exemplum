@@ -53,7 +53,7 @@ namespace QandA
 		{
 			using (var scope = host.Services.CreateScope())
 			{
-				var db = scope.ServiceProvider.GetRequiredService<QandAContext>();
+				var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
 				db.Database.Migrate();
 			}
 		}

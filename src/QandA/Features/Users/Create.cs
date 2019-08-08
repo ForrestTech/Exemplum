@@ -24,9 +24,9 @@ namespace QandA.Features.Users
 
 	public class Create : IRequestHandler<CreateUserRequest, User>
 	{
-		private readonly QandAContext _context;
+		private readonly DatabaseContext _context;
 
-		public Create(QandAContext context)
+		public Create(DatabaseContext context)
 		{
 			_context = context;
 		}

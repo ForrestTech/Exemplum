@@ -8,7 +8,7 @@ using QandA.Data;
 
 namespace qanda.Migrations
 {
-    [DbContext(typeof(QandAContext))]
+    [DbContext(typeof(DatabaseContext))]
     partial class QandAContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
