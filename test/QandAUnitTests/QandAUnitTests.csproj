@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\QandA\QandA.csproj" />
+    <ProjectReference Include="..\..\src\QandA\qanda.csproj" />
   </ItemGroup>
 
 </Project>
