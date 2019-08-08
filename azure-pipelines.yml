@@ -15,5 +15,7 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- script: | 
+  dotnet restore Exemplum.sln
+  dotnet build Exemplum.sln --configuration $(buildConfiguration)
+  displayName: 'dotnet build Exemplum.sln $(buildConfiguration)'
