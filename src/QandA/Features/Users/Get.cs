@@ -17,7 +17,7 @@ namespace QandA.Features.Users
 
 		public Task<User> Handle(GetUserRequest request, CancellationToken cancellationToken)
 		{
-			return _context.User.SingleOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
+			return _context.Users.SingleOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
 		}
 	}
 

@@ -17,7 +17,7 @@ namespace QandA.Features.Users
 
 		public Task<IPagedList<User>> Handle(ListUsersRequest request, CancellationToken cancellationToken)
 		{
-			return _context.User.ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+			return _context.Users.ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 		}
 	}
 

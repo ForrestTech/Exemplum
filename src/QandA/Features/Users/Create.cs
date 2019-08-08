@@ -22,7 +22,7 @@ namespace QandA.Features.Users
 				Email = request.Email
 			};
 
-			_context.User.Add(user);
+			_context.Users.Add(user);
 			await _context.SaveChangesAsync(cancellationToken);
 			return user;
 		}
