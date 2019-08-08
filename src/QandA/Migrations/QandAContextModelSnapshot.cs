@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QandA.Data;
 
-namespace QandA.Migrations
+namespace qanda.Migrations
 {
     [DbContext(typeof(QandAContext))]
     partial class QandAContextModelSnapshot : ModelSnapshot
@@ -41,7 +41,7 @@ namespace QandA.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer");
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("QandA.Features.Questions.Question", b =>
@@ -67,7 +67,7 @@ namespace QandA.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("QandA.Features.Questions.User", b =>
+            modelBuilder.Entity("QandA.Features.Users.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,20 +75,30 @@ namespace QandA.Migrations
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(300);
 
                     b.Property<DateTime>("LastUpdated");
 
-                    b.Property<string>("Username");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(300);
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("QandA.Features.Questions.Answer", b =>
                 {
-                    b.HasOne("QandA.Features.Questions.User", "Answerer")
+                    b.HasOne("QandA.Features.Users.User", "Answerer")
                         .WithMany()
                         .HasForeignKey("AnswererId");
 
@@ -99,7 +109,7 @@ namespace QandA.Migrations
 
             modelBuilder.Entity("QandA.Features.Questions.Question", b =>
                 {
-                    b.HasOne("QandA.Features.Questions.User", "Questioner")
+                    b.HasOne("QandA.Features.Users.User", "Questioner")
                         .WithMany()
                         .HasForeignKey("QuestionerId");
                 });

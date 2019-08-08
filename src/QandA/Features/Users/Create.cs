@@ -1,10 +1,27 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using QandA.Data;
 
 namespace QandA.Features.Users
 {
+	public class CreateUserRequest : IRequest<User>
+	{
+		public string Username { get; set; }
+
+		public string Email { get; set; }
+	}
+
+	public class CreateUserValidator : AbstractValidator<CreateUserRequest>
+	{
+		public CreateUserValidator()
+		{
+			RuleFor(x => x.Username).NotEmpty();
+			RuleFor(x => x.Email).EmailAddress().NotEmpty();
+		}
+	}
+
 	public class Create : IRequestHandler<CreateUserRequest, User>
 	{
 		private readonly QandAContext _context;
@@ -26,12 +43,5 @@ namespace QandA.Features.Users
 			await _context.SaveChangesAsync(cancellationToken);
 			return user;
 		}
-	}
-
-	public class CreateUserRequest : IRequest<User>
-	{
-		public string Username { get; set; }
-
-		public string Email { get; set; }
 	}
 }

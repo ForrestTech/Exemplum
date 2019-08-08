@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace QandA.Features.Users
 {
+	[ApiController]
 	public class UserController : Controller
 	{
 		private readonly IMediator _mediator;

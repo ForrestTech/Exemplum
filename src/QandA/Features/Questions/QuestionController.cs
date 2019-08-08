@@ -2,6 +2,7 @@
 
 namespace QandA.Features.Questions
 {
+	[ApiController]
 	public class QuestionController : Controller
 	{
 		[HttpGet("questions")]

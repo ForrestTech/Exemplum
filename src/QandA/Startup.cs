@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using QandA.Data;
@@ -16,7 +19,29 @@ namespace QandA
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc()
-				.AddFeatureFolders();
+				.AddFeatureFolders()
+				.AddFluentValidation(options =>
+				{
+					options.RegisterValidatorsFromAssemblyContaining<Startup>();
+				});
+
+			services.Configure<ApiBehaviorOptions>(options =>
+			{
+				options.InvalidModelStateResponseFactory = context =>
+				{
+					var problemDetails = new ValidationProblemDetails(context.ModelState)
+					{
+						Instance = context.HttpContext.Request.Path,
+						Status = StatusCodes.Status400BadRequest,
+						Type = "/swagger",
+						Detail = "Please refer to the errors property for additional details."
+					};
+					return new BadRequestObjectResult(problemDetails)
+					{
+						ContentTypes = { "application/problem+json", "application/problem+xml" }
+					};
+				};
+			});
 
 			services.AddMediatR(Assembly.GetAssembly(typeof(Startup)));
 
