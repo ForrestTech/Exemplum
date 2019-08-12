@@ -6,6 +6,13 @@ using X.PagedList;
 
 namespace QandA.Features.Users
 {
+	public class ListUsersRequest : IRequest<IPagedList<User>>, IPagedListRequest
+	{
+		public int PageNumber { get; set; } = 1;
+
+		public int PageSize { get; set; } = 10;
+	}
+
 	public class List : IRequestHandler<ListUsersRequest, IPagedList<User>>
 	{
 		private readonly DatabaseContext _context;
@@ -20,12 +27,4 @@ namespace QandA.Features.Users
 			return _context.Users.ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 		}
 	}
-
-	public class ListUsersRequest : IRequest<IPagedList<User>>, IPagedListRequest
-	{
-		public int PageNumber { get; set; } = 1;
-
-		public int PageSize { get; set; } = 10;
-	}
-
 }

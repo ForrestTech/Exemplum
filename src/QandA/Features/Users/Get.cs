@@ -6,6 +6,11 @@ using QandA.Data;
 
 namespace QandA.Features.Users
 {
+	public class GetUserRequest : IRequest<User>
+	{
+		public int UserId { get; set; }
+	}
+
 	public class Get : IRequestHandler<GetUserRequest, User>
 	{
 		private readonly DatabaseContext _context;
@@ -19,10 +24,5 @@ namespace QandA.Features.Users
 		{
 			return _context.Users.SingleOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
 		}
-	}
-
-	public class GetUserRequest : IRequest<User>
-	{
-		public int UserId { get; set; }
 	}
 }
