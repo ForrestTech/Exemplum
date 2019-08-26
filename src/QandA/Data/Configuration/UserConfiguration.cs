@@ -18,17 +18,23 @@ namespace QandA.Data.Configuration
 
 			builder.Property(x => x.Username)
 				.IsRequired()
-				.HasMaxLength(300);
+				.HasMaxLength(Constants.UsernameMaxLength);
 
 			builder.HasIndex(u => u.Username)
 				.IsUnique();
 
 			builder.Property(x => x.Email)
 				.IsRequired()
-				.HasMaxLength(300);
+				.HasMaxLength(Constants.EmailMaxLength);
 
 			builder.HasIndex(u => u.Email)
 				.IsUnique();
+		}
+
+		public static class Constants
+		{
+			public const int UsernameMaxLength = 300;
+			public const int EmailMaxLength = 300;
 		}
 	}
 }

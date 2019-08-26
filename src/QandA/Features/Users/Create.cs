@@ -4,6 +4,7 @@ using EntityFramework.Exceptions.Common;
 using FluentValidation;
 using MediatR;
 using QandA.Data;
+using QandA.Data.Configuration;
 
 namespace QandA.Features.Users
 {
@@ -18,8 +19,12 @@ namespace QandA.Features.Users
 	{
 		public CreateUserValidator()
 		{
-			RuleFor(x => x.Username).NotEmpty();
-			RuleFor(x => x.Email).EmailAddress().NotEmpty();
+			RuleFor(x => x.Username).NotEmpty()
+				.MaximumLength(UserConfiguration.Constants.UsernameMaxLength);
+
+			RuleFor(x => x.Email).EmailAddress()
+				.NotEmpty()
+				.MaximumLength(UserConfiguration.Constants.EmailMaxLength);
 		}
 	}
 
