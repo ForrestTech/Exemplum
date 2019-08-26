@@ -1,6 +1,6 @@
-﻿using System.Data;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using EntityFramework.Exceptions.Common;
 using FluentValidation;
 using MediatR;
 using QandA.Data;
@@ -41,7 +41,16 @@ namespace QandA.Features.Users
 			};
 
 			_context.Users.Add(user);
-			await _context.SaveChangesAsync(cancellationToken);
+
+			try
+			{
+				await _context.SaveChangesAsync(cancellationToken);
+			}
+			catch (UniqueConstraintException)
+			{
+				this.ThrowValidationException(nameof(CreateUserRequest.Username), $"{nameof(CreateUserRequest.Username)} must be unique");
+			}
+
 			return user;
 		}
 	}

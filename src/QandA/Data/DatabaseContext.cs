@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using EntityFramework.Exceptions.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using QandA.Data.Configuration;
 using QandA.Features.Questions;
@@ -18,6 +19,13 @@ namespace QandA.Data
 		public DbSet<Question> Questions { get; set; }
 		public DbSet<User> Users { get; set; }
 		public DbSet<Answer> Answers { get; set; }
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.UseExceptionProcessor();
+
+			base.OnConfiguring(optionsBuilder);
+		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
