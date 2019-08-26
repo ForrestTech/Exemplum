@@ -6,14 +6,14 @@ using X.PagedList;
 
 namespace QandA.Features.Users
 {
-	public class ListUsersRequest : IRequest<IPagedList<User>>, IPagedListRequest
+	public class ListUsersRequest : IRequest<PageWithMetaData<User>>, IPagedListRequest
 	{
 		public int PageNumber { get; set; } = 1;
 
 		public int PageSize { get; set; } = 10;
 	}
 
-	public class List : IRequestHandler<ListUsersRequest, IPagedList<User>>
+	public class List : IRequestHandler<ListUsersRequest, PageWithMetaData<User>>
 	{
 		private readonly DatabaseContext _context;
 
@@ -22,9 +22,15 @@ namespace QandA.Features.Users
 			_context = context;
 		}
 
-		public Task<IPagedList<User>> Handle(ListUsersRequest request, CancellationToken cancellationToken)
+		public async Task<PageWithMetaData<User>> Handle(ListUsersRequest request, CancellationToken cancellationToken)
 		{
-			return _context.Users.ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+			var page = await _context.Users.ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+
+			return new PageWithMetaData<User>
+			{
+				Items = page,
+				PageDetails = page.GetMetaData()
+			};
 		}
 	}
 }

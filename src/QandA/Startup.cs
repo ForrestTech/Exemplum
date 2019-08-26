@@ -1,12 +1,17 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Net.Http;
+using System.Reflection;
 using FluentValidation.AspNetCore;
+using Hellang.Middleware.ProblemDetails;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using QandA.Data;
 using Serilog;
 
@@ -14,16 +19,28 @@ namespace QandA
 {
 	public class Startup
 	{
-		// This method gets called by the runtime. Use this method to add services to the container.
-		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+		public IConfiguration Configuration { get; }
+		public IHostingEnvironment HostingEnvironment { get; }
+
+		public Startup(IConfiguration configuration, IHostingEnvironment environment)
+		{
+			Configuration = configuration;
+			HostingEnvironment = environment;
+		}
+
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddProblemDetails(ConfigureProblemDetails);
+
 			services.AddMvc()
-				.AddFeatureFolders()
-				.AddFluentValidation(options =>
+				.AddJsonOptions(options =>
+				{
+					options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+				}).AddFluentValidation(options =>
 				{
 					options.RegisterValidatorsFromAssemblyContaining<Startup>();
 				});
+
 
 			services.Configure<ApiBehaviorOptions>(options =>
 			{
@@ -59,7 +76,25 @@ namespace QandA
 
 			app.UseSerilogRequestLogging();
 
+			app.UseProblemDetails();
+
 			app.UseMvc();
+		}
+
+		private void ConfigureProblemDetails(ProblemDetailsOptions options)
+		{
+			// This is the default behavior; only include exception details in a development environment.
+			options.IncludeExceptionDetails = ctx => HostingEnvironment.IsDevelopment();
+
+			// This will map NotImplementedException to the 501 Not Implemented status code.
+			options.Map<NotImplementedException>(ex => new ExceptionProblemDetails(ex, StatusCodes.Status501NotImplemented));
+
+			// This will map HttpRequestException to the 503 Service Unavailable status code.
+			options.Map<HttpRequestException>(ex => new ExceptionProblemDetails(ex, StatusCodes.Status503ServiceUnavailable));
+
+			// Because exceptions are handled polymorphically, this will act as a "catch all" mapping, which is why it's added last.
+			// If an exception other than NotImplementedException and HttpRequestException is thrown, this will handle it.
+			options.Map<Exception>(ex => new ExceptionProblemDetails(ex, StatusCodes.Status500InternalServerError));
 		}
 	}
 }

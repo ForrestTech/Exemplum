@@ -31,7 +31,7 @@ namespace QandAUnitTests.Feature.Users
 
 			    var result = await sut.Handle(new ListUsersRequest(), CancellationToken.None);
 
-			    result.Count.Should().Be(1);
+			    result.Items.Count.Should().Be(1);
 		    }
 	    }
 	}

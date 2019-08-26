@@ -9,6 +9,20 @@ namespace QandA.Data.Configuration
 		public void Configure(EntityTypeBuilder<Question> builder)
 		{
 			builder.HasKey(q => q.Id);
+
+			builder.Property(q => q.Title)
+				.HasMaxLength(500)
+				.IsRequired();
+
+			builder.Property(q => q.QuestionContent)
+				.IsRequired();
+
+			builder.HasOne(q => q.Questioner)
+				.WithOne()
+				.IsRequired();
+
+			builder.HasMany(x => x.Answers)
+				.WithOne();
 		}
 	}
 }

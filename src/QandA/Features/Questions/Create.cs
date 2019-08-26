@@ -1,31 +1,47 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using QandA.Data;
 
 namespace QandA.Features.Questions
 {
-	//public class Create : IRequestHandler<CreateQuestionRequest, Question>
-	//{
-	//	private readonly QandAContext _context;
+	public class CreateQuestionRequest : IRequest<Question>
+	{
+		public string Title { get; set; }
 
-	//	public Create(QandAContext context)
-	//	{
-	//		_context = context;
-	//	}
+		public string QuestionContent { get; set; }
 
-	//	public Task<Question> Handle(CreateQuestionRequest request, CancellationToken cancellationToken)
-	//	{
-	//		var question = 
-	//	}
-	//}
+		public int QuestionerId { get; set; }
+	}
 
-	//public class CreateQuestionRequest : IRequest<Question>
-	//{
-	//	public string Title { get; set; }
+	public class CreateQuestionValidator : AbstractValidator<CreateQuestionRequest>
+	{
+		public CreateQuestionValidator()
+		{
+			RuleFor(x => x.Title).NotEmpty();
+			RuleFor(x => x.QuestionContent).NotEmpty();
+			RuleFor(x => x.QuestionerId).GreaterThan(0);
+		}
+	}
 
-	//	public string Content { get; set; }
+	public class Create : IRequestHandler<CreateQuestionRequest, Question>
+	{
+		private readonly DatabaseContext _context;
 
-	//	public int QuestionerId { get; set; }
-	//}
+		public Create(DatabaseContext context)
+		{
+			_context = context;
+		}
+
+		public async Task<Question> Handle(CreateQuestionRequest request, CancellationToken cancellationToken)
+		{
+			var question = new Question(request.Title, request.QuestionContent, request.QuestionerId);
+
+			_context.Questions.Add(question);
+			await _context.SaveChangesAsync(cancellationToken);
+
+			return question;
+		}
+	}
 }

@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "916a0372-150d-4e9a-a2e8-6a1be66daa3d",
+		"name": "Exemplum",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2099ed5-db75-4c9f-a582-1040dbe99297",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response has location header\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"username-{{$guid}}\",\n\t\"email\":\"email-{{$guid}}@email.com\"\n}"
+				},
+				"url": {
+					"raw": "{{Exemplum-Host}}/users",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "65febedf-0006-4384-8100-219af02ab67b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Id of user matches request Id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Exemplum-Host}}/users/1",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Exemplum-Host}}/users?pageNumber=1&pageSize=10",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get None Existent User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "854db3fb-ad7f-4b02-bc76-619ff52a0f2d",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Content-Type is problem details\", function () {",
+							"    pm.response.to.be.header(\"Content-Type\", \"application/problem+json; charset=utf-8\");",
+							"});",
+							"",
+							"var notFound = \"Not Found\"",
+							"pm.test(\"Problem title is \" + notFound, function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.title).to.eql(notFound);",
+							"});",
+							"",
+							"var notFoundStauts = 404",
+							"pm.test(\"Problem status is \" + notFoundStauts, function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(notFoundStauts);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Exemplum-Host}}/users/0",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"users",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Invalid User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"\",\n\t\"email\":\"email-{{$guid}}@email.com\"\n}"
+				},
+				"url": {
+					"raw": "{{Exemplum-Host}}/users",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Question ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2099ed5-db75-4c9f-a582-1040dbe99297",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response has location header\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\":\"Question Title {{$guid}}\",\n\t\"questionContent\":\"Question Content {{$guid}}\",\n\t\"questionerId\":1\n}"
+				},
+				"url": {
+					"raw": "{{Exemplum-Host}}/questions",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"questions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Question",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Exemplum-Host}}/questions/1",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"questions",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Questions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Exemplum-Host}}/questions?pageNumber=1&pageSize=10",
+					"host": [
+						"{{Exemplum-Host}}"
+					],
+					"path": [
+						"questions"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
