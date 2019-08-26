@@ -44,12 +44,18 @@
 					"raw": "{\n\t\"username\":\"username-{{$guid}}\",\n\t\"email\":\"email-{{$guid}}@email.com\"\n}"
 				},
 				"url": {
-					"raw": "{{Exemplum-Host}}/users",
+					"raw": "{{Exemplum-Host}}/users?Request-Id={{$guid}}",
 					"host": [
 						"{{Exemplum-Host}}"
 					],
 					"path": [
 						"users"
+					],
+					"query": [
+						{
+							"key": "Request-Id",
+							"value": "{{$guid}}"
+						}
 					]
 				}
 			},
@@ -81,7 +87,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Request-Id",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{Exemplum-Host}}/users/1",
 					"host": [
@@ -99,7 +111,13 @@
 			"name": "List Users",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Request-Id",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{Exemplum-Host}}/users?pageNumber=1&pageSize=10",
 					"host": [
@@ -163,13 +181,19 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{Exemplum-Host}}/users/0",
+					"raw": "{{Exemplum-Host}}/users/0?Request-Id={{$guid}}",
 					"host": [
 						"{{Exemplum-Host}}"
 					],
 					"path": [
 						"users",
 						"0"
+					],
+					"query": [
+						{
+							"key": "Request-Id",
+							"value": "{{$guid}}"
+						}
 					]
 				}
 			},
@@ -185,11 +209,16 @@
 						"name": "Content-Type",
 						"value": "application/json",
 						"type": "text"
+					},
+					{
+						"key": "Request-Id",
+						"value": "{{$guid}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\":\"\",\n\t\"email\":\"email-{{$guid}}@email.com\"\n}"
+					"raw": "{\n\t\"username\":\"barry\",\n\t\"email\":\"email-{{$guid}}@email.com\"\n}"
 				},
 				"url": {
 					"raw": "{{Exemplum-Host}}/users",
@@ -235,6 +264,11 @@
 						"name": "Content-Type",
 						"type": "text",
 						"value": "application/json"
+					},
+					{
+						"key": "Request-Id",
+						"value": "{{$guid}}",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -257,7 +291,13 @@
 			"name": "Get Question",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Request-Id",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{Exemplum-Host}}/questions/1",
 					"host": [
@@ -275,7 +315,13 @@
 			"name": "List Questions",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Request-Id",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{Exemplum-Host}}/questions?pageNumber=1&pageSize=10",
 					"host": [
