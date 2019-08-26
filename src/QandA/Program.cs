@@ -13,13 +13,30 @@ namespace QandA
     {
 		public static int Main(string[] args)
 		{
-			Log.Logger = new LoggerConfiguration()
+			var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+			var isDevelopment = environment == EnvironmentName.Development;
+
+			var logger = new LoggerConfiguration()
 				.MinimumLevel.Debug()
-				.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+				.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 				.Enrich.FromLogContext()
-				.WriteTo.Console()
-				.WriteTo.Seq("http://localhost:5341")
-				.CreateLogger();
+				.WriteTo.Console();
+
+			if (isDevelopment)
+			{
+				logger.WriteTo.Seq("http://localhost:5341");
+			}
+			else
+			{
+				logger.WriteTo.File(
+					@"D:\home\LogFiles\Application\myapp.txt",
+					fileSizeLimitBytes: 1_000_000,
+					rollOnFileSizeLimit: true,
+					shared: true,
+					flushToDiskInterval: TimeSpan.FromSeconds(1));
+			}
+				
+			Log.Logger = logger.CreateLogger();
 
 			try
 			{

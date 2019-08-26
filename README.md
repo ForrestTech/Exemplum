@@ -8,6 +8,18 @@
 
 [![Build Status](https://dev.azure.com/forrest-technologies/exemplum/_apis/build/status/3?api-version=5.1-preview.1)](https://dev.azure.com/forrest-technologies/exemplum/_apis/build/status/3?api-version=5.1-preview.1)
 
+### Todo
+
+1. Better intro to the project
+1. Talk about:
+1. Hanlders
+1. Logging
+1. Database setup
+1. Infrastructure setup
+1. Build Setup
+1. CI setup
+
+
 ## Docker 
 
 Publish project
