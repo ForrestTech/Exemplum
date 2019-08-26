@@ -32,6 +32,8 @@ namespace QandA
 		{
 			services.AddProblemDetails(ConfigureProblemDetails);
 
+			services.AddApplicationInsightsTelemetry();
+
 			services.AddMvc()
 				.AddJsonOptions(options =>
 				{

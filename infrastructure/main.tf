@@ -48,6 +48,13 @@ resource "azurerm_sql_firewall_rule" "sql-firewall" {
   end_ip_address      = "0.0.0.0"
 }
 
+resource "azurerm_application_insights" "app-insights" {
+  name                = "${var.prefix}-${var.env}-${var.loc}-app-insights"
+  location            = "${var.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  application_type    = "web"
+}
+
 resource "azurerm_app_service_plan" "qanda-sp" {
   name                = "${var.prefix}-${var.env}-${var.loc}-qanda-sp"
   location            = "${azurerm_resource_group.rg.location}"
@@ -70,7 +77,7 @@ resource "azurerm_app_service" "qanda-as" {
   }
 
   app_settings = {
-    "SOME_KEY" = "some-value"
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${azurerm_application_insights.app-insights.instrumentation_key}"
   }
 
   connection_string {
@@ -78,4 +85,8 @@ resource "azurerm_app_service" "qanda-as" {
     type  = "SQLServer"
     value = "Server=tcp:${azurerm_sql_server.sqlserver.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.qanda-db.name};Persist Security Info=False;User ID=${azurerm_sql_server.sqlserver.administrator_login};Password=${azurerm_sql_server.sqlserver.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
+}
+
+output "instrumentation_key" {
+  value = "${azurerm_application_insights.app-insights.instrumentation_key}"
 }

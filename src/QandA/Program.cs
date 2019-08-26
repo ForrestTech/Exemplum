@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +10,8 @@ using Serilog.Events;
 
 namespace QandA
 {
-    public class Program
-    {
+	public class Program
+	{
 		public static int Main(string[] args)
 		{
 			var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -34,8 +35,10 @@ namespace QandA
 					rollOnFileSizeLimit: true,
 					shared: true,
 					flushToDiskInterval: TimeSpan.FromSeconds(1));
+
+				logger.WriteTo.ApplicationInsights(TelemetryConfiguration.Active, TelemetryConverter.Traces);
 			}
-				
+
 			Log.Logger = logger.CreateLogger();
 
 			try
