@@ -30,7 +30,7 @@ namespace QandA
 			else
 			{
 				logger.WriteTo.File(
-					@"D:\home\LogFiles\Application\myapp.txt",
+					@"D:\home\LogFiles\Application\exemplum.txt",
 					fileSizeLimitBytes: 1_000_000,
 					rollOnFileSizeLimit: true,
 					shared: true,
