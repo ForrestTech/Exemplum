@@ -18,14 +18,28 @@ namespace QandA.Features.Questions
 			_linkGenerator = linkGenerator;
 		}
 
+		/// <summary>
+		/// Get list of questions
+		/// </summary>
+		/// <param name="request">Get question list</param>
+		/// <returns>List of questions</returns>
 		[HttpGet("questions")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(400)]
 		public async Task<ActionResult<PagedList<Question>>> Index([FromQuery]ListQuestionRequest request)
 		{
 			var response = await _mediator.Send(request);
 			return Ok(response);
 		}
 
+		/// <summary>
+		/// Get specific question
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
 		[HttpGet("questions/{questionId:int}")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
 		public async Task<IActionResult> Get([FromRoute]GetQuestionRequest request)
 		{
 			var response = await _mediator.Send(request);
@@ -38,6 +52,11 @@ namespace QandA.Features.Questions
 			return NotFound();
 		}
 
+		/// <summary>
+		/// Create a question
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
 		[HttpPost("questions")]
 		public async Task<IActionResult> Create([FromBody] CreateQuestionRequest request)
 		{

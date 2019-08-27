@@ -18,14 +18,29 @@ namespace QandA.Features.Users
 			_linkGenerator = linkGenerator;
 		}
 
+		/// <summary>
+		/// Get a list of users
+		/// </summary>
+		/// <param name="request">User list request</param>
+		/// <returns>List of users</returns>
 		[HttpGet("users")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(400)]
 		public async Task<ActionResult<PagedList<User>>> Index([FromQuery]ListUsersRequest request)
 		{
 			var response = await _mediator.Send(request);
 			return Ok(response);
 		}
 
+		/// <summary>
+		/// Get a specific User
+		/// </summary>
+		/// <param name="request">Get user request</param>
+		/// <returns>User</returns>
 		[HttpGet("users/{userid:int}")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
 		public async Task<IActionResult> Get([FromRoute]GetUserRequest request)
 		{
 			var response = await _mediator.Send(request);
@@ -38,8 +53,15 @@ namespace QandA.Features.Users
 			return NotFound();
 		}
 
+		/// <summary>
+		/// Create a user for the Q and A system
+		/// </summary>
+		/// <param name="request">Create user request</param>
+		/// <returns>Created User</returns>
 		[HttpPost("users")]
-		public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
+		[ProducesResponseType(201)]
+		[ProducesResponseType(400)]
+		public async Task<ActionResult<User>> Create([FromBody] CreateUserRequest request)
 		{
 			var response = await _mediator.Send(request);
 
