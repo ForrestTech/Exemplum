@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using QandA.CrossCutting;
 using QandA.Data;
 using Serilog;
 
@@ -78,6 +79,8 @@ namespace QandA
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 				c.IncludeXmlComments(xmlPath);
 			});
+
+			services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
