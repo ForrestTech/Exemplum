@@ -1,12 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using QandA.Data;
 
 namespace QandA.Features.Questions
 {
-	public class CreateQuestionRequest : IRequest<Question>
+	public class CreateQuestionCommand : IRequest<QuestionDTO>
 	{
 		public string Title { get; set; }
 
@@ -15,7 +16,7 @@ namespace QandA.Features.Questions
 		public int QuestionerId { get; set; }
 	}
 
-	public class CreateQuestionValidator : AbstractValidator<CreateQuestionRequest>
+	public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>
 	{
 		public CreateQuestionValidator()
 		{
@@ -25,23 +26,25 @@ namespace QandA.Features.Questions
 		}
 	}
 
-	public class Create : IRequestHandler<CreateQuestionRequest, Question>
+	public class Create : IRequestHandler<CreateQuestionCommand, QuestionDTO>
 	{
 		private readonly DatabaseContext _context;
+		private readonly IMapper _mapper;
 
-		public Create(DatabaseContext context)
+		public Create(DatabaseContext context, IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
-		public async Task<Question> Handle(CreateQuestionRequest request, CancellationToken cancellationToken)
+		public async Task<QuestionDTO> Handle(CreateQuestionCommand command, CancellationToken cancellationToken)
 		{
-			var question = new Question(request.Title, request.QuestionContent, request.QuestionerId);
+			var question = new Question(command.Title, command.QuestionContent, command.QuestionerId);
 
 			_context.Questions.Add(question);
 			await _context.SaveChangesAsync(cancellationToken);
 
-			return question;
+			return _mapper.Map<QuestionDTO>(question);
 		}
 	}
 }

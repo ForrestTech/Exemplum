@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using EntityFramework.Exceptions.Common;
 using FluentValidation;
 using MediatR;
@@ -8,14 +9,14 @@ using QandA.Data.Configuration;
 
 namespace QandA.Features.Users
 {
-	public class CreateUserRequest : IRequest<User>
+	public class CreateUserCommand : IRequest<UserDTO>
 	{
 		public string Username { get; set; }
 
 		public string Email { get; set; }
 	}
 
-	public class CreateUserValidator : AbstractValidator<CreateUserRequest>
+	public class CreateUserValidator : AbstractValidator<CreateUserCommand>
 	{
 		public CreateUserValidator()
 		{
@@ -28,21 +29,23 @@ namespace QandA.Features.Users
 		}
 	}
 
-	public class Create : IRequestHandler<CreateUserRequest, User>
+	public class Create : IRequestHandler<CreateUserCommand, UserDTO>
 	{
 		private readonly DatabaseContext _context;
+		private readonly IMapper _mapper;
 
-		public Create(DatabaseContext context)
+		public Create(DatabaseContext context, IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
-		public async Task<User> Handle(CreateUserRequest request, CancellationToken cancellationToken)
+		public async Task<UserDTO> Handle(CreateUserCommand command, CancellationToken cancellationToken)
 		{
 			var user = new User
 			{
-				Username = request.Username,
-				Email = request.Email
+				Username = command.Username,
+				Email = command.Email
 			};
 
 			_context.Users.Add(user);
@@ -53,10 +56,10 @@ namespace QandA.Features.Users
 			}
 			catch (UniqueConstraintException)
 			{
-				this.ThrowValidationException(nameof(CreateUserRequest.Username), $"{nameof(CreateUserRequest.Username)} must be unique");
+				this.ThrowValidationException(nameof(CreateUserCommand.Username), $"{nameof(CreateUserCommand.Username)} must be unique");
 			}
 
-			return user;
+			return _mapper.Map<UserDTO>(user);
 		}
 	}
 }

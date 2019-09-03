@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QandA.Data;
 
-namespace qanda.Migrations
+namespace QandA.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190808161006_Initial_Create")]
-    partial class Initial_Create
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,15 +25,16 @@ namespace qanda.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AnswererId");
+                    b.Property<int>("AnswererId");
 
-                    b.Property<string>("Content");
+                    b.Property<string>("Content")
+                        .IsRequired();
 
                     b.Property<DateTime>("Created");
 
                     b.Property<DateTime>("LastUpdated");
 
-                    b.Property<int?>("QuestionId");
+                    b.Property<int>("QuestionId");
 
                     b.HasKey("Id");
 
@@ -54,13 +53,16 @@ namespace qanda.Migrations
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<string>("Description");
-
                     b.Property<DateTime>("LastUpdated");
 
-                    b.Property<int?>("QuestionerId");
+                    b.Property<string>("QuestionContent")
+                        .IsRequired();
 
-                    b.Property<string>("Title");
+                    b.Property<int>("QuestionerId");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
@@ -101,19 +103,22 @@ namespace qanda.Migrations
             modelBuilder.Entity("QandA.Features.Questions.Answer", b =>
                 {
                     b.HasOne("QandA.Features.Users.User", "Answerer")
-                        .WithMany()
-                        .HasForeignKey("AnswererId");
-
-                    b.HasOne("QandA.Features.Questions.Question")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("AnswererId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("QandA.Features.Questions.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("QandA.Features.Questions.Question", b =>
                 {
                     b.HasOne("QandA.Features.Users.User", "Questioner")
-                        .WithMany()
-                        .HasForeignKey("QuestionerId");
+                        .WithMany("Questions")
+                        .HasForeignKey("QuestionerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -17,12 +17,10 @@ namespace QandA.Data.Configuration
 			builder.Property(q => q.QuestionContent)
 				.IsRequired();
 
-			builder.HasOne(q => q.Questioner)
-				.WithOne()
+			builder.HasOne(s => s.Questioner)
+				.WithMany(x => x.Questions)
+				.HasForeignKey(p => p.QuestionerId)
 				.IsRequired();
-
-			builder.HasMany(x => x.Answers)
-				.WithOne();
 		}
 	}
 }

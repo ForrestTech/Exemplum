@@ -45,7 +45,7 @@ namespace QandA.Features.Questions
 
 		public User Questioner { get; private set; }
 
-		public ICollection<Answer> Answers { get; set; } = new List<Answer>();
+		public List<Answer> Answers { get; set; }
 
 		public DateTime Created { get; set; }
 

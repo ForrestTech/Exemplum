@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace qanda.Migrations
+namespace QandA.Migrations
 {
-    public partial class Initial_Create : Migration
+    public partial class Initial_Migration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,9 +30,9 @@ namespace qanda.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    QuestionerId = table.Column<int>(nullable: true),
+                    Title = table.Column<string>(maxLength: 500, nullable: false),
+                    QuestionContent = table.Column<string>(nullable: false),
+                    QuestionerId = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: false)
                 },
@@ -44,7 +44,7 @@ namespace qanda.Migrations
                         column: x => x.QuestionerId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,11 +53,11 @@ namespace qanda.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Content = table.Column<string>(nullable: true),
-                    AnswererId = table.Column<int>(nullable: true),
+                    Content = table.Column<string>(nullable: false),
+                    QuestionId = table.Column<int>(nullable: false),
+                    AnswererId = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
-                    LastUpdated = table.Column<DateTime>(nullable: false),
-                    QuestionId = table.Column<int>(nullable: true)
+                    LastUpdated = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,13 +67,13 @@ namespace qanda.Migrations
                         column: x => x.AnswererId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Answers_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(

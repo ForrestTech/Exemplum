@@ -10,6 +10,12 @@ namespace QandA.Features.Questions
 
 		public string Content { get; set; }
 
+		public int QuestionId { get; set; }
+
+		public Question Question { get; set; }
+
+		public int AnswererId { get; set; }
+
 		public User Answerer { get; set; }
 
 		public DateTime Created { get; set; }

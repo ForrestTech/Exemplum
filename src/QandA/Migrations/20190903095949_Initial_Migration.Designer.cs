@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QandA.Data;
 
-namespace qanda.Migrations
+namespace QandA.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190826020533_Update_Question")]
-    partial class Update_Question
+    [Migration("20190903095949_Initial_Migration")]
+    partial class Initial_Migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,15 +27,16 @@ namespace qanda.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AnswererId");
+                    b.Property<int>("AnswererId");
 
-                    b.Property<string>("Content");
+                    b.Property<string>("Content")
+                        .IsRequired();
 
                     b.Property<DateTime>("Created");
 
                     b.Property<DateTime>("LastUpdated");
 
-                    b.Property<int?>("QuestionId");
+                    b.Property<int>("QuestionId");
 
                     b.HasKey("Id");
 
@@ -67,8 +68,7 @@ namespace qanda.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionerId")
-                        .IsUnique();
+                    b.HasIndex("QuestionerId");
 
                     b.ToTable("Questions");
                 });
@@ -105,19 +105,21 @@ namespace qanda.Migrations
             modelBuilder.Entity("QandA.Features.Questions.Answer", b =>
                 {
                     b.HasOne("QandA.Features.Users.User", "Answerer")
-                        .WithMany()
-                        .HasForeignKey("AnswererId");
-
-                    b.HasOne("QandA.Features.Questions.Question")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("AnswererId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("QandA.Features.Questions.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("QandA.Features.Questions.Question", b =>
                 {
                     b.HasOne("QandA.Features.Users.User", "Questioner")
-                        .WithOne()
-                        .HasForeignKey("QandA.Features.Questions.Question", "QuestionerId")
+                        .WithMany("Questions")
+                        .HasForeignKey("QuestionerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

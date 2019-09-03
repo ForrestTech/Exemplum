@@ -26,7 +26,7 @@ namespace QandA.Features.Questions
 		[HttpGet("questions")]
 		[ProducesResponseType(200)]
 		[ProducesResponseType(400)]
-		public async Task<ActionResult<PagedList<Question>>> Index([FromQuery]ListQuestionRequest request)
+		public async Task<ActionResult<PagedList<QuestionDTO>>> Index([FromQuery]ListQuestionRequest request)
 		{
 			var response = await _mediator.Send(request);
 			return Ok(response);
@@ -40,7 +40,7 @@ namespace QandA.Features.Questions
 		[HttpGet("questions/{questionId:int}")]
 		[ProducesResponseType(200)]
 		[ProducesResponseType(404)]
-		public async Task<IActionResult> Get([FromRoute]GetQuestionRequest request)
+		public async Task<ActionResult<QuestionDTO>> Get([FromRoute]GetQuestionRequest request)
 		{
 			var response = await _mediator.Send(request);
 
@@ -55,12 +55,12 @@ namespace QandA.Features.Questions
 		/// <summary>
 		/// Create a question
 		/// </summary>
-		/// <param name="request"></param>
+		/// <param name="command"></param>
 		/// <returns></returns>
 		[HttpPost("questions")]
-		public async Task<IActionResult> Create([FromBody] CreateQuestionRequest request)
+		public async Task<ActionResult<QuestionDTO>> Create([FromBody] CreateQuestionCommand command)
 		{
-			var response = await _mediator.Send(request);
+			var response = await _mediator.Send(command);
 
 			var url = _linkGenerator.GetPathByAction(nameof(Create), ControllerName(nameof(QuestionController)), new { userid = response.Id });
 

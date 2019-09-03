@@ -26,7 +26,7 @@ namespace QandA.Features.Users
 		[HttpGet("users")]
 		[ProducesResponseType(200)]
 		[ProducesResponseType(400)]
-		public async Task<ActionResult<PagedList<User>>> Index([FromQuery]ListUsersRequest request)
+		public async Task<ActionResult<PagedList<UserDTO>>> Index([FromQuery]ListUsersRequest request)
 		{
 			var response = await _mediator.Send(request);
 			return Ok(response);
@@ -41,7 +41,7 @@ namespace QandA.Features.Users
 		[ProducesResponseType(200)]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
-		public async Task<IActionResult> Get([FromRoute]GetUserRequest request)
+		public async Task<ActionResult<UserDTO>> Get([FromRoute]GetUserRequest request)
 		{
 			var response = await _mediator.Send(request);
 
@@ -56,14 +56,14 @@ namespace QandA.Features.Users
 		/// <summary>
 		/// Create a user for the Q and A system
 		/// </summary>
-		/// <param name="request">Create user request</param>
+		/// <param name="command">Create user request</param>
 		/// <returns>Created User</returns>
 		[HttpPost("users")]
 		[ProducesResponseType(201)]
 		[ProducesResponseType(400)]
-		public async Task<ActionResult<User>> Create([FromBody] CreateUserRequest request)
+		public async Task<ActionResult<UserDTO>> Create([FromBody] CreateUserCommand command)
 		{
-			var response = await _mediator.Send(request);
+			var response = await _mediator.Send(command);
 
 			var url = _linkGenerator.GetPathByAction(nameof(Create), ControllerName(nameof(UserController)),new { userid = response.Id });
 

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using Hellang.Middleware.ProblemDetails;
 using MediatR;
@@ -36,6 +37,8 @@ namespace QandA
 			services.AddProblemDetails(ConfigureProblemDetails);
 
 			services.AddApplicationInsightsTelemetry();
+
+			services.AddAutoMapper(Assembly.GetAssembly(typeof(Startup)));
 
 			services.AddMvc()
 				.AddJsonOptions(options =>
@@ -83,7 +86,6 @@ namespace QandA
 			services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			if (env.IsDevelopment())
