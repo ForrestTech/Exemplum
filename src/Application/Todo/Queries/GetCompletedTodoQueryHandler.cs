@@ -8,34 +8,43 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class GetTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
-        IPaginatedQuery
+    public class GetCompletedTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
+        IPaginatedQuery,
+        IQueryObject<TodoItem>
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+
+        public IQueryable<TodoItem> ApplyQuery(IQueryable<TodoItem> query)
+        {
+            query = query.Where(x => x.Done)
+                .OrderBy(x => x.Title);
+
+            return query;
+        }
     }
 
-    public class GetTodoQueryHandler : IRequestHandler<GetTodoItemsQuery, PaginatedList<TodoItemDto>>
+    public class GetCompletedTodoQueryHandler : IRequestHandler<GetCompletedTodoItemsQuery, PaginatedList<TodoItemDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetTodoQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetCompletedTodoQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        
-        public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoItemsQuery request, CancellationToken cancellationToken)
+
+        public async Task<PaginatedList<TodoItemDto>> Handle(GetCompletedTodoItemsQuery request,
+            CancellationToken cancellationToken)
         {
             return await _context.TodoItems
                 .AsNoTracking()
-                .OrderBy(x => x.Title)
+                .Query(request)
                 .ProjectTo<TodoItemDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
         }

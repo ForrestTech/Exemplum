@@ -12,7 +12,6 @@ namespace WebApi.Controllers
     using MediatR;
 
     [ApiController]
-    [Route("[controller]")]
     public class TodoController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -24,8 +23,14 @@ namespace WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public Task<PaginatedList<TodoItemDto>> Get([FromQuery] GetTodoItemsWithPaginationQuery query)
+        [HttpGet("todo")]
+        public Task<PaginatedList<TodoItemDto>> Get([FromQuery] GetTodoItemsQuery query)
+        {
+            return _mediator.Send(query);
+        }
+        
+        [HttpGet("todo/completed")]
+        public Task<PaginatedList<TodoItemDto>> Completed([FromQuery] GetCompletedTodoItemsQuery query)
         {
             return _mediator.Send(query);
         }

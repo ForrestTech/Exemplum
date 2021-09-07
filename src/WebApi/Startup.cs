@@ -21,6 +21,7 @@ namespace WebApi
     // Todo Add command for creation
     // Todo Add fluent validation (add problem details)
     // Todo Add application logic example test
+    // Todo Add mapping logic tests
     // Todo Add full database setup
     // Todo add transaction behavior so all handlers share a transaction
     // Todo Add support for Auditable items
@@ -32,9 +33,12 @@ namespace WebApi
     // Todo demonstrate how multi aggregate updates work within a transaction for domains events
     // Todo add health checks
     // Todo add some custom health checks
+    // Todo add github builds
+    // Todo add github tests
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add blazor client
+    // Todo .net 6 simple endpoints
     public class Startup
     {
         public Startup(IConfiguration configuration)
