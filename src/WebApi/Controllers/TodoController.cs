@@ -25,9 +25,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public Task<PaginatedList<TodoItemDto>> Get()
+        public Task<PaginatedList<TodoItemDto>> Get([FromQuery] GetTodoItemsWithPaginationQuery query)
         {
-            return _mediator.Send(new GetTodoItemsWithPaginationQuery());
+            return _mediator.Send(query);
         }
     }
 }

@@ -15,18 +15,17 @@ using Microsoft.OpenApi.Models;
 namespace WebApi
 {
     using Application;
+    using Infrastructure;
 
-    // Todo Add pagination
-    // Todo Add controller endpoint to execute the query
-    // Todo add Automapper for mapping to view model (include projection)
-    // Todo Add ef core persistence for the items 
     // Todo Add query object support for central query logic (should query logic live in the domain or application)
     // Todo Add command for creation
     // Todo Add fluent validation (add problem details)
     // Todo Add application logic example test
+    // Todo Add full database setup
     // Todo add transaction behavior so all handlers share a transaction
     // Todo Add support for Auditable items
     // Todo add support for Domain events
+    // Todo Add support for injectable dates
     // Todo add more write update and delete handlers and their domain events 
     // Todo persistence migrations and configurations
     // Todo Add a basic calendar view entity that is a read model over todos 
@@ -34,6 +33,8 @@ namespace WebApi
     // Todo add health checks
     // Todo add some custom health checks
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
+    // Todo add authorization including adding roles and resolving polices
+    // Todo add blazor client
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -47,6 +48,7 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication();
+            services.AddInfrastructure(Configuration);
             
             services.AddControllers();
             services.AddSwaggerGen(c =>

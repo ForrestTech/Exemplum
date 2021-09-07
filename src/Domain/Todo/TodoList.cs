@@ -6,6 +6,13 @@
 
     public class TodoList : BaseEntity, IAggregateRoot
     {
+        public TodoList() { }
+
+        public TodoList(List<TodoItem> items)
+        {
+            _items = items;
+        }
+        
         public string Title { get; set; }
 
         public Colour Colour { get; set; } = Colour.White;
@@ -16,7 +23,7 @@
         public void AddToDo(TodoItem item)
         {
             _items.Add(item);
-        
+
             DomainEvents.Add(new TodoItemCreated(item));
         }
     }
