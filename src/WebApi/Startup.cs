@@ -16,15 +16,13 @@ namespace WebApi
 {
     using Application;
 
-    // Todo Add mediatR for handlers 
-    // Todo Add a simple request to get an item
     // Todo Add pagination
     // Todo Add controller endpoint to execute the query
     // Todo add Automapper for mapping to view model (include projection)
     // Todo Add ef core persistence for the items 
     // Todo Add query object support for central query logic (should query logic live in the domain or application)
     // Todo Add command for creation
-    // Todo Add fluent validation
+    // Todo Add fluent validation (add problem details)
     // Todo Add application logic example test
     // Todo add transaction behavior so all handlers share a transaction
     // Todo Add support for Auditable items

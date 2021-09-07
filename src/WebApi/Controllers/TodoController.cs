@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace WebApi.Controllers
 {
+    using Application.Common.Pagination;
     using Application.Todo.Queries;
     using MediatR;
 
@@ -24,9 +25,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public Task<List<TodoItemDto>> Get()
+        public Task<PaginatedList<TodoItemDto>> Get()
         {
-            return _mediator.Send(new GetTodoItemsQuery());
+            return _mediator.Send(new GetTodoItemsWithPaginationQuery());
         }
     }
 }
