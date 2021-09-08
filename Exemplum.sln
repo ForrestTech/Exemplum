@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{B4A6FE23-69F7-4090-B96B-F6E29CA6C52A}"
 ProjectSection(SolutionItems) = preProject
 	README.md = README.md
+	.github\Workflow\dotnet.yml = .github\Workflow\dotnet.yml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "tests\Application.UnitTests\Application.UnitTests.csproj", "{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}"
