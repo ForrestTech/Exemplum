@@ -4,12 +4,29 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using System;
+    using WebApi;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    public class CustomWebApplicationFactory<TStartup>
-        : WebApplicationFactory<TStartup> where TStartup : class
+    public class WebHostFixture : WebApplicationFactory<Startup>
     {
+        public ITestOutputHelper Output { get; set; }
+        
+        protected override IHostBuilder CreateHostBuilder()
+        {
+            var builder = base.CreateHostBuilder();
+            builder.ConfigureLogging(logging =>
+            {
+                logging.ClearProviders(); // Remove other loggers
+                logging.AddXUnit(Output); // Use the ITestOutputHelper instance
+            });
+
+            return builder;
+        }
+        
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureServices(services =>
@@ -20,8 +37,7 @@
 
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<ApplicationDbContext>();
-                var logger = scopedServices
-                    .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
+                var logger = scopedServices.GetRequiredService<ILogger<WebHostFixture>>();
 
                 db.Database.EnsureCreated();
 

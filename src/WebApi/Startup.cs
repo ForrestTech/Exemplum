@@ -17,6 +17,7 @@ namespace WebApi
     using Application;
     using Infrastructure;
 
+    // Todo convert api tests to all use injectable URL with a URL builder
     // Todo Add command for creation
     // Todo Add fluent validation (add problem details)
     // Todo Add application logic example test
