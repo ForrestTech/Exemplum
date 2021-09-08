@@ -17,7 +17,6 @@ namespace WebApi
     using Application;
     using Infrastructure;
 
-    // Todo convert api tests to all use injectable URL with a URL builder
     // Todo Add command for creation
     // Todo Add fluent validation (add problem details)
     // Todo Add application logic example test
@@ -36,7 +35,7 @@ namespace WebApi
     // Todo add some custom health checks
     // Todo add github builds
     // Todo add github tests
-    // Todo add github dependency checks, code coverage and quality analysis
+    // Todo add github dependency checks, code coverage and quality analysis, check for any hint paths
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add blazor client
