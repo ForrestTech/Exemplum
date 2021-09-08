@@ -1,6 +1,8 @@
 ﻿namespace Infrastructure
 {
+    using Application.Common.DomainEvents;
     using Application.Persistence;
+    using DomainEvents;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +15,10 @@
             services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("CleanArchitectureDb"));
             
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
+            services.AddScoped<IEventHandlerDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
+            services.AddTransient<IDomainEventService, DomainEventService>();
+            
             return services;
         }
     }

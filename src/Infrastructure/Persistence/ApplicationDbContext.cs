@@ -2,6 +2,7 @@
 {
     using Application.Common.DomainEvents;
     using Application.Persistence;
+    using Domain.Audit;
     using Domain.Common;
     using Domain.Todo;
     using Microsoft.EntityFrameworkCore;
@@ -22,9 +23,11 @@
         }
 
         public DbSet<TodoItem> TodoItems => Set<TodoItem>();
-
+        
         public DbSet<TodoList> TodoLists => Set<TodoList>();
 
+        public DbSet<AuditItem> AuditItems  => Set<AuditItem>();
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

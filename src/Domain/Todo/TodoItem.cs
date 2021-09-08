@@ -30,5 +30,11 @@
         {
             _done = true;
         }
+        
+        // todo implement as a good example of business logic in smart enums
+        // public void SetPriority(PriorityLevel priority)
+        // {
+        //     
+        // }
     }
 }

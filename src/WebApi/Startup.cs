@@ -13,7 +13,8 @@ namespace WebApi
     using Infrastructure;
     using Microsoft.AspNetCore.Routing;
 
-    // Todo add support for Domain events
+    // Todo validate domain events in single transaction
+    // Todo global EF configuration to ignore domain events
     // Todo Add full database setup
     // Todo persistence migrations and configurations
     // Todo Add support for injectable dates
@@ -31,7 +32,8 @@ namespace WebApi
     // Todo add github code coverage
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
-    // Todo Add support for Auditable items
+    // Todo Add full user support for Auditable items
+    // Todo Add integration event emission using rabbit MQ
     // Todo add blazor client
     // Todo .net 6 simple endpoints
     public class Startup
