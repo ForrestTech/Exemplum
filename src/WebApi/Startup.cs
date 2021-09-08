@@ -17,7 +17,6 @@ namespace WebApi
     using Application;
     using Infrastructure;
 
-    // Todo Add query object support for central query logic (should query logic live in the domain or application)
     // Todo Add command for creation
     // Todo Add fluent validation (add problem details)
     // Todo Add application logic example test
@@ -29,6 +28,7 @@ namespace WebApi
     // Todo Add support for injectable dates
     // Todo add more write update and delete handlers and their domain events 
     // Todo persistence migrations and configurations
+    // Todo add handling for mapping database errors to real errors 
     // Todo Add a basic calendar view entity that is a read model over todos 
     // Todo demonstrate how multi aggregate updates work within a transaction for domains events
     // Todo add health checks

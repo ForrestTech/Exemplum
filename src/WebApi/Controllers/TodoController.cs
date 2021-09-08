@@ -8,31 +8,29 @@ using Microsoft.Extensions.Logging;
 namespace WebApi.Controllers
 {
     using Application.Common.Pagination;
+    using Application.Todo.Model;
     using Application.Todo.Queries;
     using MediatR;
 
-    [ApiController]
-    public class TodoController : ControllerBase
+    public class TodoController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
         private readonly ILogger<TodoController> _logger;
 
-        public TodoController(IMediator mediator, ILogger<TodoController> logger)
+        public TodoController(ILogger<TodoController> logger)
         {
-            _mediator = mediator;
             _logger = logger;
         }
 
-        [HttpGet("todo")]
-        public Task<PaginatedList<TodoItemDto>> Get([FromQuery] GetTodoItemsQuery query)
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<TodoItemDto>>> Get([FromQuery] GetTodoItemsQuery query)
         {
-            return _mediator.Send(query);
+            return await Mediator.Send(query);
         }
         
-        [HttpGet("todo/completed")]
-        public Task<PaginatedList<TodoItemDto>> Completed([FromQuery] GetCompletedTodoItemsQuery query)
+        [HttpGet("completed")]
+        public async Task<ActionResult<PaginatedList<TodoItemDto>>> Completed([FromQuery] GetCompletedTodoItemsQuery query)
         {
-            return _mediator.Send(query);
+            return await Mediator.Send(query);
         }
     }
 }
