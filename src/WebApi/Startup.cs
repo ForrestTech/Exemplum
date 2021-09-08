@@ -35,6 +35,7 @@ namespace WebApi
     // Todo add some custom health checks
     // Todo add github builds
     // Todo add github tests
+    // Todo add github dependency checks, code coverage and quality analysis
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add blazor client

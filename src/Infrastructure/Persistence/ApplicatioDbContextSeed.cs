@@ -1,6 +1,7 @@
 ﻿namespace Infrastructure.Persistence
 {
     using Domain.Todo;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -10,7 +11,8 @@
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
             // Seed, if necessary
-            if (!context.TodoLists.Any())
+            var lists = await context.TodoLists.ToListAsync();
+            if (!lists.Any())
             {
                 context.TodoLists.Add(new TodoList(new List<TodoItem>
                 {

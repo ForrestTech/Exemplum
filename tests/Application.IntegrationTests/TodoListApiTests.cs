@@ -2,6 +2,7 @@
 {
     using Common.Pagination;
     using FluentAssertions;
+    using System.Linq;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
     using TodoList.Model;
@@ -11,8 +12,9 @@
 
     public class TodoListApiTests : ApiTestBase
     {
-        public TodoListApiTests(CustomWebApplicationFactory<Startup> factory, ITestOutputHelper testOutputHelper) : base(
-            factory, testOutputHelper)
+        public TodoListApiTests(CustomWebApplicationFactory<Startup> factory, ITestOutputHelper testOutputHelper) :
+            base(
+                factory, testOutputHelper)
         {
         }
 
@@ -39,9 +41,9 @@
 
             actual.Should().NotBeNull();
             actual?.Items.Should().NotBeNull();
-            actual?.Items.Count.Should().Be(1);
+            actual?.Items.Count.Should().BeGreaterThan(0);
         }
-        
+
         [Fact]
         public async Task Get_by_id_should_return_single_list()
         {
