@@ -4,7 +4,9 @@
     using AutoMapper.QueryableExtensions;
     using Common.Mapping;
     using Common.Pagination;
+    using Common.Validation;
     using Domain.Todo;
+    using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -26,6 +28,16 @@
                 .OrderBy(x => x.Title);
 
             return query;
+        }
+    }
+
+    public class GetCompletedTodoItemsQueryValidator : AbstractValidator<GetCompletedTodoItemsQuery>
+    {
+        public GetCompletedTodoItemsQueryValidator()
+        {
+            RuleFor(x => x.PageNumber).ValidPageNumber(1);
+
+            RuleFor(x => x.PageSize).ValidPageSize(1);
         }
     }
 

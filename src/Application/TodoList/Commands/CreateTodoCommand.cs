@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Domain.Todo;
+    using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
@@ -17,6 +18,15 @@
         public string Title { get; set; } = string.Empty;
         
         public string Note { get; set; } = string.Empty;
+    }
+
+    public class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCommand>
+    {
+        public CreateTodoItemCommandValidator()
+        {
+            RuleFor(x => x.ListId).GreaterThan(0);
+            RuleFor(x => x.Title).NotEmpty();
+        }
     }
 
     public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, TodoItemDto>
