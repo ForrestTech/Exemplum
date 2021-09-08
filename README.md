@@ -5,6 +5,8 @@
 
 > An exemplum (Latin for "example", pl. exempla, exempli gratia = "for example", abbr.: e.g.) an example or model, especially a story told to illustrate a moral point.
 
+[![.NET](https://github.com/ForrestTech/Exemplum/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ForrestTech/Exemplum/actions/workflows/dotnet.yml)
+
 ### Todo
 
 Things we need to add to the readme
