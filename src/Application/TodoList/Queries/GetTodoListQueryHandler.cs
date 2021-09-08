@@ -12,11 +12,6 @@
 
     public class GetTodoListQuery : IRequest<TodoListDto>
     {
-        public GetTodoListQuery(int id)
-        {
-            Id = id;
-        }
-
         public int Id { get; set; }
     }
     

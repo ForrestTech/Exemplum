@@ -11,9 +11,10 @@ Things we need to add to the readme
 
 1. Talk about how to structure folders structure things around features not concepts e.g. billing not entities this should be reflected in tests as well
 2. Things we do when we read compared to what we do when we write
-3. Test framework use of shouldly as a better model for assertions
+3. Test framework use of shoudly as a better model for assertions
 4. Add details on how mappings are registered
 5. Add details about query objects and how we encapsulate query logic
+6. Dto only have read write props and say why
 
 
 ## Docker 

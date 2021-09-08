@@ -1,7 +1,8 @@
 ﻿namespace Domain.UnitTests.Todo
 {
     using Domain.Todo;
-    using Shouldly;
+    using FluentAssertions;
+    using System;
     using System.Data.Common;
     using Xunit;
 
@@ -14,13 +15,14 @@
             
             var sut = Colour.From(whiteCode);
             
-            sut.Code.ShouldBe(whiteCode);
+            sut.Code.Should().Be(whiteCode);
         }
         
         [Fact]
         public void From_for_invalid_colour_should_throw()
         {
-            Should.Throw<UnsupportedColourException>(() => Colour.From("Foo"));
+            Action act = () => Colour.From("Foo");
+            act.Should().Throw<UnsupportedColourException>();
         }
     }
 }

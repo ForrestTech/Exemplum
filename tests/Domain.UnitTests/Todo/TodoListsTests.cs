@@ -1,7 +1,7 @@
 ﻿namespace Domain.UnitTests.Todo
 {
     using Domain.Todo;
-    using Shouldly;
+    using FluentAssertions;
     using Xunit;
 
     public class TodoListsTests
@@ -13,7 +13,7 @@
             
             sut.AddToDo(new TodoItem("New todo"));
             
-            sut.DomainEvents.Count.ShouldBe(1);
+            sut.DomainEvents.Count.Should().Be(1);
         }
     }
 }

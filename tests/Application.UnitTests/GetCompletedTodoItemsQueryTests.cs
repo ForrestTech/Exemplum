@@ -1,7 +1,7 @@
 ﻿namespace Application.UnitTests
 {
     using Domain.Todo;
-    using Shouldly;
+    using FluentAssertions;
     using System.Collections.Generic;
     using System.Linq;
     using Todo.Queries;
@@ -28,7 +28,7 @@
             var actual = sut.ApplyQuery(todos.AsQueryable())
                 .ToList();
 
-            actual.Count.ShouldBe(3);
+            actual.Count.Should().Be(3);
         }
     }
 }

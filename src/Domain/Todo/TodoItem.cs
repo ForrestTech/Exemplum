@@ -11,6 +11,9 @@
         {
             Title = title;
         }
+        
+        public int ListId { get; private set; }
+        public TodoList List { get; private set; }
 
         public string Title { get; set; }
 

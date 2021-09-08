@@ -1,7 +1,7 @@
 ﻿namespace Domain.UnitTests.Todo
 {
     using Domain.Todo;
-    using Shouldly;
+    using FluentAssertions;
     using System.Diagnostics.SymbolStore;
     using Xunit;
 
@@ -14,7 +14,7 @@
             
             sut.MarkAsDone();
             
-            sut.Done.ShouldBe(true);
+            sut.Done.Should().Be(true);
         }
     }
 }

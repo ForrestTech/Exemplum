@@ -27,11 +27,11 @@ namespace WebApi.Controllers
         {
             return await Mediator.Send(query);
         }
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoListDto>> GetById(int id)
         {
-            return await Mediator.Send(new GetTodoListQuery(id));
+            return await Mediator.Send(new GetTodoListQuery() { Id = id });
         }
     }
 }
