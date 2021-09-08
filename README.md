@@ -1,13 +1,16 @@
 # Exemplum
 
-![Exemplum](./logo.png)
-
-
 > An exemplum (Latin for "example", pl. exempla, exempli gratia = "for example", abbr.: e.g.) an example or model, especially a story told to illustrate a moral point.
+
+<br/>
 
 [![.NET](https://github.com/ForrestTech/Exemplum/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ForrestTech/Exemplum/actions/workflows/dotnet.yml)
 
-### Todo
+<br/>
+
+This is a solution template for creating a asp.net core applications. Single Page App (SPA) with Angular and ASP.NET Core following the principles of Clean Architecture. You can create a new project based on this one by clicking the above Use this template button.
+
+## Todo
 
 Things we need to add to the readme
 
@@ -21,9 +24,3 @@ Things we need to add to the readme
 
 ## Docker 
 
-Publish project
-`dotnet publish .\src\QandA\QandA.csproj -o ./publish`
-Build Container
-`docker build -t exemplum -f Dockerfile .`
-Run container
-`docker run -d -p 8080:80 --name myapp exemplum`
