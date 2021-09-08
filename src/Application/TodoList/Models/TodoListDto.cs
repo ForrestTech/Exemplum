@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Model
+﻿namespace Application.TodoList.Models
 {
     using Common.Mapping;
     using Domain.Todo;
@@ -7,6 +7,6 @@
     {
         public int Id { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
     }
 }

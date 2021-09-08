@@ -6,8 +6,8 @@
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
-    using Todo.Model;
-    using TodoList.Model;
+    using Todo.Models;
+    using TodoList.Models;
     using WebApi;
     using Xunit;
     using Xunit.Abstractions;

@@ -4,7 +4,7 @@
     using AutoMapper.QueryableExtensions;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
-    using Model;
+    using Models;
     using Persistence;
     using System.Linq;
     using System.Threading;
@@ -12,7 +12,7 @@
 
     public class GetTodoListQuery : IRequest<TodoListDto>
     {
-        public int Id { get; set; }
+        public int ListId { get; set; }
     }
     
     public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, TodoListDto>
@@ -31,7 +31,7 @@
         {
             return await _context.TodoLists
                 .AsNoTracking()
-                .Where(x => x.Id == request.Id)
+                .Where(x => x.Id == request.ListId)
                 .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken: cancellationToken);
         }

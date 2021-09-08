@@ -14,17 +14,20 @@
             var lists = await context.TodoLists.ToListAsync();
             if (!lists.Any())
             {
-                context.TodoLists.Add(new TodoList(new List<TodoItem>
+                var list = new TodoList("Shopping", Colour.Blue);
+                list.AddToDo(new List<TodoItem>
                 {
-                    new TodoItem { Title = "Apples", Done = true },
-                    new TodoItem { Title = "Milk", Done = true },
-                    new TodoItem { Title = "Bread", Done = true },
-                    new TodoItem { Title = "Toilet paper" },
-                    new TodoItem { Title = "Pasta" },
-                    new TodoItem { Title = "Tissues" },
-                    new TodoItem { Title = "Tuna" },
-                    new TodoItem { Title = "Water" }
-                }) { Title = "Shopping", Colour = Colour.Blue });
+                    new TodoItem("Apples") { Done = true },
+                    new TodoItem("Milk") { Done = true },
+                    new TodoItem("Bread") { Done = true },
+                    new TodoItem("Toilet paper"),
+                    new TodoItem("Pasta"),
+                    new TodoItem("Tissues"),
+                    new TodoItem("Tuna"),
+                    new TodoItem("Water")
+                });
+
+                context.TodoLists.Add(list);
 
                 await context.SaveChangesAsync();
             }

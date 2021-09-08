@@ -7,9 +7,9 @@
     public class TodoListsTests
     {
         [Fact]
-        public void Foo()
+        public void AddToDo_should_raise_domain_event()
         {
-            var sut = new TodoList();
+            var sut = new TodoList("List", Colour.Red);
             
             sut.AddToDo(new TodoItem("New todo"));
             

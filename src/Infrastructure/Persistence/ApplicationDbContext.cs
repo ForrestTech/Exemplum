@@ -14,11 +14,9 @@
         public ApplicationDbContext(DbContextOptions options) : base(options)
         { }
         
-        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 
-        public DbSet<TodoList> TodoLists { get; set; }
-        
-        
+        public DbSet<TodoList> TodoLists => Set<TodoList>();
         
         protected override void OnModelCreating(ModelBuilder builder)
         {

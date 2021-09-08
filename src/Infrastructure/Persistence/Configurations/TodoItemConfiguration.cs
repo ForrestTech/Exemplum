@@ -13,15 +13,10 @@
             builder.Property(t => t.Title)
                 .HasMaxLength(200)
                 .IsRequired();
-            
-            builder.Property(t => t.Colour)
-                .HasConversion(
-                    x => x.Code.ToString(),
-                    x => Colour.From(x));
-            
+
             builder.Property(t => t.Priority)
                 .HasConversion(
-                    x => x.ToString(),
+                    x => x!.ToString(),
                     x => PriorityLevel.FromValue(x));
         }
     }

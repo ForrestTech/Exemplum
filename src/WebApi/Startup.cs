@@ -19,8 +19,7 @@ namespace WebApi
 
     // Todo Add command for creation
     // Todo Add fluent validation (add problem details)
-    // Todo Add application logic example test
-    // Todo Add mapping logic tests
+    // Todo add domain function examples like mark as done
     // Todo Add full database setup
     // Todo add transaction behavior so all handlers share a transaction
     // Todo Add support for Auditable items

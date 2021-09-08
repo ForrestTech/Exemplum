@@ -5,8 +5,8 @@
     using Domain.Todo;
     using System;
     using System.Runtime.Serialization;
-    using Todo.Model;
-    using TodoList.Model;
+    using Todo.Models;
+    using TodoList.Models;
     using Xunit;
 
     public class MappingTests

@@ -20,6 +20,7 @@ Things we need to add to the readme
 4. Add details on how mappings are registered
 5. Add details about query objects and how we encapsulate query logic
 6. Dto only have read write props and say why
+7. Command happen against the aggregate route REST resource should reflect this 
 
 
 ## Docker 

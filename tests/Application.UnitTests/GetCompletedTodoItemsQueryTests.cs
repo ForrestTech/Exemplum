@@ -12,19 +12,20 @@
         [Fact]
         public void ApplyQuery_only_returns_completed_items()
         {
-            var todos = new List<TodoItem>{
-                new TodoItem { Title = "Apples", Done = true },
-                new TodoItem { Title = "Milk", Done = true },
-                new TodoItem { Title = "Bread", Done = true },
-                new TodoItem { Title = "Toilet paper" },
-                new TodoItem { Title = "Pasta" },
-                new TodoItem { Title = "Tissues" },
-                new TodoItem { Title = "Tuna" },
-                new TodoItem { Title = "Water" }
+            var todos = new List<TodoItem>
+            {
+                new TodoItem("Apples") { Done = true },
+                new TodoItem("Milk") { Done = true },
+                new TodoItem("Bread") { Done = true },
+                new TodoItem("Toilet paper"),
+                new TodoItem("Pasta"),
+                new TodoItem("Tissues"),
+                new TodoItem("Tuna"),
+                new TodoItem("Water")
             };
-            
+
             var sut = new GetCompletedTodoItemsQuery();
-            
+
             var actual = sut.ApplyQuery(todos.AsQueryable())
                 .ToList();
 

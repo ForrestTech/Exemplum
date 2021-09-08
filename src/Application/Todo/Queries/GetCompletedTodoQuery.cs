@@ -7,7 +7,7 @@
     using Domain.Todo;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
-    using Model;
+    using Models;
     using Persistence;
     using System.Linq;
     using System.Threading;

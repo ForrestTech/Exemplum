@@ -6,16 +6,21 @@
 
     public class TodoList : BaseEntity, IAggregateRoot
     {
-        public TodoList() { }
-
-        public TodoList(List<TodoItem> items)
-        {
-            _items = items;
-        }
+        /// <summary>
+        /// EF constuctor
+        /// </summary>
+        private TodoList()
+        { }
         
-        public string Title { get; set; }
+        public TodoList(string title, Colour colour)
+        {
+            Title = title;
+            Colour = colour;
+        }
 
-        public Colour Colour { get; set; } = Colour.White;
+        public string Title { get; private set; } = string.Empty;
+
+        public Colour Colour { get; private set; } = Colour.White;
 
         private readonly List<TodoItem> _items = new List<TodoItem>();
         public IEnumerable<TodoItem> Items => _items.AsReadOnly();
@@ -25,6 +30,16 @@
             _items.Add(item);
 
             DomainEvents.Add(new TodoItemCreated(item));
+        }
+        
+        public void AddToDo(List<TodoItem> items)
+        {
+            items.ForEach(x =>
+            {
+                _items.Add(x);
+
+                DomainEvents.Add(new TodoItemCreated(x));    
+            });
         }
     }
 }
