@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+    using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
@@ -15,6 +16,16 @@
         public int ListId { get; set; }
 
         public int TodoId { get; set; }
+    }
+    
+    public class GetTodoItemInListQueryValidator : AbstractValidator<GetTodoItemInListQuery>
+    {
+        public GetTodoItemInListQueryValidator()
+        {
+            RuleFor(x => x.ListId).GreaterThan(0);
+            
+            RuleFor(x => x.TodoId).GreaterThan(0);
+        }
     }
     
     public class GetTodoItemInListQueryHandler : IRequestHandler<GetTodoItemInListQuery, TodoItemDto?>

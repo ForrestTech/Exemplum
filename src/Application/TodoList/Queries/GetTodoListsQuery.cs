@@ -4,6 +4,8 @@
     using AutoMapper.QueryableExtensions;
     using Common.Mapping;
     using Common.Pagination;
+    using Common.Validation;
+    using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -17,6 +19,16 @@
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+    }
+    
+    public class GetTodoListsQueryValidator : AbstractValidator<GetTodoListsQuery>
+    {
+        public GetTodoListsQueryValidator()
+        {
+            RuleFor(x => x.PageNumber).ValidPageNumber(1);
+
+            RuleFor(x => x.PageSize).ValidPageSize(1);
+        }
     }
 
     public class GetTodoListsQueryHandler : IRequestHandler<GetTodoListsQuery, PaginatedList<TodoListDto>>

@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+    using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -13,6 +14,14 @@
     public class GetTodoListQuery : IRequest<TodoListDto>
     {
         public int ListId { get; set; }
+    }
+    
+    public class GetTodoListQueryValidator : AbstractValidator<GetTodoListQuery>
+    {
+        public GetTodoListQueryValidator()
+        {
+            RuleFor(x => x.ListId).GreaterThan(0);
+        }
     }
     
     public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, TodoListDto>
