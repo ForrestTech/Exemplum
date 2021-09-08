@@ -34,8 +34,7 @@
         where TEnum : SmartEnum<TEnum, TValue>
         where TValue : IEquatable<TValue>, IComparable<TValue>
     {
-        static readonly Lazy<TEnum[]> _enumOptions = 
-            new Lazy<TEnum[]>(GetAllOptions, LazyThreadSafetyMode.ExecutionAndPublication);
+        static readonly Lazy<TEnum[]> _enumOptions = new Lazy<TEnum[]>(GetAllOptions, LazyThreadSafetyMode.ExecutionAndPublication);
         
         static readonly Lazy<Dictionary<string, TEnum>> _fromName = 
             new Lazy<Dictionary<string, TEnum>>(() => _enumOptions.Value.ToDictionary(item => item.Name));
@@ -43,11 +42,10 @@
         static readonly Lazy<Dictionary<string, TEnum>> _fromNameIgnoreCase = 
             new Lazy<Dictionary<string, TEnum>>(() => _enumOptions.Value.ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase));
 
-        static readonly Lazy<Dictionary<TValue, TEnum>> _fromValue =
-            new Lazy<Dictionary<TValue, TEnum>>(() =>
+        static readonly Lazy<Dictionary<TValue, TEnum?>> _fromValue = new Lazy<Dictionary<TValue, TEnum?>>(() =>
             {
                 // multiple enums with same value are allowed but store only one per value
-                var dictionary = new Dictionary<TValue, TEnum>();
+                var dictionary = new Dictionary<TValue, TEnum?>();
                 foreach (var item in _enumOptions.Value)
                 {
                     if (!dictionary.ContainsKey(item._value))
@@ -64,7 +62,7 @@
                 .Where(t => baseType.IsAssignableFrom(t))
                 .SelectMany(t => t.GetFieldsOfType<TEnum>())
                 .OrderBy(t => t.Name)
-                .ToArray();
+                .ToArray() ?? Array.Empty<TEnum>();
         }
 
         /// <summary>
@@ -77,15 +75,13 @@
                 .ToList()
                 .AsReadOnly();
 
-        private readonly string _name;
         private readonly TValue _value;
 
         /// <summary>
         /// Gets the name.
         /// </summary>
         /// <value>A <see cref="String"/> that is the name of the <see cref="SmartEnum{TEnum, TValue}"/>.</value>
-        public string Name =>
-            _name;
+        public string Name { get; }
 
         /// <summary>
         /// Gets the value.
@@ -98,10 +94,8 @@
         {
             if (String.IsNullOrEmpty(name))
                 ThrowHelper.ThrowArgumentNullException(nameof(name));
-            if (value == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(value));
 
-            _name = name;
+            Name = name;
             _value = value;
         }
 
@@ -130,16 +124,16 @@
             if (String.IsNullOrEmpty(name))
                 ThrowHelper.ThrowArgumentNullException(nameof(name));
 
-            TEnum FromName(Dictionary<string, TEnum> dictionary)
+            TEnum FromNameLocal(Dictionary<string, TEnum> dictionary)
             {
                 if (!dictionary.TryGetValue(name, out var result))
                 {
                     ThrowHelper.ThrowNameNotFoundException<TEnum, TValue>(name);
                 }
-                return result;
+                return result!;
             }
 
-            return FromName(ignoreCase ? _fromNameIgnoreCase.Value : _fromName.Value);
+            return FromNameLocal(ignoreCase ? _fromNameIgnoreCase.Value : _fromName.Value);
         }
 
         /// <summary>
@@ -156,8 +150,7 @@
         /// <seealso cref="SmartEnum{TEnum, TValue}.FromName(string, bool)"/>
         /// <seealso cref="SmartEnum{TEnum, TValue}.TryFromName(string, bool, out TEnum)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryFromName(string name, out TEnum result) =>
-            TryFromName(name, false, out result);
+        public static bool TryFromName(string name, out TEnum? result) => TryFromName(name, false, out result);
 
         /// <summary>
         /// Gets the item associated with the specified name.
@@ -173,7 +166,7 @@
         /// <exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>.</exception> 
         /// <seealso cref="SmartEnum{TEnum, TValue}.FromName(string, bool)"/>
         /// <seealso cref="SmartEnum{TEnum, TValue}.TryFromName(string, out TEnum)"/>
-        public static bool TryFromName(string name, bool ignoreCase, out TEnum result)
+        public static bool TryFromName(string name, bool ignoreCase, out TEnum? result)
         {
             if (String.IsNullOrEmpty(name))
             {
@@ -181,10 +174,9 @@
                 return false;
             }
 
-            if (ignoreCase)
-                return _fromNameIgnoreCase.Value.TryGetValue(name, out result);
-            else
-                return _fromName.Value.TryGetValue(name, out result);
+            return ignoreCase ? 
+                _fromNameIgnoreCase.Value.TryGetValue(name, out result) : 
+                _fromName.Value.TryGetValue(name, out result);
         }
 
         /// <summary>
@@ -200,14 +192,11 @@
         /// <seealso cref="SmartEnum{TEnum, TValue}.TryFromValue(TValue, out TEnum)"/>
         public static TEnum FromValue(TValue value)
         {
-            if (value == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(value));
-
             if (!_fromValue.Value.TryGetValue(value, out var result))
             {
                 ThrowHelper.ThrowValueNotFoundException<TEnum, TValue>(value);
             }
-            return result;
+            return result!;
         }
 
         /// <summary>
@@ -223,14 +212,7 @@
         /// <seealso cref="SmartEnum{TEnum, TValue}.TryFromValue(TValue, out TEnum)"/>
         public static TEnum FromValue(TValue value, TEnum defaultValue)
         {
-            if (value == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(value));
-
-            if (!_fromValue.Value.TryGetValue(value, out var result))
-            {
-                return defaultValue;
-            }
-            return result;
+            return (!_fromValue.Value.TryGetValue(value, out var result) ? defaultValue : result)!;
         }
 
         /// <summary>
@@ -245,44 +227,28 @@
         /// </returns>
         /// <seealso cref="SmartEnum{TEnum, TValue}.FromValue(TValue)"/>
         /// <seealso cref="SmartEnum{TEnum, TValue}.FromValue(TValue, TEnum)"/>
-        public static bool TryFromValue(TValue value, out TEnum result)
+        public static bool TryFromValue(TValue value, out TEnum? result)
         {
-            if (value == null)
-            {
-                result = default;
-                return false;
-            }
-
             return _fromValue.Value.TryGetValue(value, out result);
         }
 
         public override string ToString() =>
-            _name;
+            Name;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode() =>
-            _value.GetHashCode();
+        public override int GetHashCode() => _value.GetHashCode();
 
-        public override bool Equals(object obj) =>
-            (obj is SmartEnum<TEnum, TValue> other) && Equals(other);
+        public override bool Equals(object? obj) => (obj is SmartEnum<TEnum, TValue> other) && Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified <see cref="SmartEnum{TEnum, TValue}"/> value.
         /// </summary>
         /// <param name="other">An <see cref="SmartEnum{TEnum, TValue}"/> value to compare to this instance.</param>
         /// <returns><c>true</c> if <paramref name="other"/> has the same value as this instance; otherwise, <c>false</c>.</returns>
-        public virtual bool Equals(SmartEnum<TEnum, TValue> other)
+        public virtual bool Equals(SmartEnum<TEnum, TValue>? other)
         {
             // check if same instance
-            if (Object.ReferenceEquals(this, other))
-                return true;
-
-            // it's not same instance so 
-            // check if it's not null and is same value
-            if (other is null)
-                return false;
-
-            return _value.Equals(other._value);
+            return other is not null && (Object.ReferenceEquals(this, other) || _value.Equals(other._value));
         }
 
         /// <summary>
@@ -314,17 +280,12 @@
 
         public static bool operator ==(SmartEnum<TEnum, TValue> left, SmartEnum<TEnum, TValue> right)
         {
-            // Handle null on left side
-            if (left is null)
-                return right is null; // null == null = true
-
             // Equals handles null on right side
             return left.Equals(right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(SmartEnum<TEnum, TValue> left, SmartEnum<TEnum, TValue> right) =>
-            !(left == right);
+        public static bool operator !=(SmartEnum<TEnum, TValue> left, SmartEnum<TEnum, TValue> right) => !(left == right);
 
         /// <summary>
         /// Compares this instance to a specified <see cref="SmartEnum{TEnum, TValue}"/> and returns an indication of their relative values.
@@ -332,8 +293,10 @@
         /// <param name="other">An <see cref="SmartEnum{TEnum, TValue}"/> value to compare to this instance.</param>
         /// <returns>A signed number indicating the relative values of this instance and <paramref name="other"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public virtual int CompareTo(SmartEnum<TEnum, TValue> other) =>
-            _value.CompareTo(other._value);
+        public virtual int CompareTo(SmartEnum<TEnum, TValue>? other)
+        {
+            return other is not null ? _value.CompareTo(other._value) : 0;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <(SmartEnum<TEnum, TValue> left, SmartEnum<TEnum, TValue> right) =>
