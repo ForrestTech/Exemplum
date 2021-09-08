@@ -4,7 +4,7 @@
 
 <br/>
 
-[![.NET](https://github.com/ForrestTech/Exemplum/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ForrestTech/Exemplum/actions/workflows/dotnet.yml)
+[![.NET](https://github.com/ForrestTech/Exemplum/actions/workflows/build.yml/badge.svg)](https://github.com/ForrestTech/Exemplum/actions/workflows/build.yml)
 
 <br/>
 
