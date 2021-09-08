@@ -22,7 +22,7 @@
 
         protected abstract IEnumerable<object> GetEqualityComponents();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
@@ -36,7 +36,7 @@
         public override int GetHashCode()
         {
             return GetEqualityComponents()
-                .Select(x => x != null ? x.GetHashCode() : 0)
+                .Select(x => x.GetHashCode())
                 .Aggregate((x, y) => x ^ y);
         }
     }

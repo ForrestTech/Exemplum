@@ -7,7 +7,7 @@
     public class TodoList : BaseEntity, IAggregateRoot
     {
         /// <summary>
-        /// EF constuctor
+        /// EF constructor
         /// </summary>
         private TodoList()
         { }
@@ -29,7 +29,7 @@
         {
             _items.Add(item);
 
-            DomainEvents.Add(new TodoItemCreated(item));
+            DomainEvents.Add(new TodoItemCreatedEvent(item));
         }
         
         public void AddToDo(List<TodoItem> items)
@@ -38,7 +38,7 @@
             {
                 _items.Add(x);
 
-                DomainEvents.Add(new TodoItemCreated(x));    
+                DomainEvents.Add(new TodoItemCreatedEvent(x));    
             });
         }
     }

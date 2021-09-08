@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace WebApi
@@ -19,26 +13,25 @@ namespace WebApi
     using Infrastructure;
     using Microsoft.AspNetCore.Routing;
 
-    // Todo Add command for creation
-    // Todo Add fluent validation (add problem details)
-    // Todo Add full database setup
-    // Todo add transaction behavior so all handlers share a transaction
-    // Todo Add support for Auditable items
     // Todo add support for Domain events
+    // Todo Add full database setup
+    // Todo persistence migrations and configurations
     // Todo Add support for injectable dates
     // Todo add domain function examples like mark as done
-    // Todo add more write update and delete handlers and their domain events 
-    // Todo persistence migrations and configurations
+    // Todo add more write update and delete handlers and their domain events
     // Todo add handling for mapping database errors to real errors will need unique index and FKey exceptions
     // Todo Add a basic calendar view entity that is a read model over todos 
     // Todo demonstrate how multi aggregate updates work within a transaction for domains events
+    // Todo add httpclient (call to 3rd party service)
+    // Todo add docker support for sql/redis ??
+    // Todo add redis for caching
+    // Todo add poly
     // Todo add health checks
     // Todo add some custom health checks
-    // Todo add github builds
-    // Todo add github tests
-    // Todo add github dependency checks, code coverage and quality analysis, check for any hint paths
+    // Todo add github code coverage
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
+    // Todo Add support for Auditable items
     // Todo add blazor client
     // Todo .net 6 simple endpoints
     public class Startup

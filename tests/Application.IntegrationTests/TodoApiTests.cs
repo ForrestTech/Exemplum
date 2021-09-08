@@ -67,7 +67,7 @@
 
             actual.Should().NotBeNull();
             actual?.Items.Should().NotBeNull();
-            actual?.Items.Count.Should().Be(1);
+            actual?.Items?.Count.Should().Be(1);
         }
 
         [Fact]

@@ -2,9 +2,9 @@
 {
     using Common;
 
-    public class TodoItemCreated: DomainEvent
+    public class TodoItemCreatedEvent: DomainEvent
     {
-        public TodoItemCreated(TodoItem item)
+        public TodoItemCreatedEvent(TodoItem item)
         {
             Item = item;
         }

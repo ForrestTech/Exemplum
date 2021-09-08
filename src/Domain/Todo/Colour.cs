@@ -6,14 +6,6 @@
 
     public class Colour : ValueObject
     {
-        static Colour()
-        {
-        }
-
-        private Colour()
-        {
-        }
-
         private Colour(string code)
         {
             Code = code;
@@ -21,7 +13,7 @@
 
         public static Colour From(string code)
         {
-            var colour = new Colour { Code = code };
+            var colour = new Colour(code);
 
             if (!SupportedColours.Contains(colour))
             {
@@ -64,7 +56,7 @@
             return Code;
         }
 
-        protected static IEnumerable<Colour> SupportedColours
+        private static IEnumerable<Colour> SupportedColours
         {
             get
             {
