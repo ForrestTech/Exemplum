@@ -14,14 +14,17 @@ This is a solution template for creating a asp.net core applications. Single Pag
 
 Things we need to add to the readme
 
-1. Talk about how to structure folders structure things around features not concepts e.g. billing not entities this should be reflected in tests as well
-2. Things we do when we read compared to what we do when we write
-3. Test framework use of shoudly as a better model for assertions
-4. Add details on how mappings are registered
-5. Add details about query objects and how we encapsulate query logic
-6. Dto only have read write props and say why
-7. Command happen against the aggregate route REST resource should reflect this 
-8. Transaction behaviour dont save changes in event handlers
+1. Clean architecture, onion architecture and ports and adapters
+2. Solution structure 
+3. Folder structure, feature folders
+4. Command Query MediatR (Command happen against the aggregate route REST resource should reflect this)
+5. Dtos and mapping use of Automapper (Dto should have )
+6. EF Core and how we configure it
+7. Support for Auditable entities
+8. Add details about query objects and how we encapsulate query logic
+9. Domain events and transactions  (Transaction behaviour dont save changes in event handlers) 
+10. Test framework use of fluent assertions as a better model for assertions, test server setup
+11. 
 
 
 ## Docker 

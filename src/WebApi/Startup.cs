@@ -12,13 +12,14 @@ namespace WebApi
     using FluentValidation.AspNetCore;
     using Infrastructure;
     using Microsoft.AspNetCore.Routing;
-
-    // Todo validate domain events in single transaction
+    
+    // Todo add command handler unit tests with mocks
+    // Todo remove todo and do all actions via todolist
     // Todo global EF configuration to ignore domain events
     // Todo Add full database setup
     // Todo persistence migrations and configurations
     // Todo Add support for injectable dates
-    // Todo add domain function examples like mark as done
+    // Todo add domain function examples like mark as done set priority (add unit tests for smart enum stuff or migrate to using the package) 
     // Todo add more write update and delete handlers and their domain events
     // Todo add handling for mapping database errors to real errors will need unique index and FKey exceptions
     // Todo Add a basic calendar view entity that is a read model over todos 
@@ -30,6 +31,7 @@ namespace WebApi
     // Todo add health checks
     // Todo add some custom health checks
     // Todo add github code coverage
+    // Todo add way to seed data without domains event emission
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo Add full user support for Auditable items

@@ -7,6 +7,7 @@
     using System.Net.Http.Json;
     using System.Threading.Tasks;
     using Todo.Models;
+    using TodoList.Commands;
     using TodoList.Models;
     using WebApi;
     using Xunit;
@@ -78,6 +79,28 @@
             var actual = await response.Content.ReadFromJsonAsync<TodoListDto>();
 
             actual?.Should().NotBeNull();
+        }
+        
+        [Fact]
+        public async Task Todolist_post()
+        {
+            const string todoTitle = "New todo";
+            
+            var response = await _client.PostAsJsonAsync("api/todolist/1/todo", new CreateTodoItemCommand
+            {
+                Title = todoTitle,
+                Note = "Some note"
+            });
+
+            response.EnsureSuccessStatusCode();
+            
+            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+
+            newTodoResponse.EnsureSuccessStatusCode();
+            
+            var newTodo = await response.Content.ReadFromJsonAsync<TodoItemDto>();
+
+            newTodo?.Title.Should().Be(todoTitle);
         }
     }
 }
