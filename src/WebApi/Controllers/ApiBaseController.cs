@@ -5,7 +5,7 @@
     using Microsoft.Extensions.DependencyInjection;
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api")]
     public abstract class ApiControllerBase : ControllerBase
     {
         

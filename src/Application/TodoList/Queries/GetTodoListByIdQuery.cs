@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+    using Common.Exceptions;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,12 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class GetTodoListQuery : IRequest<TodoListDto>
+    public class GetTodoListByIdQuery : IRequest<TodoListDto>
     {
         public int ListId { get; set; }
     }
     
-    public class GetTodoListQueryValidator : AbstractValidator<GetTodoListQuery>
+    public class GetTodoListQueryValidator : AbstractValidator<GetTodoListByIdQuery>
     {
         public GetTodoListQueryValidator()
         {
@@ -24,7 +25,7 @@
         }
     }
     
-    public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, TodoListDto>
+    public class GetTodoListQueryHandler : IRequestHandler<GetTodoListByIdQuery, TodoListDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -35,14 +36,21 @@
             _mapper = mapper;
         }
 
-        public async Task<TodoListDto> Handle(GetTodoListQuery request,
+        public async Task<TodoListDto> Handle(GetTodoListByIdQuery request,
             CancellationToken cancellationToken)
         {
-            return await _context.TodoLists
+            var todoList = await _context.TodoLists
                 .AsNoTracking()
                 .Where(x => x.Id == request.ListId)
                 .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+
+            if (todoList == null)
+            {
+                throw new NotFoundException();
+            }
+    
+            return todoList;
         }
     }
 }

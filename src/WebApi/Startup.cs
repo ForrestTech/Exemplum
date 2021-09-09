@@ -13,8 +13,7 @@ namespace WebApi
     using Infrastructure;
     using Microsoft.AspNetCore.Routing;
     
-    // Todo add command handler unit tests with mocks
-    // Todo remove todo and do all actions via todolist
+    // Hybrid model binding
     // Todo global EF configuration to ignore domain events
     // Todo Add full database setup
     // Todo persistence migrations and configurations

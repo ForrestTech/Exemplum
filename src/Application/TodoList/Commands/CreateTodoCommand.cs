@@ -6,10 +6,10 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
+    using Queries;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Todo.Models;
 
     public class CreateTodoItemCommand : IRequest<TodoItemDto>
     {

@@ -1,4 +1,4 @@
-﻿namespace Application.Todo.EventHandler
+﻿namespace Application.TodoList.EventHandlers
 {
     using Common.DomainEvents;
     using Domain.Audit;

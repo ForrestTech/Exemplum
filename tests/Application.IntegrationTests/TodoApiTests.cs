@@ -3,12 +3,13 @@
     using Common.Pagination;
     using FluentAssertions;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
-    using Todo.Models;
     using TodoList.Commands;
     using TodoList.Models;
+    using TodoList.Queries;
     using WebApi;
     using Xunit;
     using Xunit.Abstractions;
@@ -27,20 +28,30 @@
         }
 
         [Theory]
-        [InlineData("api/todo")]
         [InlineData("api/todolist")]
-        public async Task Get_returns_success_status_code(string url)
+        [InlineData("api/todolist/1/todo")]
+        [InlineData("api/todolist/1/todo/1")]
+        [InlineData("api/todolist/1/todo/completed")]
+        [InlineData("api/todolist/999", 404)]
+        [InlineData("api/todolist/1/todo/999", 404)]
+        public async Task Routes_table_tests(string url, int statusCode = 200)
         {
             var response = await _client.GetAsync(url);
 
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
-            response.Content.Headers.ContentType?.ToString().Should().Be("application/json; charset=utf-8");
+            response.StatusCode.Should().Be((HttpStatusCode)statusCode);
+
+            bool successfulResponse = statusCode is >= 200 and <= 299;
+            
+            response.Content.Headers.ContentType?.ToString()
+                .Should().Be(successfulResponse ? 
+                    "application/json; charset=utf-8" : 
+                    "application/problem+json; charset=utf-8");
         }
 
         [Fact]
         public async Task Todo_get_returns_paginated_list_of_todos()
         {
-            var response = await _client.GetAsync("api/todo");
+            var response = await _client.GetAsync("api/todolist/1/todo");
 
             var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
 
@@ -52,7 +63,7 @@
         [Fact]
         public async Task Todo_get_completed_should_only_returns_completed_todos()
         {
-            var response = await _client.GetAsync("api/todo/completed");
+            var response = await _client.GetAsync("api/todolist/1/todo/completed");
 
             var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
 

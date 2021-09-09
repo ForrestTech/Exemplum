@@ -1,63 +1,56 @@
-﻿namespace Application.Todo.Queries
+﻿namespace Application.TodoList.Queries
 {
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Common.Mapping;
     using Common.Pagination;
     using Common.Validation;
-    using Domain.Todo;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
-    using Models;
     using Persistence;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class GetCompletedTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
-        IPaginatedQuery,
-        IQueryObject<TodoItem>
+    public class GetTodoListTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
+        IPaginatedQuery
     {
+        public int ListId { get; set; }
+        
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-
-        public IQueryable<TodoItem> ApplyQuery(IQueryable<TodoItem> query)
-        {
-            query = query.Where(x => x.Done)
-                .OrderBy(x => x.Title);
-
-            return query;
-        }
     }
-
-    public class GetCompletedTodoItemsQueryValidator : AbstractValidator<GetCompletedTodoItemsQuery>
+    
+    public class GetTodoItemsQueryValidator : AbstractValidator<GetTodoListTodoItemsQuery>
     {
-        public GetCompletedTodoItemsQueryValidator()
+        public GetTodoItemsQueryValidator()
         {
+            RuleFor(x => x.ListId).GreaterThan(0);
+            
             RuleFor(x => x.PageNumber).ValidPageNumber(1);
 
             RuleFor(x => x.PageSize).ValidPageSize(1);
         }
     }
 
-    public class GetCompletedTodoQueryHandler : IRequestHandler<GetCompletedTodoItemsQuery, PaginatedList<TodoItemDto>>
+    public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoListTodoItemsQuery, PaginatedList<TodoItemDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetCompletedTodoQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetTodoItemsQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-
-        public async Task<PaginatedList<TodoItemDto>> Handle(GetCompletedTodoItemsQuery request,
-            CancellationToken cancellationToken)
+        
+        public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoListTodoItemsQuery request, CancellationToken cancellationToken)
         {
             return await _context.TodoItems
                 .AsNoTracking()
-                .Query(request)
+                .Where(x => x.ListId == request.ListId)
+                .OrderBy(x => x.Title)
                 .ProjectTo<TodoItemDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
         }

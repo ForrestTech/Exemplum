@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+    using Common.Exceptions;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -9,16 +10,15 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Todo.Models;
 
-    public class GetTodoItemInListQuery : IRequest<TodoItemDto?>
+    public class GetTodoItemByIdQuery : IRequest<TodoItemDto>
     {
         public int ListId { get; set; }
 
         public int TodoId { get; set; }
     }
     
-    public class GetTodoItemInListQueryValidator : AbstractValidator<GetTodoItemInListQuery>
+    public class GetTodoItemInListQueryValidator : AbstractValidator<GetTodoItemByIdQuery>
     {
         public GetTodoItemInListQueryValidator()
         {
@@ -28,7 +28,7 @@
         }
     }
     
-    public class GetTodoItemInListQueryHandler : IRequestHandler<GetTodoItemInListQuery, TodoItemDto?>
+    public class GetTodoItemInListQueryHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -39,13 +39,18 @@
             _mapper = mapper;
         }
         
-        public async Task<TodoItemDto?> Handle(GetTodoItemInListQuery request, CancellationToken cancellationToken)
+        public async Task<TodoItemDto> Handle(GetTodoItemByIdQuery request, CancellationToken cancellationToken)
         {
             var todo = await _context.TodoItems
                 .AsNoTracking()
                 .Where(x => x.ListId == request.ListId && x.Id == request.TodoId)
                 .ProjectTo<TodoItemDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+
+            if (todo == null)
+            {
+                throw new NotFoundException();
+            }
 
             return todo;
         }

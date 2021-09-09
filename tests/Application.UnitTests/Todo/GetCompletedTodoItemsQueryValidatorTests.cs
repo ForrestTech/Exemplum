@@ -1,7 +1,7 @@
 ﻿namespace Application.UnitTests.Todo
 {
-    using Application.Todo.Queries;
     using FluentValidation.TestHelper;
+    using TodoList.Queries;
     using Xunit;
 
     public class GetCompletedTodoItemsQueryValidatorTests

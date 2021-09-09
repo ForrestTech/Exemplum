@@ -1,12 +1,12 @@
 ﻿namespace Application.UnitTests.Mapping
 {
-    using Application.Todo.Models;
     using AutoMapper;
     using Common.Mapping;
     using Domain.Todo;
     using System;
     using System.Runtime.Serialization;
     using TodoList.Models;
+    using TodoList.Queries;
     using Xunit;
 
     public class MappingTests
