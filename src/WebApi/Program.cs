@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace WebApi
 {
     using Infrastructure.Persistence;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Serilog;
     using Serilog.Events;
@@ -37,7 +38,7 @@ namespace WebApi
                 Log.Information("Starting web host");
                 
                 var host = CreateHostBuilder(args).Build();
-                
+
                 await SeedDatabase(host);
 
                 await host.RunAsync();
@@ -66,6 +67,11 @@ namespace WebApi
             try
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
+                
+                if (context.Database.IsSqlServer())
+                {
+                    await context.Database.MigrateAsync();
+                }         
 
                 await ApplicationDbContextSeed.SeedSampleDataAsync(context);
             }

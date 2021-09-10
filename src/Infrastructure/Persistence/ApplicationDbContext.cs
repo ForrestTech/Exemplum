@@ -15,8 +15,11 @@
 
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        private readonly IDomainEventService _domainEventService;
+        private readonly IDomainEventService _domainEventService = null!;
 
+        public ApplicationDbContext(DbContextOptions options) : base(options)
+        { }
+        
         public ApplicationDbContext(DbContextOptions options,
             IDomainEventService domainEventService) : base(options)
         {

@@ -12,8 +12,18 @@
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("CleanArchitectureDb"));
-            
+            if (bool.Parse(configuration["UseInMemoryDatabase"]))
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseInMemoryDatabase("CleanArchitectureDb"));
+            }
+            else
+            {
+                services.AddDbContext<ApplicationDbContext>(options => 
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+            }
+
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
             services.AddScoped<IEventHandlerDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
