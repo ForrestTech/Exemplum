@@ -5,6 +5,7 @@
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Models;
     using Persistence;
     using Queries;
     using System.Linq;

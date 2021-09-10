@@ -8,6 +8,7 @@
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Models;
     using Persistence;
     using System.Linq;
     using System.Threading;
@@ -27,10 +28,7 @@
         public GetTodoItemsQueryValidator()
         {
             RuleFor(x => x.ListId).GreaterThan(0);
-            
-            RuleFor(x => x.PageNumber).ValidPageNumber(1);
-
-            RuleFor(x => x.PageSize).ValidPageSize(1);
+            Include(new PaginatedQueryValidator());
         }
     }
 

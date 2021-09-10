@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Queries
+﻿namespace Application.TodoList.Models
 {
     using Common.Mapping;
     using Domain.Todo;
