@@ -1,5 +1,6 @@
 ﻿namespace Infrastructure.Persistence
 {
+    using Application.Common.DateAndTime;
     using Application.Common.DomainEvents;
     using Application.Persistence;
     using Domain.Audit;
@@ -16,14 +17,17 @@
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         private readonly IDomainEventService _domainEventService = null!;
+        private readonly IClock _clock = null!;
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         { }
         
         public ApplicationDbContext(DbContextOptions options,
-            IDomainEventService domainEventService) : base(options)
+            IDomainEventService domainEventService,
+            IClock clock) : base(options)
         {
             _domainEventService = domainEventService;
+            _clock = clock;
         }
 
         public DbSet<TodoItem> TodoItems => Set<TodoItem>();
@@ -40,12 +44,12 @@
                 {
                     case EntityState.Added:
                         //entry.Entity.CreatedBy = _currentUserService.UserId;
-                        entry.Entity.Created = DateTime.UtcNow;
+                        entry.Entity.Created = _clock.Now;
                         break;
 
                     case EntityState.Modified:
                         //entry.Entity.LastModifiedBy = _currentUserService.UserId;
-                        entry.Entity.LastModified = DateTime.UtcNow;
+                        entry.Entity.LastModified = _clock.Now;
                         break;
                 }
             }

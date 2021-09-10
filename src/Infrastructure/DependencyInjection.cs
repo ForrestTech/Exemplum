@@ -1,7 +1,9 @@
 ﻿namespace Infrastructure
 {
+    using Application.Common.DateAndTime;
     using Application.Common.DomainEvents;
     using Application.Persistence;
+    using DateAndTime;
     using DomainEvents;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -28,6 +30,8 @@
             services.AddScoped<IEventHandlerDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             services.AddTransient<IDomainEventService, DomainEventService>();
+
+            services.AddTransient<IClock, Clock>();
             
             return services;
         }

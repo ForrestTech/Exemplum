@@ -14,9 +14,7 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo Add full database setup
-    // Todo persistence migrations and configurations
-    // Todo Add support for injectable dates
+    // Todo add more validation (add common validation for paging)
     // Todo add domain function examples like mark as done set priority (add unit tests for smart enum stuff or migrate to using the package) 
     // Todo add more write update and delete handlers and their domain events
     // Todo add handling for mapping database errors to real errors will need unique index and FKey exceptions
