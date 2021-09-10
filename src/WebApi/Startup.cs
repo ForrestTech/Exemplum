@@ -14,8 +14,6 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo distributed tracing support
-    // Todo global EF configuration to ignore domain events
     // Todo Add full database setup
     // Todo persistence migrations and configurations
     // Todo Add support for injectable dates
@@ -35,6 +33,7 @@ namespace WebApi
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo Add full user support for Auditable items
+    // Todo distributed tracing support
     // Todo Add integration event emission using rabbit MQ
     // Todo add blazor client
     // Todo .net 6 simple endpoints

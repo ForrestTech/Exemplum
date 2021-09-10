@@ -7,6 +7,7 @@
     using Domain.Todo;
     using Microsoft.EntityFrameworkCore;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -27,13 +28,6 @@
         public DbSet<TodoList> TodoLists => Set<TodoList>();
 
         public DbSet<AuditItem> AuditItems  => Set<AuditItem>();
-        
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            base.OnModelCreating(builder);
-        }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -71,6 +65,36 @@
             foreach (var domainEvent in domainEvents)
             {
                 await _domainEventService.Publish(domainEvent);
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            IgnoreDomainEvents(builder);
+
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            base.OnModelCreating(builder);
+        }
+
+        /// <summary>
+        /// Dont map domains events to storage
+        /// </summary>
+        private static void IgnoreDomainEvents(ModelBuilder builder)
+        {
+            var propertyNames = typeof(IHaveDomainEvents).GetProperties()
+                .Select(p => p.Name)
+                .ToList();
+
+            var entityTypes = builder.Model.GetEntityTypes()
+                .Where(t => typeof(IHaveDomainEvents)
+                    .IsAssignableFrom(t.ClrType));
+
+            foreach (var entityType in entityTypes)
+            {
+                var entityTypeBuilder = builder.Entity(entityType.ClrType);
+                foreach (var propertyName in propertyNames)
+                    entityTypeBuilder.Ignore(propertyName);
             }
         }
     }

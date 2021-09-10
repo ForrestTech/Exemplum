@@ -8,8 +8,6 @@
     {
         public void Configure(EntityTypeBuilder<AuditItem> builder)
         {
-            builder.Ignore(e => e.DomainEvents);
-
             builder.Property(t => t.EventType)
                 .HasMaxLength(500)
                 .IsRequired();

@@ -1,5 +1,6 @@
 ﻿namespace Infrastructure.Persistence.Configurations
 {
+    using Domain.Common;
     using Domain.Todo;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,8 +9,6 @@
     {
         public void Configure(EntityTypeBuilder<TodoItem> builder)
         {
-            builder.Ignore(e => e.DomainEvents);
-            
             builder.Property(t => t.Title)
                 .HasMaxLength(300)
                 .IsRequired();
