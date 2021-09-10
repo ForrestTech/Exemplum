@@ -235,3 +235,6 @@ _Pvt_Extensions
 /NDependOut
 /CleanArchitecture.ndproj
 /.mfractor
+
+
+App_Data/

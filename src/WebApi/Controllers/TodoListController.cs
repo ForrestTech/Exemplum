@@ -32,7 +32,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("todolist/{listId:int}")]
-        public async Task<ActionResult<TodoListDto>> GetTodoListById(int listId)
+        public async Task<ActionResult<TodoListDto>> GetTodoListById([FromRoute]int listId)
         {
             return await _mediator.Send(new GetTodoListByIdQuery { ListId = listId });
         }

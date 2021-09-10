@@ -8,11 +8,13 @@
     using Persistence;
     using Queries;
     using System.Linq;
+    using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
 
     public class CreateTodoItemCommand : IRequest<TodoItemDto>
     {
+        [JsonIgnore]
         public int ListId { get; set; }
 
         public string Title { get; set; } = string.Empty;

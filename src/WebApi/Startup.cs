@@ -12,8 +12,9 @@ namespace WebApi
     using FluentValidation.AspNetCore;
     using Infrastructure;
     using Microsoft.AspNetCore.Routing;
+    using Serilog;
     
-    // Hybrid model binding
+    // Todo distributed tracing support
     // Todo global EF configuration to ignore domain events
     // Todo Add full database setup
     // Todo persistence migrations and configurations
@@ -69,7 +70,7 @@ namespace WebApi
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Exemplum", Version = "v1" });
             });
         }
 
@@ -80,8 +81,10 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));
             }
+            
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
