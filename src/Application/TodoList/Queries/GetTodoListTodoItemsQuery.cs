@@ -11,6 +11,7 @@
     using Models;
     using Persistence;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,7 +19,6 @@
     public class GetTodoListTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
         IPaginatedQuery
     {
-        [JsonIgnore]
         public int ListId { get; set; }
         
         public int PageNumber { get; set; } = 1;
@@ -47,12 +47,14 @@
         
         public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoListTodoItemsQuery request, CancellationToken cancellationToken)
         {
-            return await _context.TodoItems
+            var list = await _context.TodoItems
                 .AsNoTracking()
                 .Where(x => x.ListId == request.ListId)
                 .OrderBy(x => x.Title)
                 .ProjectTo<TodoItemDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+
+            return list;
         }
     }
 }

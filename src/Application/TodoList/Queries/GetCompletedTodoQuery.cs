@@ -19,12 +19,14 @@
         IPaginatedQuery,
         IQueryObject<TodoItem>
     {
+        public int ListId { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
 
         public IQueryable<TodoItem> ApplyQuery(IQueryable<TodoItem> query)
         {
-            query = query.Where(x => x.Done)
+            query = query.Where(x => x.ListId == ListId 
+                                     && x.Done)
                 .OrderBy(x => x.Title);
 
             return query;
@@ -35,6 +37,7 @@
     {
         public GetCompletedTodoItemsQueryValidator()
         {
+            RuleFor(x => x.ListId).GreaterThan(0);
             Include(new PaginatedQueryValidator());
         }
     }

@@ -1,6 +1,7 @@
 ﻿namespace Domain.Todo
 {
     using Common;
+    using Common.DateAndTime;
     using Events;
     using System;
 
@@ -9,6 +10,7 @@
         public TodoItem(string title)
         {
             Title = title;
+            Priority = PriorityLevel.None;
         }
 
         public int ListId { get; private set; }
@@ -29,14 +31,23 @@
 
         public void MarkAsDone()
         {
+            if (_done != false)
+            {
+                return;
+            }
+
             _done = true;
             DomainEvents.Add(new TodoItemCompletedEvent(this));
         }
-        
-        // todo implement as a good example of business logic in smart enums
-        // public void SetPriority(PriorityLevel priority)
-        // {
-        //     
-        // }
+
+        /// <summary>
+        /// This is a good example of using SmartEnum to hold behaviour in your model and also of double dispatch, injecting strategies into domains in this case a clock
+        /// </summary>
+        public void SetPriority(PriorityLevel priority, IClock clock)
+        {
+            Priority = priority;
+
+            Reminder = clock.Now.Add(priority.ReminderTime);
+        }
     }
 }

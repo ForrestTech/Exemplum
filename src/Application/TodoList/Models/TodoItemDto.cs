@@ -1,5 +1,6 @@
 ﻿namespace Application.TodoList.Models
 {
+    using AutoMapper;
     using Common.Mapping;
     using Domain.Todo;
 
@@ -11,6 +12,16 @@
 
         public string Note { get; set; } = string.Empty;
 
+        public string Priority { get; set; } = string.Empty;
+
         public bool Done { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<TodoItem, TodoItemDto>()
+                .ForMember(dest => dest.Priority, opt => opt.MapFrom(source => source.Priority != null ? 
+                    source.Priority.ToString() : 
+                    PriorityLevel.None));
+        }
     }
 }

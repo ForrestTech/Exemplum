@@ -1,4 +1,4 @@
-﻿namespace Application.Common.DateAndTime
+﻿namespace Domain.Common.DateAndTime
 {
     using System;
 

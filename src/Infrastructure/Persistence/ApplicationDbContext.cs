@@ -1,14 +1,12 @@
 ﻿namespace Infrastructure.Persistence
 {
-    using Application.Common.DateAndTime;
     using Application.Common.DomainEvents;
     using Application.Persistence;
     using Domain.Audit;
     using Domain.Common;
+    using Domain.Common.DateAndTime;
     using Domain.Todo;
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Threading;

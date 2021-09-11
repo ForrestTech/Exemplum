@@ -14,8 +14,7 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo add domain function examples like mark as done set priority (add unit tests for smart enum stuff or migrate to using the package) 
-    // Todo add more write update and delete handlers and their domain events
+    // Todo add more write update and delete handlers
     // Todo add handling for mapping database errors to real errors will need unique index and FKey exceptions
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo Add full user support for Auditable items

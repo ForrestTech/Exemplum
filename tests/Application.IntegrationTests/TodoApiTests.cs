@@ -1,6 +1,7 @@
 ﻿namespace Application.IntegrationTests
 {
     using Common.Pagination;
+    using Domain.Todo;
     using FluentAssertions;
     using System.Linq;
     using System.Net;
@@ -128,6 +129,26 @@
             var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
 
             newTodo?.Done.Should().Be(true);
+        }
+        
+        [Fact]
+        public async Task SetPriority_of_todo_and_ensure_state()
+        {
+            string priorityLevel = PriorityLevel.High.ToString();
+            var response = await _client.PostAsJsonAsync("api/todolist/1/todo/1/priority", new SetPriorityCommand
+            {
+                PriorityLevel = priorityLevel
+            });
+
+            response.EnsureSuccessStatusCode();
+            
+            var newTodoResponse = await _client.GetAsync("api/todolist/1/todo/1");
+
+            newTodoResponse.EnsureSuccessStatusCode();
+            
+            var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
+
+            newTodo?.Priority.Should().Be(priorityLevel);
         }
     }
 }

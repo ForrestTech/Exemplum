@@ -1,9 +1,9 @@
 ﻿namespace Infrastructure
 {
-    using Application.Common.DateAndTime;
     using Application.Common.DomainEvents;
     using Application.Persistence;
     using DateAndTime;
+    using Domain.Common.DateAndTime;
     using DomainEvents;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;

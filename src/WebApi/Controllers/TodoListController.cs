@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,18 +8,15 @@ namespace WebApi.Controllers
     using Application.TodoList.Commands;
     using Application.TodoList.Models;
     using Application.TodoList.Queries;
-    using Domain.Todo;
     using MediatR;
 
     public class TodoListController : ApiControllerBase
     {
         private readonly ISender _mediator;
-        private readonly ILogger<TodoListController> _logger;
 
-        public TodoListController(ISender mediator, ILogger<TodoListController> logger)
+        public TodoListController(ISender mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
         
         [HttpGet("todolist")]
@@ -54,22 +48,32 @@ namespace WebApi.Controllers
             return CreatedAtAction(nameof(GetTodoItemById), new { listId = command.ListId, todoId = result.Id }, result);
         }
         
+        [HttpGet("todolist/{listId:int}/todo/completed")]
+        public async Task<ActionResult<PaginatedList<TodoItemDto>>> Completed(int listId, [FromQuery] GetCompletedTodoItemsQuery query)
+        {
+            query.ListId = listId;
+            return await _mediator.Send(query);
+        }
+        
         [HttpGet("todolist/{listId:int}/todo/{todoId:int}")]
         public async Task<ActionResult<TodoItemDto>> GetTodoItemById(int listId, int todoId)
         {
             return await _mediator.Send(new GetTodoItemByIdQuery { ListId = listId, TodoId = todoId});
         }
-        
-        [HttpGet("todolist/{listId:int}/todo/completed")]
-        public async Task<ActionResult<PaginatedList<TodoItemDto>>> Completed(int listId, [FromQuery] GetCompletedTodoItemsQuery query)
-        {
-            return await _mediator.Send(query);
-        }
-        
+
         [HttpPost("todolist/{listId:int}/todo/{todoId:int}/completed")]
         public async Task<ActionResult> GetTodoListTodoItems(int listId, int todoId)
         {
             await _mediator.Send(new MarkTodoCompleteCommand(listId,todoId));
+            return Ok();
+        }
+        
+        [HttpPost("todolist/{listId:int}/todo/{todoId:int}/priority")]
+        public async Task<ActionResult> SetPriorityLevel(int listId, int todoId,  [FromBody]SetPriorityCommand command)
+        {
+            command.ListId = listId; 
+            command.TodoId = todoId;
+            await _mediator.Send(command);
             return Ok();
         }
     }
