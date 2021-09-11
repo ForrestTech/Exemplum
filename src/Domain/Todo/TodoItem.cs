@@ -16,7 +16,7 @@
         public int ListId { get; private set; }
         public TodoList List { get; set; } = null!;
 
-        public string Title { get; private set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
 
         public string Note { get; set; } = string.Empty;
 

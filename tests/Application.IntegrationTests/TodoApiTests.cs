@@ -116,6 +116,48 @@
         }
         
         [Fact]
+        public async Task Update_todo_item_and_ensure_its_updated()
+        {
+            const string updatedTitle = "Updated todo";
+            const string updatedNote = "updated note";
+            
+            const string todoUrl = "api/todolist/1/todo/1";
+            
+            var response = await _client.PutAsJsonAsync(todoUrl, new UpdateTodoCommand
+            {
+                Title = updatedTitle,
+                Note = updatedNote
+            });
+
+            response.EnsureSuccessStatusCode();
+            
+            var newTodoResponse = await _client.GetAsync(todoUrl);
+
+            var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
+
+            newTodo?.Title.Should().Be(updatedTitle);
+            newTodo?.Note.Should().Be(updatedNote);
+        }
+        
+        [Fact]
+        public async Task Delete_todo_item_and_ensure_its_removed()
+        {
+            const string todoTitle = "To be deleted";
+            
+            var response = await _client.PostAsJsonAsync("api/todolist/1/todo", new CreateTodoItemCommand
+            {
+                Title = todoTitle,
+                Note = "Some note"
+            });
+
+            await _client.DeleteAsync(response.Headers.Location);
+
+            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+
+            newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+        
+        [Fact]
         public async Task Complete_todo_item_and_ensure_state()
         {
             var response = await _client.PostAsync("api/todolist/1/todo/1/completed", new StringContent(string.Empty));
