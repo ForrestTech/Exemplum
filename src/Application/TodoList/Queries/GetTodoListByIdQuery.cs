@@ -47,7 +47,7 @@
 
             if (todoList == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException(nameof(TodoList), new { listId = request.ListId});
             }
     
             return todoList;

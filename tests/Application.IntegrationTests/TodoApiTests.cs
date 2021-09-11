@@ -93,7 +93,7 @@
         }
         
         [Fact]
-        public async Task Todolist_post()
+        public async Task Create_todo_item_and_ensure_it_retrieved()
         {
             const string todoTitle = "New todo";
             
@@ -109,9 +109,25 @@
 
             newTodoResponse.EnsureSuccessStatusCode();
             
-            var newTodo = await response.Content.ReadFromJsonAsync<TodoItemDto>();
+            var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
 
             newTodo?.Title.Should().Be(todoTitle);
+        }
+        
+        [Fact]
+        public async Task Complete_todo_item_and_ensure_state()
+        {
+            var response = await _client.PostAsync("api/todolist/1/todo/1/completed", new StringContent(string.Empty));
+
+            response.EnsureSuccessStatusCode();
+            
+            var newTodoResponse = await _client.GetAsync("api/todolist/1/todo/1");
+
+            newTodoResponse.EnsureSuccessStatusCode();
+            
+            var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
+
+            newTodo?.Done.Should().Be(true);
         }
     }
 }

@@ -44,12 +44,6 @@ namespace WebApi.Controllers
             
             return await _mediator.Send(query);
         }
-
-        [HttpGet("todolist/{listId:int}/todo/{todoId:int}")]
-        public async Task<ActionResult<TodoItemDto>> GetTodoItemById(int listId, int todoId)
-        {
-            return await _mediator.Send(new GetTodoItemByIdQuery { ListId = listId, TodoId = todoId});
-        }
         
         [HttpPost("todolist/{listId:int}/todo")]
         public async Task<ActionResult> CreateTodo(int listId, CreateTodoItemCommand command)
@@ -60,12 +54,23 @@ namespace WebApi.Controllers
             return CreatedAtAction(nameof(GetTodoItemById), new { listId = command.ListId, todoId = result.Id }, result);
         }
         
+        [HttpGet("todolist/{listId:int}/todo/{todoId:int}")]
+        public async Task<ActionResult<TodoItemDto>> GetTodoItemById(int listId, int todoId)
+        {
+            return await _mediator.Send(new GetTodoItemByIdQuery { ListId = listId, TodoId = todoId});
+        }
+        
         [HttpGet("todolist/{listId:int}/todo/completed")]
         public async Task<ActionResult<PaginatedList<TodoItemDto>>> Completed(int listId, [FromQuery] GetCompletedTodoItemsQuery query)
         {
             return await _mediator.Send(query);
         }
-
         
+        [HttpPost("todolist/{listId:int}/todo/{todoId:int}/completed")]
+        public async Task<ActionResult> GetTodoListTodoItems(int listId, int todoId)
+        {
+            await _mediator.Send(new MarkTodoCompleteCommand(listId,todoId));
+            return Ok();
+        }
     }
 }

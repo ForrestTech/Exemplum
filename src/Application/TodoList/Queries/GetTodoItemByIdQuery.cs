@@ -3,6 +3,7 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Common.Exceptions;
+    using Domain.Todo;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -18,17 +19,17 @@
 
         public int TodoId { get; set; }
     }
-    
+
     public class GetTodoItemInListQueryValidator : AbstractValidator<GetTodoItemByIdQuery>
     {
         public GetTodoItemInListQueryValidator()
         {
             RuleFor(x => x.ListId).GreaterThan(0);
-            
+
             RuleFor(x => x.TodoId).GreaterThan(0);
         }
     }
-    
+
     public class GetTodoItemInListQueryHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
     {
         private readonly IApplicationDbContext _context;
@@ -39,7 +40,7 @@
             _context = context;
             _mapper = mapper;
         }
-        
+
         public async Task<TodoItemDto> Handle(GetTodoItemByIdQuery request, CancellationToken cancellationToken)
         {
             var todo = await _context.TodoItems
@@ -50,7 +51,7 @@
 
             if (todo == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException(nameof(TodoItem), new { listId = request.ListId, taskId = request.TodoId });
             }
 
             return todo;

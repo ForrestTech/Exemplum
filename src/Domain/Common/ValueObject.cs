@@ -7,17 +7,22 @@
     {
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
-            if (left is null ^ right is null)
-            {
-                return false;
-            }
-
             return left?.Equals(right) != false;
         }
 
         protected static bool NotEqualOperator(ValueObject left, ValueObject right)
         {
             return !(EqualOperator(left, right));
+        }
+        
+        public static bool operator ==(ValueObject obj1, ValueObject obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(ValueObject obj1, ValueObject obj2)
+        {
+            return !(obj1 == obj2);
         }
 
         protected abstract IEnumerable<object> GetEqualityComponents();

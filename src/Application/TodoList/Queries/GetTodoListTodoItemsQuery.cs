@@ -11,12 +11,14 @@
     using Models;
     using Persistence;
     using System.Linq;
+    using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
 
     public class GetTodoListTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
         IPaginatedQuery
     {
+        [JsonIgnore]
         public int ListId { get; set; }
         
         public int PageNumber { get; set; } = 1;

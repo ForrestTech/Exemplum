@@ -1,6 +1,7 @@
 ﻿namespace Domain.Todo
 {
     using Common;
+    using Events;
     using System;
 
     public class TodoItem : BaseEntity
@@ -29,6 +30,7 @@
         public void MarkAsDone()
         {
             _done = true;
+            DomainEvents.Add(new TodoItemCompletedEvent(this));
         }
         
         // todo implement as a good example of business logic in smart enums
