@@ -2,25 +2,30 @@
 {
     using Application.Common.Behaviour;
     using Application.Common.Exceptions;
+    using Domain.Common.Extensions;
     using Infrastructure.Persistence.ExceptionHandling;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.Extensions.Hosting;
     using System;
     using System.Collections.Generic;
 
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
+        private readonly IWebHostEnvironment _env;
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
-        public ApiExceptionFilterAttribute()
+        public ApiExceptionFilterAttribute(IWebHostEnvironment env)
         {
+            _env = env;
             // Register known exception types and handlers.  If this gets really big it could be refactored to a common interface and then registered at startup
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(NotFoundException), HandleNotFoundException },
-                { typeof(DatabaseValidationException), HandleUnauthorizedAccessException },
+                { typeof(DatabaseValidationException), HandleDatabaseException },
                 // { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
             };
         }
@@ -120,7 +125,7 @@
             context.ExceptionHandled = true;
         }
 
-        private static void HandleUnknownException(ExceptionContext context)
+        private void HandleUnknownException(ExceptionContext context)
         {
             var details = new ProblemDetails
             {
@@ -129,9 +134,18 @@
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
             };
 
+            if (_env.IsDevelopment())
+            {
+                details.Detail = context.Exception.GetAllMessages();
+            }
+
             context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status500InternalServerError };
 
             context.ExceptionHandled = true;
         }
+        
+      
     }
+    
+    
 }

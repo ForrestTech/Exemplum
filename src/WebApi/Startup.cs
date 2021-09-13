@@ -15,7 +15,6 @@ namespace WebApi
     using Serilog;
     
     // Todo add async validator for unique check
-    // Todo add handling for mapping database errors to real errors will need unique index and FKey exceptions
     // Todo Add minimal swagger attributes 
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo Add full user support for Auditable items

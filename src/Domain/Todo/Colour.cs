@@ -38,7 +38,7 @@
 
         public static Colour Yellow => new Colour("#FFFF66");
 
-        public static Colour Green => new Colour("#CCFF99 ");
+        public static Colour Green => new Colour("#CCFF99");
 
         public static Colour Blue => new Colour("#6666FF");
 

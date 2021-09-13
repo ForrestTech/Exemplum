@@ -21,8 +21,7 @@
         {
             var handler = _handlers.SingleOrDefault(x => x.CanHandle(exception));
 
-            if (handler == null)
-                return;
+            handler?.HandleException(exception);
         }
     }
 }

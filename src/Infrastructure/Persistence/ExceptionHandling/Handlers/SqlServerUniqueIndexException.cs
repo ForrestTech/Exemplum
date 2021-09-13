@@ -8,11 +8,11 @@
 
     public partial class SqlServerUniqueIndexException : IHandlerSpecificDBException
     {
-        private const int ErrorCode = 2601;
+        private const int ErrorNumber = 2601;
 
         public bool CanHandle(Exception exception)
         {
-            return exception?.InnerException is SqlException { ErrorCode: ErrorCode };
+            return exception?.InnerException is SqlException { Number: ErrorNumber };
         }
 
         public void HandleException(Exception exception)
@@ -24,7 +24,7 @@
                     var (table, field, value) = ErrorMessage.Parse(sqlListException.Message);
 
                     throw new DatabaseValidationException(field,
-                        $"Duplicate entry {value} when trying to update the property {field} of resource {table}");
+                        $"Duplicate entry: '{value}' when trying to update the property: '{field}' of resource: '{table}'");
                 }
                 catch (ParseException)
                 {
