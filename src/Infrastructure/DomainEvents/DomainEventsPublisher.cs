@@ -7,12 +7,12 @@
     using System;
     using System.Threading.Tasks;
 
-    public class DomainEventService : IDomainEventService
+    public class DomainEventsPublisher : IPublishDomainEvents
     {
-        private readonly ILogger<DomainEventService> _logger;
+        private readonly ILogger<DomainEventsPublisher> _logger;
         private readonly IPublisher _mediator;
 
-        public DomainEventService(ILogger<DomainEventService> logger, IPublisher mediator)
+        public DomainEventsPublisher(ILogger<DomainEventsPublisher> logger, IPublisher mediator)
         {
             _logger = logger;
             _mediator = mediator;

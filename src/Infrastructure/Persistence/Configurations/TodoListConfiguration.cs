@@ -8,11 +8,14 @@
     {
         public void Configure(EntityTypeBuilder<TodoList> builder)
         {
-            builder.Property(t => t.Title)
+            builder.Property(x => x.Title)
                 .HasMaxLength(300)
                 .IsRequired();
 
-            builder.Property(t => t.Colour)
+            builder.HasIndex(x => x.Title)
+                .IsUnique();
+
+            builder.Property(x => x.Colour)
                 .HasConversion(
                     x => x!.ToString(),
                     x => Colour.From(x));

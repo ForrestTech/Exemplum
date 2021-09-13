@@ -25,6 +25,21 @@ namespace WebApi.Controllers
             return await _mediator.Send(query);
         }
 
+        [HttpPost("todolist")]
+        public async Task<ActionResult<TodoListDto>> CreateTodoList([FromBody] CreateTodoListCommand command)
+        {
+            var item = await _mediator.Send(command);
+
+            return CreatedAtAction(nameof(GetTodoListById), new { listId = item.Id }, item);
+        }
+
+        [HttpDelete("todolist/{listId:int}")]
+        public async Task<ActionResult> DeleteTodoList(int listId)
+        {
+            await _mediator.Send(new DeleteTodoListCommand { ListId = listId });
+            return Ok();
+        }
+
         [HttpGet("todolist/{listId:int}")]
         public async Task<ActionResult<TodoListDto>> GetTodoListById([FromRoute] int listId)
         {

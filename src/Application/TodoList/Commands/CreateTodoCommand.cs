@@ -28,7 +28,12 @@
         public CreateTodoItemCommandValidator()
         {
             RuleFor(x => x.ListId).GreaterThan(0);
-            RuleFor(x => x.Title).NotEmpty();
+            RuleFor(x => x.Title).NotEmpty()
+                .MaximumLength(200)
+                .WithMessage("Title must not exceed 200 characters.");
+            
+            RuleFor(x => x.Note).NotEmpty()
+                .MaximumLength(2000);
         }
     }
 

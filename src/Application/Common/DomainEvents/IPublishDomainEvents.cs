@@ -3,7 +3,7 @@
     using Domain.Common;
     using System.Threading.Tasks;
 
-    public interface IDomainEventService
+    public interface IPublishDomainEvents
     {
         Task Publish(DomainEvent domainEvent);
     }

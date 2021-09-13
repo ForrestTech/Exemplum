@@ -23,6 +23,13 @@
             return colour;
         }
 
+        public static bool IsValidColour(string code)
+        {
+            var colour = new Colour(code);
+
+            return SupportedColours.Contains(colour);
+        }
+
         public static Colour White => new Colour("#FFFFFF");
 
         public static Colour Red => new Colour("#FF5733");

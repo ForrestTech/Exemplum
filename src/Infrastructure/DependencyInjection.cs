@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Persistence;
+    using Persistence.ExceptionHandling;
 
     public static class DependencyInjection
     {
@@ -17,7 +18,7 @@
             if (bool.Parse(configuration["UseInMemoryDatabase"]))
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("CleanArchitectureDb"));
+                    options.UseInMemoryDatabase("Exemplum"));
             }
             else
             {
@@ -26,11 +27,12 @@
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
 
+            
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
             services.AddScoped<IEventHandlerDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
-            services.AddTransient<IDomainEventService, DomainEventService>();
-
+            services.AddTransient<IHandleDbExceptions, HandleDbExceptions>();
+            services.AddTransient<IPublishDomainEvents, DomainEventsPublisher>();
             services.AddTransient<IClock, Clock>();
             
             return services;

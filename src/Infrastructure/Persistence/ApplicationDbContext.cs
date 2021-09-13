@@ -6,7 +6,9 @@
     using Domain.Common;
     using Domain.Common.DateAndTime;
     using Domain.Todo;
+    using ExceptionHandling;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -14,25 +16,25 @@
 
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        private readonly IDomainEventService _domainEventService = null!;
-        private readonly IClock _clock = null!;
+        private readonly IHandleDbExceptions _idbExceptions;
+        private readonly IPublishDomainEvents _publishDomainEvents;
+        private readonly IClock _clock;
 
-        public ApplicationDbContext(DbContextOptions options) : base(options)
-        { }
-        
         public ApplicationDbContext(DbContextOptions options,
-            IDomainEventService domainEventService,
+            IHandleDbExceptions idbExceptions,
+            IPublishDomainEvents publishDomainEvents,
             IClock clock) : base(options)
         {
-            _domainEventService = domainEventService;
+            _idbExceptions = idbExceptions;
+            _publishDomainEvents = publishDomainEvents;
             _clock = clock;
         }
 
         public DbSet<TodoItem> TodoItems => Set<TodoItem>();
-        
+
         public DbSet<TodoList> TodoLists => Set<TodoList>();
 
-        public DbSet<AuditItem> AuditItems  => Set<AuditItem>();
+        public DbSet<AuditItem> AuditItems => Set<AuditItem>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -54,9 +56,16 @@
 
             await DispatchEvents();
 
-            var result = await base.SaveChangesAsync(cancellationToken);
-
-            return result;
+            try
+            {
+                var result = await base.SaveChangesAsync(cancellationToken);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _idbExceptions.HandleException(e);
+                throw;
+            }
         }
 
         private async Task DispatchEvents()
@@ -69,7 +78,7 @@
 
             foreach (var domainEvent in domainEvents)
             {
-                await _domainEventService.Publish(domainEvent);
+                await _publishDomainEvents.Publish(domainEvent);
             }
         }
 

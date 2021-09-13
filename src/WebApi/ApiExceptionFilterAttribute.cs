@@ -2,13 +2,14 @@
 {
     using Application.Common.Behaviour;
     using Application.Common.Exceptions;
+    using Infrastructure.Persistence.ExceptionHandling;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using System;
     using System.Collections.Generic;
 
-    public class ApiExceptionFilterAttribute: ExceptionFilterAttribute
+    public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
@@ -19,7 +20,7 @@
             {
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(NotFoundException), HandleNotFoundException },
-                // { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
+                { typeof(DatabaseValidationException), HandleUnauthorizedAccessException },
                 // { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
             };
         }
@@ -52,6 +53,20 @@
         private static void HandleValidationException(ExceptionContext context)
         {
             var exception = context.Exception as ValidationException;
+
+            var details = new ValidationProblemDetails(exception?.Errors)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+        
+        private static void HandleDatabaseException(ExceptionContext context)
+        {
+            var exception = context.Exception as DatabaseValidationException;
 
             var details = new ValidationProblemDetails(exception?.Errors)
             {
@@ -100,10 +115,7 @@
                 Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
             };
 
-            context.Result = new ObjectResult(details)
-            {
-                StatusCode = StatusCodes.Status401Unauthorized
-            };
+            context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status401Unauthorized };
 
             context.ExceptionHandled = true;
         }
@@ -117,10 +129,7 @@
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
             };
 
-            context.Result = new ObjectResult(details)
-            {
-                StatusCode = StatusCodes.Status500InternalServerError
-            };
+            context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status500InternalServerError };
 
             context.ExceptionHandled = true;
         }

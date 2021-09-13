@@ -14,8 +14,10 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo add more write update and delete handlers
+    // Todo Separate controllers and if possible integration tests files
+    // Todo add async validator for unique check
     // Todo add handling for mapping database errors to real errors will need unique index and FKey exceptions
+    // Todo Add minimal swagger attributes 
     // Todo Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo Add full user support for Auditable items
     // Todo add authorization including adding roles and resolving polices

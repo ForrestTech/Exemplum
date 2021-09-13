@@ -50,28 +50,6 @@
         }
 
         [Fact]
-        public async Task Todo_get_returns_paginated_list_of_todos()
-        {
-            var response = await _client.GetAsync("api/todolist/1/todo");
-
-            var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
-
-            actual.Should().NotBeNull();
-            actual?.Items.Should().NotBeNull();
-            actual?.Items.Count.Should().BeGreaterThan(1);
-        }
-
-        [Fact]
-        public async Task Todo_get_completed_should_only_returns_completed_todos()
-        {
-            var response = await _client.GetAsync("api/todolist/1/todo/completed");
-
-            var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
-
-            actual?.Items.Should().NotBeEmpty().And.OnlyContain(x => x.Done);
-        }
-
-        [Fact]
         public async Task Todolist_get_returns_paginated_list()
         {
             var response = await _client.GetAsync("api/todolist");
@@ -80,9 +58,9 @@
 
             actual.Should().NotBeNull();
             actual?.Items.Should().NotBeNull();
-            actual?.Items?.Count.Should().Be(1);
+            actual?.Items?.Count.Should().BeGreaterThan(0);
         }
-
+        
         [Fact]
         public async Task Todolist_get_by_id_should_return_single_list()
         {
@@ -94,7 +72,70 @@
         }
         
         [Fact]
-        public async Task Create_todo_item_and_ensure_it_retrieved()
+        public async Task Todolist_delete_and_ensure_its_removed()
+        {
+            const string todoTitle = "To be deleted";
+            
+            var response = await _client.PostAsJsonAsync("api/todolist", new CreateTodoListCommand
+            {
+                Title = todoTitle,
+                Colour = Colour.White
+            });
+
+            await _client.DeleteAsync(response.Headers.Location);
+
+            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+
+            newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Todolist_create_and_ensure_it_retrieved()
+        {
+            const string todoTitle = "New todo";
+            
+            var response = await _client.PostAsJsonAsync("api/todolist", new CreateTodoListCommand
+            {
+                Title = todoTitle,
+                Colour = Colour.White
+            });
+
+            response.EnsureSuccessStatusCode();
+            
+            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+
+            newTodoResponse.EnsureSuccessStatusCode();
+            
+            var newList = await newTodoResponse.Content.ReadFromJsonAsync<TodoListDto>();
+
+            newList?.Title.Should().Be(todoTitle);
+            newList?.Colour.Should().Be(Colour.White);
+        }
+        
+        [Fact]
+        public async Task Todo_get_returns_paginated_list_of_todos()
+        {
+            var response = await _client.GetAsync("api/todolist/1/todo");
+
+            var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
+
+            actual.Should().NotBeNull();
+            actual?.Items.Should().NotBeNull();
+            actual?.Items?.Count.Should().BeGreaterThan(1);
+        }
+
+        [Fact]
+        public async Task Todo_get_completed_should_only_returns_completed_todos()
+        {
+            var response = await _client.GetAsync("api/todolist/1/todo/completed");
+
+            var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
+
+            actual?.Items.Should().NotBeEmpty().And.OnlyContain(x => x.Done);
+        }
+        
+        [Fact]
+        public async Task Todo_create_and_ensure_it_retrieved()
         {
             const string todoTitle = "New todo";
             
@@ -116,7 +157,7 @@
         }
         
         [Fact]
-        public async Task Update_todo_item_and_ensure_its_updated()
+        public async Task Todo_update_and_ensure_its_updated()
         {
             const string updatedTitle = "Updated todo";
             const string updatedNote = "updated note";
@@ -140,7 +181,7 @@
         }
         
         [Fact]
-        public async Task Delete_todo_item_and_ensure_its_removed()
+        public async Task Todo_delete_item_and_ensure_its_removed()
         {
             const string todoTitle = "To be deleted";
             
@@ -156,9 +197,9 @@
 
             newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
-        
+
         [Fact]
-        public async Task Complete_todo_item_and_ensure_state()
+        public async Task Todo_complete_item_and_ensure_state()
         {
             var response = await _client.PostAsync("api/todolist/1/todo/1/completed", new StringContent(string.Empty));
 
@@ -174,7 +215,7 @@
         }
         
         [Fact]
-        public async Task SetPriority_of_todo_and_ensure_state()
+        public async Task Todo_set_priority_and_ensure_state()
         {
             string priorityLevel = PriorityLevel.High.ToString();
             var response = await _client.PostAsJsonAsync("api/todolist/1/todo/1/priority", new SetPriorityCommand

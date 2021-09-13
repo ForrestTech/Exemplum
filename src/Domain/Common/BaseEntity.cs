@@ -11,7 +11,7 @@
 
     public abstract class BaseEntity<TKey> : IEntity<TKey>, IAuditableEntity, IHaveDomainEvents
     {
-        public TKey Id { get; set; } = default!;
+        public TKey Id { get; private set; } = default!;
 
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; } = string.Empty;

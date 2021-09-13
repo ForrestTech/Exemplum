@@ -30,19 +30,19 @@ namespace WebApi
                 .WriteTo.Console()
                 .WriteTo.Async(c =>
                     c.File($"App_Data/Logs/Exemplum-Logs-.txt", rollingInterval: RollingInterval.Day));
-            
+
             Log.Logger = logConfiguration.CreateLogger();
 
             try
             {
                 Log.Information("Starting web host");
-                
+
                 var host = CreateHostBuilder(args).Build();
 
                 await SeedDatabase(host);
 
                 await host.RunAsync();
-                
+
                 return 0;
             }
             catch (Exception ex)
@@ -54,24 +54,22 @@ namespace WebApi
             {
                 Log.CloseAndFlush();
             }
-            
-            
         }
 
         private static async Task SeedDatabase(IHost host)
         {
             using var scope = host.Services.CreateScope();
-            
+
             var services = scope.ServiceProvider;
 
             try
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
-                
+
                 if (context.Database.IsSqlServer())
                 {
                     await context.Database.MigrateAsync();
-                }         
+                }
 
                 await ApplicationDbContextSeed.SeedSampleDataAsync(context);
             }

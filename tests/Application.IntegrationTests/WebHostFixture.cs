@@ -3,6 +3,7 @@
     using Infrastructure.Persistence;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -52,8 +53,6 @@
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<ApplicationDbContext>();
                 var logger = scopedServices.GetRequiredService<ILogger<WebHostFixture>>();
-
-                db.Database.EnsureCreated();
 
                 try
                 {
