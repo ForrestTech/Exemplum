@@ -14,22 +14,22 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo Add minimal swagger attributes 
-    // Todo Authentications of users (ideally we would not looks to add a super specific solution)
-    // Todo Add full user support for Auditable items
-    // Todo add authorization including adding roles and resolving polices
-    // Todo Add a basic calendar view entity that is a read model over todos 
-    // Todo add way to seed data without domains event emission
+    // Todo add blazor client
+    // Todo Add a basic calendar view entity that is a read model over todos
     // Todo add httpclient (call to 3rd party service)
-    // Todo add docker support for sql/redis ??
-    // Todo add redis for caching
     // Todo add poly
     // Todo add health checks
     // Todo add some custom health checks
+    // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
+    // Todo add authorization including adding roles and resolving polices
+    // Todo add full user support for Auditable items
+    // Todo add docker support using project tyre 
+    // Todo add docker support for sql/redis ??
+    // Todo add redis for caching
     // Todo add github code coverage
-    // Todo distributed tracing support
-    // Todo Add integration event emission using rabbit MQ
-    // Todo add blazor client
+    // Todo add distributed tracing support
+    // Todo add integration event emission using rabbit MQ
+    // Todo add rabbit to docker
     // Todo .net 6 simple endpoints
     public class Startup
     {
@@ -64,6 +64,7 @@ namespace WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Exemplum", Version = "v1" });
+                c.EnableAnnotations();
             });
         }
 

@@ -1,9 +1,7 @@
 ﻿namespace Application.Common.Validation
 {
     using FluentValidation;
-    using FluentValidation.Validators;
     using Pagination;
-    using System;
 
     /// <summary>
     /// Example of reusable fluent validation rules 

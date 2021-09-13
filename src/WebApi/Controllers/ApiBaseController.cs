@@ -1,11 +1,10 @@
 ﻿namespace WebApi.Controllers
 {
-    using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.DependencyInjection;
 
     [ApiController]
     [Route("api")]
+    [Produces("application/json")]
     public abstract class ApiControllerBase : ControllerBase
     {
         

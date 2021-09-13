@@ -11,7 +11,6 @@
     using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
-    using TodoList.Models;
 
     public class CreateTodoItemCommand : IRequest<TodoItemDto>
     {

@@ -1,9 +1,7 @@
 ﻿namespace WebApi
 {
-    using Application.Common.Behaviour;
     using Application.Common.Exceptions;
     using Domain.Common.Extensions;
-    using Infrastructure.Persistence.ExceptionHandling;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

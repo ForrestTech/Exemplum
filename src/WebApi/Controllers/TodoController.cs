@@ -4,11 +4,9 @@
     using Application.Todo.Commands;
     using Application.Todo.Models;
     using Application.Todo.Queries;
-    using Application.TodoList.Commands;
-    using Application.TodoList.Models;
-    using Application.TodoList.Queries;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
+    using Swashbuckle.AspNetCore.Annotations;
     using System.Threading.Tasks;
 
     public class TodoController : ApiControllerBase
@@ -21,6 +19,7 @@
         }
 
         [HttpGet("todolist/{listId:int}/todo")]
+        [SwaggerOperation("Get todo items in a given list")]
         public async Task<ActionResult<PaginatedList<TodoItemDto>>> GetTodoItemsInList(int listId,
             [FromQuery] GetTodoItemsInListQuery query)
         {
@@ -30,6 +29,7 @@
         }
 
         [HttpPost("todolist/{listId:int}/todo")]
+        [SwaggerOperation("Create todo item")]
         public async Task<ActionResult> CreateTodoItem(int listId, CreateTodoItemCommand command)
         {
             command.ListId = listId;
@@ -40,6 +40,7 @@
         }
 
         [HttpGet("todolist/{listId:int}/todo/completed")]
+        [SwaggerOperation("Get completed todo items in a list")]
         public async Task<ActionResult<PaginatedList<TodoItemDto>>> GetCompletedTodoItems(int listId,
             [FromQuery] GetCompletedTodoItemsQuery query)
         {
@@ -48,12 +49,14 @@
         }
 
         [HttpGet("todolist/{listId:int}/todo/{todoId:int}")]
+        [SwaggerOperation("Get todo items by ID")]
         public async Task<ActionResult<TodoItemDto>> GetTodoItemById(int listId, int todoId)
         {
             return await _mediator.Send(new GetTodoItemByIdQuery { ListId = listId, TodoId = todoId });
         }
 
         [HttpPut("todolist/{listId:int}/todo/{todoId:int}")]
+        [SwaggerOperation("Update todo item")]
         public async Task<ActionResult> UpdateTodoItem(int listId, int todoId, [FromBody] UpdateTodoCommand command)
         {
             command.ListId = listId;
@@ -65,6 +68,7 @@
         }
 
         [HttpDelete("todolist/{listId:int}/todo/{todoId:int}")]
+        [SwaggerOperation("Delete todo item")]
         public async Task<ActionResult> DeleteTodoItem(int listId, int todoId)
         {
             await _mediator.Send(new DeleteTodoCommand { ListId = listId, TodoId = todoId });
@@ -73,6 +77,7 @@
         }
 
         [HttpPost("todolist/{listId:int}/todo/{todoId:int}/completed")]
+        [SwaggerOperation("Mark todo item as completed")]
         public async Task<ActionResult> MarkTodoItemCompleted(int listId, int todoId)
         {
             await _mediator.Send(new MarkTodoCompleteCommand(listId, todoId));
@@ -80,6 +85,7 @@
         }
 
         [HttpPost("todolist/{listId:int}/todo/{todoId:int}/priority")]
+        [SwaggerOperation("Set todo item priority")]
         public async Task<ActionResult> SetTodoItemPriorityLevel(int listId, int todoId, [FromBody] SetPriorityCommand command)
         {
             command.ListId = listId;

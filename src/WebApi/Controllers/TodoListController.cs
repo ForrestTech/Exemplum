@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace WebApi.Controllers
 {
@@ -9,6 +8,7 @@ namespace WebApi.Controllers
     using Application.TodoList.Models;
     using Application.TodoList.Queries;
     using MediatR;
+    using Swashbuckle.AspNetCore.Annotations;
 
     public class TodoListController : ApiControllerBase
     {
@@ -20,12 +20,14 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("todolist")]
+        [SwaggerOperation("Get todo lists")]
         public async Task<ActionResult<PaginatedList<TodoListDto>>> GetTodoLists([FromQuery] GetTodoListsQuery query)
         {
             return await _mediator.Send(query);
         }
 
         [HttpPost("todolist")]
+        [SwaggerOperation("Create todo list")]
         public async Task<ActionResult<TodoListDto>> CreateTodoList([FromBody] CreateTodoListCommand command)
         {
             var item = await _mediator.Send(command);
@@ -34,6 +36,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("todolist/{listId:int}")]
+        [SwaggerOperation("Delete todo list")]
         public async Task<ActionResult> DeleteTodoList(int listId)
         {
             await _mediator.Send(new DeleteTodoListCommand { ListId = listId });
@@ -41,6 +44,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("todolist/{listId:int}")]
+        [SwaggerOperation("Get todo list by ID")]
         public async Task<ActionResult<TodoListDto>> GetTodoListById([FromRoute] int listId)
         {
             return await _mediator.Send(new GetTodoListByIdQuery { ListId = listId });

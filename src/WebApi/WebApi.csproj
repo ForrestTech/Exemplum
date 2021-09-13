@@ -15,7 +15,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
-      </PackageReference>      
+      </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.1" />      
   </ItemGroup>
 
   <ItemGroup>
