@@ -1,6 +1,9 @@
 ﻿namespace WebApi.Controllers
 {
     using Application.Common.Pagination;
+    using Application.Todo.Commands;
+    using Application.Todo.Models;
+    using Application.Todo.Queries;
     using Application.TodoList.Commands;
     using Application.TodoList.Models;
     using Application.TodoList.Queries;
@@ -18,8 +21,8 @@
         }
 
         [HttpGet("todolist/{listId:int}/todo")]
-        public async Task<ActionResult<PaginatedList<TodoItemDto>>> GetTodoListTodoItems(int listId,
-            [FromQuery] GetTodoListTodoItemsQuery query)
+        public async Task<ActionResult<PaginatedList<TodoItemDto>>> GetTodoItemsInList(int listId,
+            [FromQuery] GetTodoItemsInListQuery query)
         {
             query.ListId = listId;
 

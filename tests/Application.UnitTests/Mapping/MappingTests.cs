@@ -1,5 +1,6 @@
 ﻿namespace Application.UnitTests.Mapping
 {
+    using Application.Todo.Models;
     using AutoMapper;
     using Common.Mapping;
     using Domain.Todo;

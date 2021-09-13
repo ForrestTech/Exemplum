@@ -17,10 +17,4 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Todo\Commands" />
-    <Folder Include="Todo\Models" />
-    <Folder Include="Todo\Queries" />
-  </ItemGroup>
-
 </Project>

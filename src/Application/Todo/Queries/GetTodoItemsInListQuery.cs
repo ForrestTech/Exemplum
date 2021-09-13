@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Queries
+﻿namespace Application.Todo.Queries
 {
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -11,12 +11,10 @@
     using Models;
     using Persistence;
     using System.Linq;
-    using System.Runtime.CompilerServices;
-    using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class GetTodoListTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
+    public class GetTodoItemsInListQuery : IRequest<PaginatedList<TodoItemDto>>, 
         IPaginatedQuery
     {
         public int ListId { get; set; }
@@ -25,7 +23,7 @@
         public int PageSize { get; set; } = 10;
     }
     
-    public class GetTodoItemsQueryValidator : AbstractValidator<GetTodoListTodoItemsQuery>
+    public class GetTodoItemsQueryValidator : AbstractValidator<GetTodoItemsInListQuery>
     {
         public GetTodoItemsQueryValidator()
         {
@@ -34,7 +32,7 @@
         }
     }
 
-    public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoListTodoItemsQuery, PaginatedList<TodoItemDto>>
+    public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsInListQuery, PaginatedList<TodoItemDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -45,7 +43,7 @@
             _mapper = mapper;
         }
         
-        public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoListTodoItemsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoItemsInListQuery request, CancellationToken cancellationToken)
         {
             var list = await _context.TodoItems
                 .AsNoTracking()

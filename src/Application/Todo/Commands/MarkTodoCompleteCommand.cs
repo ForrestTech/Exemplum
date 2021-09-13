@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Commands
+﻿namespace Application.Todo.Commands
 {
     using Common.Exceptions;
     using Domain.Todo;
@@ -6,7 +6,6 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 

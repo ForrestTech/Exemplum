@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Queries
+﻿namespace Application.Todo.Queries
 {
     using AutoMapper;
     using AutoMapper.QueryableExtensions;

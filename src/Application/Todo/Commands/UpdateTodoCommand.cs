@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Commands
+﻿namespace Application.Todo.Commands
 {
     using FluentValidation;
     using MediatR;

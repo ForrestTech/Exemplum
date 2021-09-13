@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Commands
+﻿namespace Application.Todo.Commands
 {
     using Common.Exceptions;
     using Domain.Common.DateAndTime;
@@ -8,9 +8,7 @@
     using Microsoft.EntityFrameworkCore;
     using Persistence;
     using System;
-    using System.Data;
     using System.Linq;
-    using System.Net;
     using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;

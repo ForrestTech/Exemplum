@@ -7,6 +7,8 @@
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
+    using Todo.Commands;
+    using Todo.Models;
     using TodoList.Commands;
     using TodoList.Models;
     using Xunit;

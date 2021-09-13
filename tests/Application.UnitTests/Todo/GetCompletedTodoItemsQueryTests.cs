@@ -1,5 +1,6 @@
 ﻿namespace Application.UnitTests.Todo
 {
+    using Application.Todo.Queries;
     using Domain.Todo;
     using FluentAssertions;
     using System.Collections.Generic;
