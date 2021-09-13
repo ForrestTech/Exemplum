@@ -14,18 +14,19 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo add blazor client
-    // Todo Add a basic calendar view entity that is a read model over todos
-    // Todo add httpclient (call to 3rd party service)
     // Todo add poly
+    // Todo add downstream call error handling logic
     // Todo add health checks
     // Todo add some custom health checks
+    // Todo add blazor client
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add full user support for Auditable items
+    // Todo Migrate to using refit 
     // Todo add docker support using project tyre 
     // Todo add docker support for sql/redis ??
     // Todo add redis for caching
+    // Todo create nuget template package
     // Todo add github code coverage
     // Todo add distributed tracing support
     // Todo add integration event emission using rabbit MQ
@@ -43,7 +44,7 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication();
+            services.AddApplication(Configuration);
             services.AddInfrastructure(Configuration);
 
             services.AddControllers(options =>

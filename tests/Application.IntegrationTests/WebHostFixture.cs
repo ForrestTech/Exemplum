@@ -3,15 +3,14 @@
     using Infrastructure.Persistence;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using System;
     using System.IO;
+    using WeatherForecast;
     using WebApi;
-    using Xunit;
     using Xunit.Abstractions;
 
     public class WebHostFixture : WebApplicationFactory<Startup>
@@ -37,6 +36,12 @@
                 var configuration = configBuilder.Build();
 
                 config.AddConfiguration(configuration);
+            });
+
+            builder.ConfigureServices(config =>
+            {
+                //this is a very basic example of how you can mock 3rd party dependencies when running integration tests, this would also work fine with Moq
+                config.AddTransient<IWeatherForecastClient, MockWeatherClient>();
             });
 
             return builder;

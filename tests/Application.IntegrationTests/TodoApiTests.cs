@@ -9,11 +9,10 @@
     using System.Threading.Tasks;
     using Todo.Commands;
     using Todo.Models;
-    using TodoList.Commands;
-    using TodoList.Models;
+    using WeatherForecast.Model;
     using Xunit;
 
-    public partial class TodoApiTests : IClassFixture<WebHostFixture>
+    public partial class ExemplumApiTests : IClassFixture<WebHostFixture>
     {
         [Fact]
         public async Task Todo_get_returns_paginated_list_of_todos()

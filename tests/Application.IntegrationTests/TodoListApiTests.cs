@@ -15,12 +15,12 @@
     /// <summary>
     /// Created as a partial to separate the tests but it allows us to use a single IClassFixture setup and tear down across all API integration tests
     /// </summary>
-    public partial class TodoApiTests : IClassFixture<WebHostFixture>
+    public partial class ExemplumApiTests : IClassFixture<WebHostFixture>
     {
         private readonly WebHostFixture _fixture;
         private readonly HttpClient _client;
 
-        public TodoApiTests(WebHostFixture fixture, ITestOutputHelper output)
+        public ExemplumApiTests(WebHostFixture fixture, ITestOutputHelper output)
 
         {
             _fixture = fixture;

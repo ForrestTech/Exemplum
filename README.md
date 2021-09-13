@@ -19,14 +19,16 @@ Things we need to add to the readme
 3. DDD modelling some concepts and the fact that an example domain needs to be simple but often DDD is only needed for more complex domains
 4. Command Query MediatR (Command happen against the aggregate route REST resource should reflect this)
 5. Folder structure, feature folders (command validator and handler in a single file) 
-7. Dtos and mapping use of Automapper (Dto should have )
-8. Logging
-9. EF Core and how we configure it
-10. Support for Auditable entities
-11. Add details about query objects and how we encapsulate query logic
-12. Domain events and transactions  (Transaction behaviour dont save changes in event handlers)
-13. Test framework use of fluent assertions as a better model for assertions, test server setup
-14. Shout out to packages used and inspiration for the project
+6. Dtos and mapping use of Automapper (Dto should have )
+7. Logging
+8. EF Core and how we configure it
+9. Support for Auditable entities
+10. Add details about query objects and how we encapsulate query logic
+11. Domain events and transactions  (Transaction behaviour dont save changes in event handlers)
+12. Test framework use of fluent assertions as a better model for assertions, test server setup
+13. 3rd party service calls, resilience and error handling
+14. Secret management
+15. Shout out to packages used and inspiration for the project
 
 
 ## Docker 
