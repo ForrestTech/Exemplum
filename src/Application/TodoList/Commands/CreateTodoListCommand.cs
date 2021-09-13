@@ -4,8 +4,10 @@
     using Domain.Todo;
     using FluentValidation;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
     using Models;
     using Persistence;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,10 +20,27 @@
 
     public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
     {
-        public CreateTodoListCommandValidator()
+        private readonly IApplicationDbContext _context;
+
+        public CreateTodoListCommandValidator(IApplicationDbContext context)
         {
-            RuleFor(x => x.Title).NotEmpty().MaximumLength(300);
-            RuleFor(x => x.Colour).NotEmpty().Must(Colour.IsValidColour).WithMessage("{PropertyName} must be a valid colour not {PropertyValue}");
+            _context = context;
+            
+            RuleFor(x => x.Title).NotEmpty()
+                .MaximumLength(300)
+                .MustAsync(BeUniqueTitle)
+                .WithMessage("Todo list title must be unique");
+            
+            RuleFor(x => x.Colour).NotEmpty()
+                .Must(Colour.IsValidColour)
+                .WithMessage("{PropertyName} must be a valid colour not {PropertyValue}");
+        }
+
+
+        private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
+        {
+            return await _context.TodoLists
+                .AllAsync(l => l.Title != title, cancellationToken: cancellationToken);
         }
     }
     
