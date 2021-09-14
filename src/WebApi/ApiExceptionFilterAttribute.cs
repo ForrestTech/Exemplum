@@ -7,8 +7,10 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Hosting;
+    using Refit;
     using System;
     using System.Collections.Generic;
+    using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
@@ -24,7 +26,7 @@
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(DatabaseValidationException), HandleDatabaseException },
-                // { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                { typeof(ApiException), HandleApiException },
             };
         }
 
@@ -108,6 +110,29 @@
 
             context.ExceptionHandled = true;
         }
+        
+        private void HandleApiException(ExceptionContext context)
+        {
+            var exception = context.Exception as ApiException;
+            
+            var details = new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "An error occurred while processing your request.",
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+            };
+
+            if (_env.IsDevelopment())
+            {
+                details.Detail = $"Exception calling external system.  Uri:'{exception?.Uri}' " +
+                                 $"StatusCode: '{exception?.StatusCode}' Reason:'{exception?.ReasonPhrase}' " +
+                                 $"Message:'{exception?.Message}'";
+            }
+
+            context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status500InternalServerError };
+
+            context.ExceptionHandled = true;
+        }
 
         private static void HandleUnauthorizedAccessException(ExceptionContext context)
         {
@@ -141,9 +166,5 @@
 
             context.ExceptionHandled = true;
         }
-        
-      
     }
-    
-    
 }

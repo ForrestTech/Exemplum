@@ -14,7 +14,6 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo add poly
     // Todo add downstream call error handling logic
     // Todo add health checks
     // Todo add some custom health checks
