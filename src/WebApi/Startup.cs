@@ -12,8 +12,11 @@ namespace Exemplum.WebApi
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
     using Serilog;
-
-    // Todo Migrate to using Nswag 
+    using System;
+    using System.IO;
+    using System.Reflection;
+    
+    // Todo Setup github actions locally
     // Todo generate client from swagger
     // Todo add serilog to blazor
     // Todo add basic todo UI to blazor
@@ -65,7 +68,9 @@ namespace Exemplum.WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Exemplum", Version = "v1" });
-                c.EnableAnnotations();
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
 

@@ -4,7 +4,6 @@
     using Application.WeatherForecast.Query;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Swashbuckle.AspNetCore.Annotations;
     using System.Threading.Tasks;
 
     public class WeatherForecastController : ApiControllerBase
@@ -16,8 +15,13 @@
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Get weather forecast for a given location
+        /// </summary>
+        /// <param name="lat">Latitude</param>
+        /// <param name="lon">Longitude</param>
+        /// <returns>Weatherforecast</returns>
         [HttpGet("weatherforecast")]
-        [SwaggerOperation("Get weather forecast for a given location")]
         public async Task<ActionResult<WeatherForecast>> Get(decimal lat, decimal lon)
         {
             var forecast = await _mediator.Send(new GetWeatherForecastQuery { Lat = lat, Lon = lon });

@@ -6,7 +6,6 @@
     using Application.TodoList.Queries;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Swashbuckle.AspNetCore.Annotations;
     using System.Threading.Tasks;
 
     public class TodoListController : ApiControllerBase
@@ -18,35 +17,51 @@
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Get todo lists
+        /// </summary>
+        /// <returns>A paginated list of todo lists</returns>
+        /// <param name="pageSize">The size of a page</param>
+        /// <param name="pageNumber">The page number</param>
         [HttpGet("todolist")]
-        [SwaggerOperation("Get todo lists")]
-        public async Task<ActionResult<PaginatedList<TodoListDto>>> GetTodoLists([FromQuery] GetTodoListsQuery query)
+        public async Task<ActionResult<PaginatedList<TodoListDto>>> GetTodoLists([FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
         {
-            return await _mediator.Send(query);
+            return await _mediator.Send(new GetTodoListsQuery { PageNumber = pageNumber, PageSize = pageSize });
         }
 
+        /// <summary>
+        /// Create todo list
+        /// </summary>
+        /// <param name="command">The list to create</param>
+        /// <returns>The created todo list</returns>
         [HttpPost("todolist")]
-        [SwaggerOperation("Create todo list")]
         public async Task<ActionResult<TodoListDto>> CreateTodoList([FromBody] CreateTodoListCommand command)
         {
             var item = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(GetTodoListById), new { listId = item.Id }, item);
         }
+        
+        /// <summary>
+        /// Get todo list by ID
+        /// </summary>
+        /// <param name="listId">The id of the list</param>
+        [HttpGet("todolist/{listId:int}")]
+        public async Task<ActionResult<TodoListDto>> GetTodoListById([FromRoute] int listId)
+        {
+            return await _mediator.Send(new GetTodoListByIdQuery { ListId = listId });
+        }
 
+        /// <summary>
+        /// Delete the todo list
+        /// </summary>
+        /// <param name="listId">The id of the list</param>
         [HttpDelete("todolist/{listId:int}")]
-        [SwaggerOperation("Delete todo list")]
         public async Task<ActionResult> DeleteTodoList(int listId)
         {
             await _mediator.Send(new DeleteTodoListCommand { ListId = listId });
             return Ok();
-        }
-
-        [HttpGet("todolist/{listId:int}")]
-        [SwaggerOperation("Get todo list by ID")]
-        public async Task<ActionResult<TodoListDto>> GetTodoListById([FromRoute] int listId)
-        {
-            return await _mediator.Send(new GetTodoListByIdQuery { ListId = listId });
         }
     }
 }
