@@ -31,6 +31,7 @@ Things we need to add to the readme
 15. Shout out to packages used and inspiration for the project
 16. Nullable
 17. Generated client
+18. Blazor component libraries
 
 
 ## Docker 

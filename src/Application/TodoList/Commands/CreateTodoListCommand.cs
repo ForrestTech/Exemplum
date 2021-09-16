@@ -24,7 +24,7 @@
         public CreateTodoListCommandValidator(IApplicationDbContext context)
         {
             _context = context;
-            
+
             RuleFor(x => x.Title).NotEmpty()
                 .MaximumLength(300)
                 .MustAsync(BeUniqueTitle)

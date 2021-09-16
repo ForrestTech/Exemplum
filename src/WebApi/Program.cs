@@ -7,8 +7,11 @@ namespace Exemplum.WebApi
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Serilog;
+    using Serilog.Enrichers.Span;
     using Serilog.Events;
+    using Serilog.Formatting.Compact;
     using System;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     public class Program
@@ -22,13 +25,19 @@ namespace Exemplum.WebApi
                 .WriteTo.Seq("http://localhost:5341")
 #else
                 .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
 #endif
+                // if you want to get rid of some of the noise of asp.net core logging uncomment this line
+                //.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning) 
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithEnvironmentName()
+                .Enrich.WithSpan()
+                .Enrich.WithProperty("ApplicationName", "Exemplum.Api")
+                .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
                 .WriteTo.Console()
-                .WriteTo.Async(c =>
-                    c.File($"App_Data/Logs/Exemplum-Logs-.txt", rollingInterval: RollingInterval.Day));
+                .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data/Logs/Exemplum-Logs-.txt",
+                        rollingInterval: RollingInterval.Day));
 
             Log.Logger = logConfiguration.CreateLogger();
 

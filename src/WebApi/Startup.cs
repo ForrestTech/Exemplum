@@ -17,9 +17,9 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
     
-    // Todo Setup github actions locally
-    // Todo generate client from swagger
-    // Todo add serilog to blazor
+    // Todo Migrate client calls to refit
+    // Todo add serilog to blazor, seq, request id end to end, common configuration
+    // Todo integrate a blazor component library
     // Todo add basic todo UI to blazor
     // Todo add health checks
     // Todo add some custom health checks
@@ -27,10 +27,12 @@ namespace Exemplum.WebApi
     // Todo add authorization including adding roles and resolving polices
     // Todo add full user support for Auditable items
     // Todo Migrate to using refit 
-    // Todo add docker support using project tyre 
+    // Todo add docker support using project tye
+    // Todo add seq to docker/tye
     // Todo add docker support for sql/redis ??
     // Todo add redis for caching
     // Todo create nuget template package
+    // Todo add github release drafting system
     // Todo add github code coverage
     // Todo add distributed tracing support
     // Todo add integration event emission using rabbit MQ
