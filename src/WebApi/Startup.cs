@@ -13,11 +13,10 @@ namespace Exemplum.WebApi
     using Microsoft.OpenApi.Models;
     using Serilog;
 
-    // Todo add blazor client
-    // Todo add bass assembly namespaces
     // Todo Migrate to using Nswag 
     // Todo generate client from swagger
     // Todo add serilog to blazor
+    // Todo add basic todo UI to blazor
     // Todo add health checks
     // Todo add some custom health checks
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
