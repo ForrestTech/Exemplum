@@ -15,7 +15,8 @@
             }
         }
 
-        public DatabaseValidationException(string field, string message) : base(message)
+        public DatabaseValidationException(string field, string message, Exception innerException) : base(message,
+            innerException: innerException)
         {
             Field = field;
         }

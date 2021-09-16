@@ -9,6 +9,10 @@ namespace Exemplum.WebApi
     using Serilog;
     using Serilog.Enrichers.Span;
     using Serilog.Events;
+    using Serilog.Exceptions;
+    using Serilog.Exceptions.Core;
+    using Serilog.Exceptions.EntityFrameworkCore.Destructurers;
+    using Serilog.Exceptions.MsSqlServer.Destructurers;
     using Serilog.Formatting.Compact;
     using System;
     using System.Reflection;
@@ -33,6 +37,10 @@ namespace Exemplum.WebApi
                 .Enrich.WithMachineName()
                 .Enrich.WithEnvironmentName()
                 .Enrich.WithSpan()
+                .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder()
+                    .WithDefaultDestructurers()
+                    .WithDestructurers(new[] { new SqlExceptionDestructurer() })
+                    .WithDestructurers(new[] { new DbUpdateExceptionDestructurer() }))
                 .Enrich.WithProperty("ApplicationName", "Exemplum.Api")
                 .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
                 .WriteTo.Console()

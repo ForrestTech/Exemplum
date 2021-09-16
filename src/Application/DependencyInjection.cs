@@ -4,6 +4,7 @@
     using Common.ExecutionPolicies;
     using FluentValidation;
     using MediatR;
+    using MediatR.Pipeline;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Refit;
@@ -19,8 +20,10 @@
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
+            services.AddTransient(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+            
             services.Configure<WeatherForecastOptions>(configuration.GetSection(WeatherForecastOptions.Section));
             //because refit auto generates a implementation we register this here not in infrastructure as there is no implementation at design time
             services.AddRefitClient<IWeatherForecastClient>()

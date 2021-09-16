@@ -24,7 +24,7 @@
                     var (table, field, value) = ErrorMessage.Parse(sqlListException.Message);
 
                     throw new DatabaseValidationException(field,
-                        $"Duplicate entry: '{value}' when trying to update the property: '{field}' of resource: '{table}'");
+                        $"Duplicate entry. An item already exists that has a '{field}' with the value of: '{value}'.", exception);
                 }
                 catch (ParseException)
                 {
