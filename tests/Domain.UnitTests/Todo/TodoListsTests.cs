@@ -1,6 +1,6 @@
 ﻿namespace Domain.UnitTests.Todo
 {
-    using Domain.Todo;
+    using Exemplum.Domain.Todo;
     using FluentAssertions;
     using Xunit;
 

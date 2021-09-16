@@ -1,4 +1,4 @@
-﻿namespace Domain.Todo
+﻿namespace Exemplum.Domain.Todo
 {
     using Common;
     using Common.DateAndTime;

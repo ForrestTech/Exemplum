@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <RootNamespace>Exemplum.WebApp</RootNamespace>
+    <AssemblyName>Exemplum.WebApp</AssemblyName>
   </PropertyGroup>
 
 </Project>

@@ -1,11 +1,10 @@
 ﻿namespace Application.UnitTests.Todo
 {
-    using Application.Todo.Queries;
-    using Domain.Todo;
+    using Exemplum.Application.Todo.Queries;
+    using Exemplum.Domain.Todo;
     using FluentAssertions;
     using System.Collections.Generic;
     using System.Linq;
-    using TodoList.Queries;
     using Xunit;
 
     public class GetCompletedTodoItemsQueryTests

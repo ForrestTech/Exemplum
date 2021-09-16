@@ -1,15 +1,14 @@
 ﻿namespace Application.IntegrationTests
 {
-    using Common.Pagination;
-    using Domain.Todo;
+    using Exemplum.Application.Common.Pagination;
+    using Exemplum.Application.Todo.Commands;
+    using Exemplum.Application.Todo.Models;
+    using Exemplum.Domain.Todo;
     using FluentAssertions;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
-    using Todo.Commands;
-    using Todo.Models;
-    using WeatherForecast.Model;
     using Xunit;
 
     public partial class ExemplumApiTests : IClassFixture<WebHostFixture>

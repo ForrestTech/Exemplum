@@ -29,6 +29,7 @@ Things we need to add to the readme
 13. 3rd party service calls, resilience and error handling
 14. Secret management
 15. Shout out to packages used and inspiration for the project
+16. Nullable
 
 
 ## Docker 

@@ -1,4 +1,4 @@
-﻿namespace Domain.Todo.Events
+﻿namespace Exemplum.Domain.Todo.Events
 {
     using Common;
 

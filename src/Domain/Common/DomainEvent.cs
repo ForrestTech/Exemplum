@@ -1,4 +1,4 @@
-﻿namespace Domain.Common
+﻿namespace Exemplum.Domain.Common
 {
     using System;
 

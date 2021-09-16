@@ -4,6 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UserSecretsId>94d8ef11-aa71-4053-87f5-2f09f2cb0f1d</UserSecretsId>
+    <RootNamespace>Exemplum.WebApi</RootNamespace>
+    <AssemblyName>Exemplum.WebApi</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

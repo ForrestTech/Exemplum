@@ -1,4 +1,4 @@
-﻿namespace WebApi.Controllers
+﻿namespace Exemplum.WebApi.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 

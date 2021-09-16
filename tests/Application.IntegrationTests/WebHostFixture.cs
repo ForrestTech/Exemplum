@@ -1,6 +1,8 @@
 ﻿namespace Application.IntegrationTests
 {
-    using Infrastructure.Persistence;
+    using Exemplum.Application.WeatherForecast;
+    using Exemplum.Infrastructure.Persistence;
+    using Exemplum.WebApi;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.Extensions.Configuration;
@@ -9,8 +11,6 @@
     using Microsoft.Extensions.Logging;
     using System;
     using System.IO;
-    using WeatherForecast;
-    using WebApi;
     using Xunit.Abstractions;
 
     public class WebHostFixture : WebApplicationFactory<Startup>

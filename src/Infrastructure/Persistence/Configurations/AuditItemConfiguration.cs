@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Persistence.Configurations
+﻿namespace Exemplum.Infrastructure.Persistence.Configurations
 {
     using Domain.Audit;
     using Microsoft.EntityFrameworkCore;

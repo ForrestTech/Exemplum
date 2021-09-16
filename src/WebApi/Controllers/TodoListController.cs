@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
-namespace WebApi.Controllers
+﻿namespace Exemplum.WebApi.Controllers
 {
     using Application.Common.Pagination;
     using Application.TodoList.Commands;
     using Application.TodoList.Models;
     using Application.TodoList.Queries;
     using MediatR;
+    using Microsoft.AspNetCore.Mvc;
     using Swashbuckle.AspNetCore.Annotations;
+    using System.Threading.Tasks;
 
     public class TodoListController : ApiControllerBase
     {

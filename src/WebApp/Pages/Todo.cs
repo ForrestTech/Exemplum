@@ -1,4 +1,4 @@
-﻿namespace WebApp.Pages
+﻿namespace Exemplum.WebApp.Pages
 {
     using System.Collections.Generic;
     using System.Linq;

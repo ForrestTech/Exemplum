@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Persistence
+﻿namespace Exemplum.Infrastructure.Persistence
 {
     using Domain.Todo;
     using Microsoft.EntityFrameworkCore;

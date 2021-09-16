@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Mapping
+﻿namespace Exemplum.Application.Common.Mapping
 {
     using AutoMapper;
     using System;

@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Pagination
+﻿namespace Exemplum.Application.Common.Pagination
 {
     public interface IPaginatedQuery
     {

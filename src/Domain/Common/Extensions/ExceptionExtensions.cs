@@ -1,4 +1,4 @@
-﻿namespace Domain.Common.Extensions
+﻿namespace Exemplum.Domain.Common.Extensions
 {
     using System;
     using System.Collections.Generic;

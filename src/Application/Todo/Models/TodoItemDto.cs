@@ -1,4 +1,4 @@
-﻿namespace Application.Todo.Models
+﻿namespace Exemplum.Application.Todo.Models
 {
     using AutoMapper;
     using Common.Mapping;

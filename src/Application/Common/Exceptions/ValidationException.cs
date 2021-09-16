@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Exceptions
+﻿namespace Exemplum.Application.Common.Exceptions
 {
     using FluentValidation.Results;
     using System;

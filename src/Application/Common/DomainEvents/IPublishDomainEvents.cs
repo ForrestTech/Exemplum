@@ -1,4 +1,4 @@
-﻿namespace Application.Common.DomainEvents
+﻿namespace Exemplum.Application.Common.DomainEvents
 {
     using Domain.Common;
     using System.Threading.Tasks;

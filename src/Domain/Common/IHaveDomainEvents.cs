@@ -1,7 +1,6 @@
-﻿namespace Domain.Common
+﻿namespace Exemplum.Domain.Common
 {
     using System.Collections.Generic;
-    using Todo;
 
     public interface IHaveDomainEvents
     {

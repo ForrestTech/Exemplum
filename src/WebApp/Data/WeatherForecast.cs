@@ -1,7 +1,7 @@
-using System;
-
-namespace WebApp.Data
+namespace Exemplum.WebApp.Data
 {
+    using System;
+
     public class WeatherForecast
     {
         public DateTime Date { get; set; }
@@ -10,6 +10,6 @@ namespace WebApp.Data
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
-        public string Summary { get; set; }
+        public string Summary { get; set; } = string.Empty;
     }
 }

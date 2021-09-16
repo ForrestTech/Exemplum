@@ -1,4 +1,4 @@
-﻿namespace Domain.Audit
+﻿namespace Exemplum.Domain.Audit
 {
     using Common;
     using System;

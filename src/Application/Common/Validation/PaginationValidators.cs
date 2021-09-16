@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Validation
+﻿namespace Exemplum.Application.Common.Validation
 {
     using FluentValidation;
     using Pagination;

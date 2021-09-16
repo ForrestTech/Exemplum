@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Persistence.ExceptionHandling.Handlers
+﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling.Handlers
 {
     using Application.Common.Exceptions;
     using Microsoft.Data.SqlClient;

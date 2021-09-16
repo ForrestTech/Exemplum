@@ -1,4 +1,4 @@
-﻿namespace Application.WeatherForecast
+﻿namespace Exemplum.Application.WeatherForecast
 {
     using Model;
     using Refit;

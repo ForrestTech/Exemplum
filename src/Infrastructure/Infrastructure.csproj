@@ -4,6 +4,8 @@
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
         <GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
+        <RootNamespace>Exemplum.Infrastructure</RootNamespace>
+        <AssemblyName>Exemplum.Infrastructure</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

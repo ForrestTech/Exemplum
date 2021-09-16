@@ -1,9 +1,9 @@
 ﻿namespace Application.IntegrationTests
 {
+    using Exemplum.Application.WeatherForecast.Model;
     using FluentAssertions;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
-    using WeatherForecast.Model;
     using Xunit;
 
     public partial class ExemplumApiTests : IClassFixture<WebHostFixture>

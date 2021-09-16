@@ -1,4 +1,4 @@
-﻿namespace Application
+﻿namespace Exemplum.Application
 {
     using Common.Behaviour;
     using Common.ExecutionPolicies;
@@ -6,12 +6,8 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Polly;
-    using Polly.Contrib.WaitAndRetry;
-    using Polly.Extensions.Http;
     using Refit;
     using System;
-    using System.Net.Http;
     using System.Reflection;
     using WeatherForecast;
 

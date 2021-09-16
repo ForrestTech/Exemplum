@@ -1,9 +1,9 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebApp.Data
+namespace Exemplum.WebApp.Data
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class WeatherForecastService
     {
         private static readonly string[] Summaries = new[]

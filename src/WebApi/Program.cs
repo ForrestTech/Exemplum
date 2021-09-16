@@ -1,16 +1,15 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
-namespace WebApi
+namespace Exemplum.WebApi
 {
     using Infrastructure.Persistence;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
     using Serilog;
     using Serilog.Events;
+    using System;
+    using System.Threading.Tasks;
 
     public class Program
     {

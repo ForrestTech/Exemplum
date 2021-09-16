@@ -1,8 +1,8 @@
 ﻿namespace Domain.UnitTests.Todo
 {
-    using Domain.Todo;
+    using Exemplum.Domain.Todo;
+    using Exemplum.Infrastructure.DateAndTime;
     using FluentAssertions;
-    using Infrastructure.DateAndTime;
     using System;
     using System.Diagnostics.SymbolStore;
     using Xunit;

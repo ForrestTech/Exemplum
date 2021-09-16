@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Persistence.ExceptionHandling
+﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling
 {
     using Handlers;
     using System;

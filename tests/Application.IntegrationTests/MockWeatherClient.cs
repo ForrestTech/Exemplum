@@ -1,8 +1,8 @@
 ﻿namespace Application.IntegrationTests
 {
+    using Exemplum.Application.WeatherForecast;
+    using Exemplum.Application.WeatherForecast.Model;
     using System.Threading.Tasks;
-    using WeatherForecast;
-    using WeatherForecast.Model;
 
     public class MockWeatherClient : IWeatherForecastClient
     {

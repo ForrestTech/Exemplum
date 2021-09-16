@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Models
+﻿namespace Exemplum.Application.TodoList.Models
 {
     using Common.Mapping;
     using Domain.Todo;

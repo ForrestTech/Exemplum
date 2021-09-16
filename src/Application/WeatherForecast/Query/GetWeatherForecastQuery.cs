@@ -1,4 +1,4 @@
-﻿namespace Application.WeatherForecast.Query
+﻿namespace Exemplum.Application.WeatherForecast.Query
 {
     using FluentValidation;
     using MediatR;

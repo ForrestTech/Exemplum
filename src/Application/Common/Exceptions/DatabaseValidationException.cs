@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Exceptions
+﻿namespace Exemplum.Application.Common.Exceptions
 {
     using System;
     using System.Collections.Generic;

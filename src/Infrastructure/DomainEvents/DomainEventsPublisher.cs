@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.DomainEvents
+﻿namespace Exemplum.Infrastructure.DomainEvents
 {
     using Application.Common.DomainEvents;
     using Domain.Common;

@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Behaviour
+﻿namespace Exemplum.Application.Common.Behaviour
 {
     using FluentValidation;
     using MediatR;

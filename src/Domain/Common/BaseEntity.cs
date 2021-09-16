@@ -1,8 +1,7 @@
-﻿namespace Domain.Common
+﻿namespace Exemplum.Domain.Common
 {
     using System;
     using System.Collections.Generic;
-    using Todo;
 
     public abstract class BaseEntity: BaseEntity<int>
     {

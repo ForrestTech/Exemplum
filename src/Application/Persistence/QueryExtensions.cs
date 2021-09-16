@@ -1,4 +1,4 @@
-﻿namespace Application.Persistence
+﻿namespace Exemplum.Application.Persistence
 {
     using System.Linq;
 

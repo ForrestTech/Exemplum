@@ -1,4 +1,4 @@
-﻿namespace WebApi.Controllers
+﻿namespace Exemplum.WebApi.Controllers
 {
     using Application.WeatherForecast.Model;
     using Application.WeatherForecast.Query;

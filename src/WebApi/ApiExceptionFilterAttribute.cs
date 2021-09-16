@@ -1,4 +1,4 @@
-﻿namespace WebApi
+﻿namespace Exemplum.WebApi
 {
     using Application.Common.Exceptions;
     using Domain.Common.Extensions;

@@ -1,4 +1,4 @@
-﻿namespace Application.Persistence
+﻿namespace Exemplum.Application.Persistence
 {
     using System.Threading;
     using System.Threading.Tasks;

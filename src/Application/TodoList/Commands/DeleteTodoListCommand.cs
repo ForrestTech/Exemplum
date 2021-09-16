@@ -1,4 +1,4 @@
-﻿namespace Application.TodoList.Commands
+﻿namespace Exemplum.Application.TodoList.Commands
 {
     using Common.Exceptions;
     using Domain.Todo;

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Persistence
+﻿namespace Exemplum.Infrastructure.Persistence
 {
     using Application.Common.DomainEvents;
     using Application.Persistence;

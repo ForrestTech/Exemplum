@@ -1,4 +1,4 @@
-﻿namespace Application.Common.ExecutionPolicies
+﻿namespace Exemplum.Application.Common.ExecutionPolicies
 {
     using Polly;
     using Polly.Contrib.WaitAndRetry;

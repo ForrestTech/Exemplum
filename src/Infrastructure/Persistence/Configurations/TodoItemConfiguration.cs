@@ -1,6 +1,5 @@
-﻿namespace Infrastructure.Persistence.Configurations
+﻿namespace Exemplum.Infrastructure.Persistence.Configurations
 {
-    using Domain.Common;
     using Domain.Todo;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;

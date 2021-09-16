@@ -1,7 +1,7 @@
 ﻿namespace Application.UnitTests.ExceptionHandling
 {
+    using Exemplum.Infrastructure.Persistence.ExceptionHandling.Handlers;
     using FluentAssertions;
-    using Infrastructure.Persistence.ExceptionHandling.Handlers;
     using Sprache;
     using System;
     using Xunit;

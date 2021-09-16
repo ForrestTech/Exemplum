@@ -1,14 +1,14 @@
 ﻿namespace Application.IntegrationTests
 {
-    using Common.Pagination;
-    using Domain.Todo;
+    using Exemplum.Application.Common.Pagination;
+    using Exemplum.Application.TodoList.Commands;
+    using Exemplum.Application.TodoList.Models;
+    using Exemplum.Domain.Todo;
     using FluentAssertions;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
-    using TodoList.Commands;
-    using TodoList.Models;
     using Xunit;
     using Xunit.Abstractions;
 
