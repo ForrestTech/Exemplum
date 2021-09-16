@@ -1,0 +1,16 @@
+﻿@page "/todo"
+
+<h3>Todo (@CountOfTodoItems)</h3>
+
+<ul>
+    @foreach (var todo in Todos)
+    {
+        <li>
+            <input type="checkbox" @bind="todo.IsDone"/>
+            <input @bind="todo.Title"/>
+        </li>
+    }
+</ul>
+
+<input placeholder="Something todo" @bind="NewTodo"/>
+<button @onclick="AddTodo">Add todo</button>

@@ -14,10 +14,13 @@ namespace WebApi
     using Microsoft.AspNetCore.Routing;
     using Serilog;
     
-    // Todo add downstream call error handling logic
+    // Todo add blazor client
+    // Todo add bass assembly namespaces
+    // Todo Migrate to using Nswag 
+    // Todo generate client from swagger
+    // Todo add serilog to blazor
     // Todo add health checks
     // Todo add some custom health checks
-    // Todo add blazor client
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add full user support for Auditable items
