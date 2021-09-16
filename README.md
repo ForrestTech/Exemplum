@@ -30,6 +30,7 @@ Things we need to add to the readme
 14. Secret management
 15. Shout out to packages used and inspiration for the project
 16. Nullable
+17. Generated client
 
 
 ## Docker 

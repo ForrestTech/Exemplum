@@ -8,7 +8,7 @@
 
         public List<Weather> Weather { get; set; } = new List<Weather>();
 
-        public Main Main { get; set; } = new Main();
+        public Temperatures Main { get; set; } = new Temperatures();
     }
 
     public class Weather
@@ -17,7 +17,7 @@
         public string Description { get; set; } = string.Empty;
     }
 
-    public class Main
+    public class Temperatures
     {
         public double Temp { get; set; }
     }
