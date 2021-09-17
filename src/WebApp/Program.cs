@@ -5,22 +5,43 @@ namespace Exemplum.WebApp
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Refit;
+    using Serilog;
     using System;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     public class Program
     {
         public static async Task Main(string[] args)
         {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.WithProperty("ApplicationName", "Exemplum.Web")
+                .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
+                .WriteTo.BrowserConsole()
+                .CreateLogger();
 
-            builder.Services.AddSingleton<WeatherForecastService>();
+            try
+            {
+                Log.Information("Starting Web host");
+                
+                var builder = WebAssemblyHostBuilder.CreateDefault(args);
+                builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddRefitClient<ITodoClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:5001"));
+                builder.Services.AddSingleton<WeatherForecastService>();
 
-            await builder.Build().RunAsync();
+                builder.Services.AddRefitClient<ITodoClient>()
+                    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:5001"));
+                
+                builder.Logging.AddSerilog();
+
+                await builder.Build().RunAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "An exception occurred while creating the WASM host");
+                throw;
+            }
         }
         
 //         public static async Task<int> Main(string[] args)
