@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.WebApp.Features.TodoLists
 {
     using Microsoft.AspNetCore.Components;
+    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -12,9 +13,14 @@
 
         [Inject] 
         public ITodoClient Client { get; set; } = default!;
+        
+        [Inject] 
+        public ILogger<TodoPage> Logger { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
+            Logger.LogInformation("Getting todo list items");
+            
             var todoPage = await Client.GetTodoItemsInList(1);
 
             Todos = todoPage.Items;

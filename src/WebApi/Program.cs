@@ -44,14 +44,14 @@ namespace Exemplum.WebApi
                 .Enrich.WithProperty("ApplicationName", "Exemplum.Api")
                 .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
                 .WriteTo.Console()
-                .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data/Logs/Exemplum-Logs-.txt",
+                .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data/Logs/ExemplumApi-Logs-.txt",
                         rollingInterval: RollingInterval.Day));
 
             Log.Logger = logConfiguration.CreateLogger();
 
             try
             {
-                Log.Information("Starting web host");
+                Log.Information("Starting API host");
 
                 var host = CreateHostBuilder(args).Build();
 

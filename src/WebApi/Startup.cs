@@ -16,9 +16,8 @@ namespace Exemplum.WebApi
     using System;
     using System.IO;
     using System.Reflection;
-    
+
     // Todo add serilog to blazor, seq, request id end to end
-    // Todo Migrate client calls to refit
     // Todo integrate a blazor component library
     // Todo add basic todo UI to blazor
     // Todo add health checks
@@ -52,6 +51,14 @@ namespace Exemplum.WebApi
         {
             services.AddApplication(Configuration);
             services.AddInfrastructure(Configuration);
+            
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:6001");
+                });
+            });
 
             services.AddControllers(options =>
             {
@@ -74,8 +81,9 @@ namespace Exemplum.WebApi
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
-                
-                c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null);
+
+                c.CustomOperationIds(apiDesc =>
+                    apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null);
             });
         }
 
@@ -88,12 +96,14 @@ namespace Exemplum.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));
             }
-            
+
             app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseCors();
 
             app.UseAuthorization();
 

@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.WebApp.Features.TodoLists
 {
-    using Microsoft.AspNetCore.Mvc;
     using Refit;
     using System.Threading.Tasks;
 

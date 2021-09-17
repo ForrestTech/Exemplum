@@ -1,20 +1,80 @@
 namespace Exemplum.WebApp
 {
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Hosting;
+    using Features.TodoLists;
+    using Features.WeatherForecasts;
+    using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
+    using Refit;
+    using System;
+    using System.Threading.Tasks;
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            builder.RootComponents.Add<App>("#app");
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            builder.Services.AddSingleton<WeatherForecastService>();
+
+            builder.Services.AddRefitClient<ITodoClient>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:5001"));
+
+            await builder.Build().RunAsync();
+        }
+        
+//         public static async Task<int> Main(string[] args)
+//         {
+//             var logConfiguration = new LoggerConfiguration()
+// #if DEBUG
+//                 .MinimumLevel.Debug()
+//                 .WriteTo.Debug()
+//                 .WriteTo.Seq("http://localhost:5341")
+// #else
+//                 .MinimumLevel.Information()
+// #endif
+//                 // if you want to get rid of some of the noise of asp.net core logging uncomment this line
+//                 //.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning) 
+//                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+//                 .Enrich.FromLogContext()
+//                 .Enrich.WithMachineName()
+//                 .Enrich.WithEnvironmentName()
+//                 .Enrich.WithSpan()
+//                 .Enrich.WithProperty("ApplicationName", "Exemplum.Api")
+//                 .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
+//                 .WriteTo.Console()
+//                 .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data/Logs/ExemplumWeb-Logs-.txt",
+//                     rollingInterval: RollingInterval.Day));
+//
+//             Log.Logger = logConfiguration.CreateLogger();
+//             
+//             try
+//             {
+//                 Log.Information("Starting web host");
+//
+//                 var host = CreateHostBuilder(args).Build();
+//
+//                 await host.RunAsync();
+//
+//                 return 0;
+//             }
+//             catch (Exception ex)
+//             {
+//                 Log.Fatal(ex, "Host terminated unexpectedly");
+//                 return 1;
+//             }
+//             finally
+//             {
+//                 Log.CloseAndFlush();
+//             }
+//         }
+//
+//         public static IHostBuilder CreateHostBuilder(string[] args) =>
+//             Host.CreateDefaultBuilder(args)
+//                 .UseSerilog()
+//                 .ConfigureWebHostDefaults(webBuilder =>
+//                 {
+//                     webBuilder.UseStartup<Startup>();
+//                 });
     }
 }
