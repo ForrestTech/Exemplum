@@ -7,4 +7,9 @@
     <AssemblyName>Exemplum.WebApp</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="refit" Version="6.0.94" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="6.0.94" />
+  </ItemGroup>
+
 </Project>

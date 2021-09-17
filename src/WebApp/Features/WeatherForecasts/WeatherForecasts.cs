@@ -1,8 +1,8 @@
-namespace Exemplum.WebApp.Data
+namespace Exemplum.WebApp.Features.WeatherForecasts
 {
     using System;
 
-    public class WeatherForecast
+    public class WeatherForecastDto
     {
         public DateTime Date { get; set; }
 

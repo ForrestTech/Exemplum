@@ -32,6 +32,7 @@ Things we need to add to the readme
 16. Nullable
 17. Generated client
 18. Blazor component libraries
+19. Not publishing a client or contracts !!?
 
 
 ## Docker 

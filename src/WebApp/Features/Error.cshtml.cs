@@ -1,4 +1,4 @@
-﻿namespace Exemplum.WebApp.Pages
+﻿namespace Exemplum.WebApp.Features
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;

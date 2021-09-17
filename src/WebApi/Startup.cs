@@ -17,8 +17,8 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
     
+    // Todo add serilog to blazor, seq, request id end to end
     // Todo Migrate client calls to refit
-    // Todo add serilog to blazor, seq, request id end to end, common configuration
     // Todo integrate a blazor component library
     // Todo add basic todo UI to blazor
     // Todo add health checks

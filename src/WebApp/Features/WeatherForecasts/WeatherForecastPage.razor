@@ -1,6 +1,4 @@
 ﻿@page "/weatherforecast"
-
-@using WebApp.Data
 @inject WeatherForecastService ForecastService
 
 <h1>Weather forecast</h1>
@@ -37,7 +35,7 @@ else
 }
 
 @code {
-    private Data.WeatherForecast[] forecasts = new Data.WeatherForecast[]{};
+    private WeatherForecastDto[] forecasts = new WeatherForecastDto[]{};
 
     protected override async Task OnInitializedAsync()
     {
