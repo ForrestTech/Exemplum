@@ -1,7 +1,30 @@
 @page "/"
 
-<h1>Exemplum</h1>
-
-Welcome to Exemplum.
-
-<SurveyPrompt Title="How is Exemplum working for you?" />
+<div class="home-main-content">
+    <div class="home-index">
+        <div for="Section One" class="home-sections">
+            <MudGrid>
+                <MudItem xs="12" sm="12" md="12">
+                    <div class="d-flex justify-center">
+                        <ExemplumLogo/>
+                    </div>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudText Align="Align.Center" Typo="Typo.h5" Class="home-text-h5 mt-4">Get off to a good start</MudText>
+                    <MudText Align="Align.Center" Typo="Typo.h5" Class="home-text-h5 smaller">A template for faster .net service development</MudText>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudText Align="Align.Center" Class="home-description-text">
+                        Exemplum is the ideal starting point for .NET developers who want to rapidly build amazing microservices using a good starting point for libraries and tools.
+                    </MudText>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <div class="d-flex justify-center mt-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Link="https://forresttech.github.io/exemplum/" Class="home-mud-button get-started">Get Started</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Link="https://github.com/ForrestTech/Exemplum" Target="_blank" Class="home-mud-button github">GitHub</MudButton>
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </div>
+    </div>
+</div>

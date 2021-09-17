@@ -1,17 +1,64 @@
 @inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudThemeProvider Theme="currentTheme"/>
+<MudDialogProvider FullWidth="true" MaxWidth="MaxWidth.ExtraSmall"/>
+<MudSnackbarProvider/>
 
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="https://github.com/ForrestTech/Exemplum" target="_blank">About</a>
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
-</div>
+<MudSwipeArea OnSwipe="@OnSwipe">
+    <MudLayout>
+        <MudAppBar Elevation="25">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                           Color="Color.Inherit"
+                           Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+            <MudText Typo="Typo.h5" Class="exemplum-appbar-brand-text d-none d-md-flex">Exemplum</MudText>
+            <MudSpacer/>
+            <div class="d-none d-md-flex align-center">
+                <MudMenu EndIcon="@Icons.Filled.KeyboardArrowDown" Label="Support" Color="Color.Inherit" Dense="true" Direction="Direction.Right" OffsetY="true">
+                    <MudText Typo="Typo.body2" Class="px-4 py-2">
+                        <b>Community Support</b>
+                    </MudText>
+                    <MudMenuItem Link="https://github.com/ForrestTech/Exemplum/discussions" Target="_blank">GitHub Discussions</MudMenuItem>
+                </MudMenu>
+                <MudDivider Vertical="true" FlexItem="true" DividerType="DividerType.Middle" Class="mx-4 my-3"/>
+                <MudTooltip Text="Toggle light/dark theme">
+                    <MudIconButton Icon="@Icons.Material.Filled.Brightness4"
+                                   Color="Color.Inherit"
+                                   OnClick="@((e) => DarkMode())"/>
+                </MudTooltip>
+                <MudIconButton Link="https://github.com/ForrestTech/Exemplum"
+                               Target="_blank"
+                               Icon="@Icons.Custom.Brands.GitHub"
+                               Color="Color.Inherit"
+                               aria-label="github"/>
+            </div>
+            <MudMenu Icon="@Icons.Filled.Settings" Color="Color.Inherit" Dense="true" Direction="Direction.Right" OffsetY="true" Class="d-md-none">
+                <div class="px-2">
+                    <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@((e) => DarkMode())"/>
+                    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/ForrestTech/Exemplum"
+                                   Target="_blank"/>
+                </div>
+                <MudText Typo="Typo.body2" Class="px-4 py-2">
+                    <b>Community Support</b>
+                </MudText>
+                <MudMenuItem Link="https://github.com/ForrestTech/Exemplum/discussions" Target="_blank">GitHub Discussions</MudMenuItem>
+            </MudMenu>
+        </MudAppBar>
+        <MudDrawer @bind-Open="drawerOpen" Elevation="25"
+                   Breakpoint="Breakpoint.Lg"
+                   Class="exemplum-appbar-band">
+            <MudDrawerHeader Class="exemplum-brand" LinkToIndex="true">
+                <ExemplumLogo/>
+            </MudDrawerHeader>
+            <NavMenu/>
+        </MudDrawer>
+        <MudMainContent>
+            <MudContainer MaxWidth="MaxWidth.Medium">
+                @Body
+            </MudContainer>
+            <Footer></Footer>
+        </MudMainContent>
+        <MudScrollToTop TopOffset="400" Style="z-index:2000;">
+            <MudFab Icon="@Icons.Material.Filled.KeyboardArrowUp" Color="Color.Primary"/>
+        </MudScrollToTop>
+    </MudLayout>
+</MudSwipeArea>

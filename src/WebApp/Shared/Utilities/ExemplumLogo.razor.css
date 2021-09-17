@@ -1,0 +1,10 @@
+﻿.exemplum-svg {
+    width: 100%;
+    max-width: 300px;
+}
+
+@media (min-width: 960px) {
+    .exemplum-svg {
+        max-width: 400px;
+    }
+}

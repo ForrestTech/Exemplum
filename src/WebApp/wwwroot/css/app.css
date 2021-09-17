@@ -1,50 +1,117 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿.home-main-content {
+    padding-top: 86px;
+    padding-bottom: 86px;
 }
 
-a, .btn-link {
-    color: #0366d6;
+@media (min-width: 960px) {
+    .home-main-content {
+        padding-top: 128px;
+        padding-bottom: 64px;
+        padding-left: 12px;
+    }
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+.home-index {
+    margin-top: 64px;
 }
 
-.content {
-    padding-top: 1.1rem;
+@media (min-width: 960px) {
+    .home-index {
+        margin-top: 128px;
+    }
 }
 
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+.home-index .home-sections {
+    margin-bottom: 128px;
 }
 
-.invalid {
-    outline: 1px solid red;
+.home-mud-button {
+    width: 200px;
+    padding: 12px 0;
+    margin: 0 8px;
 }
 
-.validation-message {
-    color: red;
+.home-mud-button.get-started {
+    background: transparent linear-gradient(90deg, #594ae2 0%, #776be7 100%) 0% 0% no-repeat padding-box;
 }
 
-#blazor-error-ui {
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
+.home-mud-button.sponsor {
+    background: transparent linear-gradient(18deg, #ff4081 0%, #ff669a 100%) 0% 0% no-repeat padding-box;
 }
 
-#blazor-error-ui .dismiss {
+.home-mud-button.github {
+    background: transparent linear-gradient(90deg, #484848 0%, #343434 100%) 0% 0% no-repeat padding-box;
+}
+
+.home-text-h5 {
+    letter-spacing: 0.1rem;
+    font-size: 2rem;
+    font-weight: 300;
+    color: #594ae2ff;
+}
+
+@media (min-width: 960px) {
+    .home-text-h5 {
+        font-size: 3rem;
+        letter-spacing: 0.2rem;
+    }
+}
+
+.home-text-h5.smaller {
+    font-size: 1.5rem;
+}
+
+@media (min-width: 960px) {
+    .home-text-h5.smaller {
+        font-size: 2.5rem;
+    }
+}
+
+.home-description-text {
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+.exemplum-appbar-brand-text {
+    letter-spacing: 0.5rem;
+    font-weight: 300;
+    margin-left: 12px;
+    font-size: 24px;
+    user-select: none;
+}
+
+@media (max-width: 400px) {
+    .exemplum-appbar-brand-text {
+        letter-spacing: 0.25rem;
+    }
+}
+
+.exemplum-brand {
+    margin: 32px 0 0;
+    padding: 0;
+}
+
+.exemplum-brand:hover {
     cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
+    color: #594ae2ff;
+    transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.exemplum-brand > .exemplum-svg {
+    width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.exemplum-appbar-band {
+    background-image: url(../AppbarCorner.svg);
+    background-repeat: no-repeat;
+    background-position: top right;
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .exemplum-appbar-band {
+        background-position: 14px 0;
+    }
 }

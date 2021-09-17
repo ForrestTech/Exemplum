@@ -1,0 +1,17 @@
+﻿.exemplum-footer {
+    padding: 48px 0;
+    margin-bottom: -64px;
+}
+.exemplum-footer h1 {
+    font-weight: 400;
+    letter-spacing: 0.4rem;
+    line-height: 1.167;
+    font-size: 1rem;
+}
+.exemplum-footer > p {
+    padding-top: 50px;
+    text-align: center;
+}
+.exemplum-footer ul li {
+    padding: 6px 0;
+}
