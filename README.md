@@ -33,6 +33,7 @@ Things we need to add to the readme
 17. Generated client
 18. Blazor component libraries
 19. Not publishing a client or contracts !!?
+20. Blazor css scoping
 
 
 ## Docker 

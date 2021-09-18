@@ -14,7 +14,12 @@ namespace Exemplum.WebApp
     public class Program
     {
         // TODO create logo for exemplum
-        // TODO create top right icons links for things like github
+        // TODO add colour picker for todo list will need to update domain logic to handle it
+        // TODO add Confirm dialog for delete and snackbar notification
+        // TODO link up all todo list actions to API
+        // TODO migrate to using fluent validation https://blog.stevensanderson.com/2019/09/04/blazor-fluentvalidation/
+        // TODO migrate to teal palette 
+        // TODO move create list to its own component
         public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()

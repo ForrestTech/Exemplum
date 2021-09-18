@@ -6,7 +6,6 @@
 
     public partial class MainLayout : LayoutComponentBase
     {
-        NavMenu navMenuRef;
         bool drawerOpen = false;
         MudTheme currentTheme = new();
         readonly MudTheme defaultTheme = new() { Palette = new Palette() { Black = "#272c34" } };

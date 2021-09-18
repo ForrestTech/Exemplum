@@ -1,0 +1,15 @@
+﻿.todolist  {
+    
+}
+
+::deep .todolist-paper {    
+    padding: 10px;
+    display: flex;    
+    align-items: center;
+    margin-top: 10px;
+    width: 500px;
+}
+
+::deep .todolist-icons {
+    margin-left: auto;
+}

@@ -1,0 +1,129 @@
+﻿@page "/todolists"
+@using Exemplum.WebApp.Extensions
+@using System.ComponentModel.DataAnnotations
+
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        <div class="todolist">
+            <MudText Typo="Typo.h1">Todo Lists</MudText>
+            <EditForm Model="@newTodoList" OnValidSubmit="@AddNewList">
+                <DataAnnotationsValidator/>
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudTextField Label="New list name"
+                                      @bind-Value="@newTodoList.Title"
+                                      For="@(() => newTodoList.Title)"
+                                      Immediate="true"
+                                      RequiredError="List name is required!"/>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudButton @onclick="AddNewList"
+                                   Disabled="@(!CanAdd())"
+                                   Class="ml-auto"
+                                   ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary">
+                            Add
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+            <MudGrid>
+                <MudItem xs="12">
+                    @foreach (var list in todoLists)
+                    {
+                        <MudPaper Elevation="2" Class="todolist-paper">
+                            @if (list.EditMode)
+                            {
+                                <MudTextField @bind-Value="@list.Title"
+                                              Immediate="true"
+                                              @onkeypress="(args) => Enter(list.Id, args)"/>
+                                <span class="todolist-icons">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Save"
+                                                       @onclick="() => SaveList(list.Id)"/>
+                                    </MudTooltip>
+                                </span>
+                            }
+                            else
+                            {
+                                <span>@list.Title</span>
+                                <span class="todolist-icons">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.Create"
+                                                       @onclick="() => EditList(list.Id)"/>
+                                    </MudTooltip>
+                                    <MudTooltip Text="View Todos">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.List"
+                                                       @onclick="() => ViewList(list.Id)"/>
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete List">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.Delete"
+                                                       @onclick="() => DeleteList(list.Id)"/>
+                                    </MudTooltip>
+                                </span>
+                            }
+                        </MudPaper>
+                    }
+                </MudItem>
+            </MudGrid>
+        </div>
+    </MudContainer>
+</MudMainContent>
+
+
+@code{
+
+    [Inject]
+    public ITodoClient Client { get; set; } = default!;
+
+    [Inject]
+    public NavigationManager NavManager { get; set; } = default!;
+
+    NewTodoList newTodoList = new();
+    List<TodoList> todoLists = new List<TodoList>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var todoPage = await Client.GetTodoLists(1, 100);
+
+        todoLists = todoPage.Items;
+    }
+
+    void AddNewList()
+    {
+        todoLists.Add(new TodoList
+        {
+            Id = todoLists.Max(x => x.Id) + 1,
+            Title = newTodoList.Title
+        });
+        newTodoList = new NewTodoList();
+    }
+
+    bool CanAdd() => newTodoList.Title.HasValue() && newTodoList.Title.Length > 2;
+
+    void SaveList(int id) => todoLists.Single(x => x.Id == id).EditMode = false;
+
+    void EditList(int id) => todoLists.Single(x => x.Id == id).EditMode = true;
+
+    void ViewList(int id) => NavManager.NavigateTo($"todolist/{id}");
+
+    void DeleteList(int id) => todoLists.RemoveAll(x => x.Id == id);
+
+    void Enter(int listId, KeyboardEventArgs keyboardEvent)
+    {
+        if (keyboardEvent.IsEnter())
+        {
+            StateHasChanged();
+            SaveList(listId);
+        }
+    }
+
+    private class NewTodoList
+    {
+        [Required]
+        [StringLength(300, MinimumLength = 3)]
+        public string Title { get; set; } = string.Empty;
+    }
+
+}

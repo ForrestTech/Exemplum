@@ -18,6 +18,7 @@ namespace Exemplum.WebApi
     using System.Reflection;
     
     // Todo add basic todo UI to blazor
+    // Todo add mocking example using nsubstitute to application unit tests
     // Todo add health checks
     // Todo add some custom health checks
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)

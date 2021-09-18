@@ -8,10 +8,11 @@
     line-height: 1.167;
     font-size: 1rem;
 }
-.exemplum-footer > p {
-    padding-top: 50px;
-    text-align: center;
-}
 .exemplum-footer ul li {
     padding: 6px 0;
+}
+
+::deep > p {
+    padding-top: 50px;
+    text-align: center;
 }
