@@ -9,17 +9,26 @@
             <EditForm Model="@newTodoList" OnValidSubmit="@AddNewList">
                 <DataAnnotationsValidator/>
                 <MudGrid>
-                    <MudItem xs="8">
+                    <MudItem xs="7">
                         <MudTextField Label="New list name"
                                       @bind-Value="@newTodoList.Title"
                                       For="@(() => newTodoList.Title)"
                                       Immediate="true"
                                       RequiredError="List name is required!"/>
                     </MudItem>
-                    <MudItem xs="4">
+                    <MudItem xs="2">
+                        <MudColorPicker Label="" @bind-Text="newTodoList.Colour"
+                                        PickerVariant="PickerVariant.Inline"
+                                        ColorPickerMode="ColorPickerMode.HEX"
+                                        DisableAlpha="true"
+                                        DisableInputs="true" DisableModeSwitch="true"
+                                        AllowKeyboardInput="false"
+                                        Style="@($"color: {newTodoList.Colour};")"/>
+                    </MudItem>
+                    <MudItem xs="3">
                         <MudButton @onclick="AddNewList"
                                    Disabled="@(!CanAdd())"
-                                   Class="ml-auto"
+                                   Class="ml-auto add-list-button"
                                    ButtonType="ButtonType.Submit"
                                    Variant="Variant.Filled"
                                    Color="Color.Primary">
@@ -37,7 +46,7 @@
                             {
                                 <MudTextField @bind-Value="@list.Title"
                                               Immediate="true"
-                                              @onkeypress="(args) => Enter(list.Id, args)"/>
+                                              @onkeypress="(args) => {if (args.IsEnter()) Enter(list.Id, args);}"/>
                                 <span class="todolist-icons">
                                     <MudTooltip Text="Edit">
                                         <MudIconButton Icon="@Icons.Material.Filled.Save"
@@ -47,7 +56,7 @@
                             }
                             else
                             {
-                                <span>@list.Title</span>
+                                <span style="color:@list.Colour">@list.Title</span>
                                 <span class="todolist-icons">
                                     <MudTooltip Text="Edit">
                                         <MudIconButton Icon="@Icons.Material.Outlined.Create"
@@ -80,6 +89,13 @@
     [Inject]
     public NavigationManager NavManager { get; set; } = default!;
 
+    [Inject]
+    IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    ISnackbar Snackbar { get; set; } = default!;
+
+    string colourValue = string.Empty;
     NewTodoList newTodoList = new();
     List<TodoList> todoLists = new List<TodoList>();
 
@@ -95,28 +111,34 @@
         todoLists.Add(new TodoList
         {
             Id = todoLists.Max(x => x.Id) + 1,
-            Title = newTodoList.Title
+            Title = newTodoList.Title,
+            Colour = newTodoList.Colour
         });
         newTodoList = new NewTodoList();
     }
 
     bool CanAdd() => newTodoList.Title.HasValue() && newTodoList.Title.Length > 2;
 
+    void Enter(int listId, KeyboardEventArgs keyboardEvent) => SaveList(listId);
+    
     void SaveList(int id) => todoLists.Single(x => x.Id == id).EditMode = false;
 
     void EditList(int id) => todoLists.Single(x => x.Id == id).EditMode = true;
 
     void ViewList(int id) => NavManager.NavigateTo($"todolist/{id}");
 
-    void DeleteList(int id) => todoLists.RemoveAll(x => x.Id == id);
 
-    void Enter(int listId, KeyboardEventArgs keyboardEvent)
+    async Task DeleteList(int id)
     {
-        if (keyboardEvent.IsEnter())
+        var listTitle = todoLists.Single(x => x.Id == id).Title;
+        var dialogText = $"Do you really want to delete the list {listTitle}? This process cannot be undone.";
+        var result = await ConfirmationDialog.ShowDeleteDialog(DialogService, dialogText);
+
+        if (!result.Cancelled)
         {
-            StateHasChanged();
-            SaveList(listId);
-        }
+            Snackbar.Add($"List {listTitle} deleted", Severity.Success);
+            todoLists.RemoveAll(x => x.Id == id);
+        }       
     }
 
     private class NewTodoList
@@ -124,6 +146,7 @@
         [Required]
         [StringLength(300, MinimumLength = 3)]
         public string Title { get; set; } = string.Empty;
-    }
 
+        public string Colour { get; set; } = string.Empty;
+    }
 }

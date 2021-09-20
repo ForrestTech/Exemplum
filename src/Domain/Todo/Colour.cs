@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Domain.Todo
 {
     using Common;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -13,21 +14,20 @@
 
         public static Colour From(string code)
         {
-            var colour = new Colour(code);
-
-            if (!SupportedColours.Contains(colour))
+            if (!IsValidColour(code))
             {
                 throw new UnsupportedColourException(code);
             }
 
+            var colour = new Colour(code);
             return colour;
         }
 
         public static bool IsValidColour(string code)
         {
-            var colour = new Colour(code);
-
-            return SupportedColours.Contains(colour);
+            return code.Length == 7 &&
+                   code[0] == '#'
+                   && code.All(x => Char.IsLetterOrDigit(x) || x == '#');
         }
 
         public static Colour White => new Colour("#FFFFFF");
@@ -61,21 +61,6 @@
         public override string ToString()
         {
             return Code;
-        }
-
-        private static IEnumerable<Colour> SupportedColours
-        {
-            get
-            {
-                yield return White;
-                yield return Red;
-                yield return Orange;
-                yield return Yellow;
-                yield return Green;
-                yield return Blue;
-                yield return Purple;
-                yield return Grey;
-            }
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

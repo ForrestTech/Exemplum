@@ -2,6 +2,14 @@
     
 }
 
+::deep .add-list-button{
+    margin-top: 15px;
+}
+
+::deep .hide-input input{
+    visibility:hidden;
+}
+
 ::deep .todolist-paper {    
     padding: 10px;
     display: flex;    
