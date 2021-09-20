@@ -40,6 +40,11 @@
             DomainEvents.Add(new TodoItemCompletedEvent(this));
         }
 
+        public void MarkAsIncomplete()
+        {
+            _done = false;
+        }
+
         /// <summary>
         /// This is a good example of using SmartEnum to hold behaviour in your model and also of double dispatch, injecting strategies into domains in this case a clock
         /// </summary>

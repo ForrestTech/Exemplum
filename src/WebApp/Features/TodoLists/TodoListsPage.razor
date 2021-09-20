@@ -112,7 +112,7 @@
 
     async Task AddNewList()
     {
-        var todoItem = await Client.CreateTodoList(new CreateTodoListCommand(newTodoList.Title, newTodoList.Colour));        
+        var todoItem = await Client.CreateTodoList(new CreateTodoList(newTodoList.Title, newTodoList.Colour));        
         todoLists.Add(todoItem);
         newTodoList = new NewTodoList();
     }
@@ -140,7 +140,7 @@
     async Task SaveList(int id)
     {
         var todoList = todoLists.Single(x => x.Id == id);
-        await Client.UpdateTodoList(id, new UpdateTodoListCommand(todoList.Title, todoList.Colour));
+        await Client.UpdateTodoList(id, new UpdateTodoList(todoList.Title, todoList.Colour));
         todoLists.Single(x => x.Id == id).InEditMode = false;
     }
 
@@ -155,6 +155,7 @@
         if (!result.Cancelled)
         {
             Snackbar.Add($"List {listTitle} deleted", Severity.Error);
+            await Client.DeleteTodoList(id);
             todoLists.RemoveAll(x => x.Id == id);
         }       
     }

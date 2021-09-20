@@ -1,6 +1,5 @@
 namespace Exemplum.WebApp
 {
-    using Features.TodoLists;
     using Features.TodoLists.Clients;
     using Features.WeatherForecasts;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -12,10 +11,8 @@ namespace Exemplum.WebApp
     using System;
     using System.Threading.Tasks;
 
-    public class Program
+    public class ProgramClient
     {
-        // TODO link up all todo item actions to API 
-        // TODO migrate to using fluent validation https://blog.stevensanderson.com/2019/09/04/blazor-fluentvalidation/
         // TODO migrate to teal palette
         // TODO create logo for exemplum
         // TODO move create list to its own component
@@ -30,18 +27,11 @@ namespace Exemplum.WebApp
             try
             {
                 Log.Information("Starting Web host");
-                
+
                 var builder = WebAssemblyHostBuilder.CreateDefault(args);
                 builder.RootComponents.Add<App>("#app");
 
-                builder.Services.AddSingleton<WeatherForecastService>();
-
-                builder.Services.AddRefitClient<ITodoClient>()
-                    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:5001"));
-                
-                builder.Services.AddMudServices();
-                
-                builder.Logging.AddSerilog();
+                ConfigureServices(builder);
 
                 await builder.Build().RunAsync();
             }
@@ -50,6 +40,20 @@ namespace Exemplum.WebApp
                 Log.Fatal(ex, "An exception occurred while creating the WASM host");
                 throw;
             }
+        }
+
+        private static void ConfigureServices(WebAssemblyHostBuilder builder)
+        {
+            builder.Services.AddSingleton<WeatherForecastService>();
+
+            builder.Services.AddRefitClient<ITodoClient>()
+                .ConfigureHttpClient(c =>
+                    c.BaseAddress = new Uri("https://localhost:5001")
+                );
+
+            builder.Services.AddMudServices();
+
+            builder.Logging.AddSerilog();
         }
     }
 }

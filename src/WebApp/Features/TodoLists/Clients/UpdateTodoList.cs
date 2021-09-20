@@ -1,6 +1,6 @@
 ﻿namespace Exemplum.WebApp.Features.TodoLists.Clients
 {
-    public record UpdateTodoListCommand(string Title, string? Colour)
+    public record UpdateTodoList(string Title, string? Colour)
     {
     }
 }

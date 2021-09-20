@@ -4,6 +4,7 @@
     using Application.Todo.Commands;
     using Application.Todo.Models;
     using Application.Todo.Queries;
+    using Domain.Todo;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
@@ -88,14 +89,12 @@
         /// <param name="todoId">The todo id</param>
         /// <param name="command">The todo details to update</param>
         [HttpPut("todolist/{listId:int}/todo/{todoId:int}")]
-        public async Task<ActionResult> UpdateTodoItem(int listId, int todoId, [FromBody] UpdateTodoCommand command)
+        public async Task<ActionResult<TodoItem>> UpdateTodoItem(int listId, int todoId, [FromBody] UpdateTodoCommand command)
         {
             command.ListId = listId;
             command.TodoId = todoId;
 
-            await _mediator.Send(command);
-
-            return Ok();
+            return await _mediator.Send(command);
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace Exemplum.WebApi
     using System.Reflection;
     using System.Threading.Tasks;
 
-    public class Program
+    public class ProgramApi
     {
         public static async Task<int> Main(string[] args)
         {
@@ -91,7 +91,7 @@ namespace Exemplum.WebApi
             }
             catch (Exception ex)
             {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<ProgramApi>>();
 
                 logger.LogError(ex, "An error occurred while migrating or seeding the database");
 

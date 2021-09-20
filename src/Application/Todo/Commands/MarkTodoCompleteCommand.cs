@@ -43,8 +43,16 @@
             {
                 throw new NotFoundException(nameof(TodoItem), request);
             }
+
+            if (todo.Done)
+            {
+                todo.MarkAsIncomplete();
+            }
+            else
+            {
+                todo.MarkAsDone();    
+            }
             
-            todo.MarkAsDone();
 
             await _context.SaveChangesAsync(cancellationToken);
 

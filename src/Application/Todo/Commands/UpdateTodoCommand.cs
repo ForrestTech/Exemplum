@@ -1,5 +1,6 @@
 ﻿namespace Exemplum.Application.Todo.Commands
 {
+    using Domain.Todo;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class UpdateTodoCommand : IRequest
+    public class UpdateTodoCommand : IRequest<TodoItem>
     {
         [JsonIgnore]
         public int ListId { get; set; }
@@ -31,7 +32,7 @@
         }
     }
     
-    public class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand>
+    public class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand, TodoItem>
     {
         private readonly IApplicationDbContext _context;
 
@@ -40,7 +41,7 @@
             _context = context;
         }
         
-        public async Task<Unit> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
+        public async Task<TodoItem> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
         {
             var todo = await _context.TodoItems
                 .Where(x => x.ListId == request.ListId && x.Id == request.TodoId)
@@ -51,7 +52,7 @@
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return todo;
         }
     }
 }

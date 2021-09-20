@@ -40,7 +40,7 @@
                                 <MudTextField @bind-Value="item.Title"
                                               UserAttributes="TodoItemAttributes(item.Id)"
                                               Immediate="true"
-                                              @onkeypress="(args) => {if (args.IsEnter()) Enter(item.Id);}"/>
+                                              @onkeypress="(args) => Enter(item.Id, args)"/>
                                 <span class="todo-items-icons">
                                     <MudTooltip Text="Edit">
                                         <MudIconButton Icon="@Icons.Material.Filled.Save"
@@ -58,8 +58,10 @@
                                                        @onclick="() => EditItem(item.Id)"/>
                                     </MudTooltip>
                                     <MudTooltip Text="Mark as done">
-                                        <MudSwitch @bind-Checked="item.Done" 
-                                                   Color="Color.Primary"/>
+                                        <MudSwitch T="bool"  
+                                                    Checked="@item.Done" 
+                                                    CheckedChanged="() => OnCompletedChanged(item.Id)"
+                                                    Color="Color.Primary"/>
                                     </MudTooltip>
                                     <MudTooltip Text="Delete">
                                         <MudIconButton Icon="@Icons.Material.Outlined.Delete"
@@ -106,29 +108,37 @@
         var pagedList = await Client.GetTodoItemsInList(ListId, 1, 100);
         todoItems = pagedList.Items;
     }
-    
+
     bool CanAdd() => newTodoItem.Title.HasValue() && newTodoItem.Title.Length > 2;
 
-    void AddNewItem()
+    string ItemTitle(int id) => todoItems.Single(x => x.Id == id).Title;
+
+    async Task AddNewItem()
     {
-        todoItems.Add(new TodoItem
-        {
-            Id = todoItems.Max(x => x.Id) + 1,
-            Title = newTodoItem.Title
-        });
+        var todoItem = await Client.CreateTodoItem(list.Id, new CreateTodoItem(newTodoItem.Title));
+        todoItems.Add(todoItem);
         newTodoItem = new NewTodoItem();
     }
 
-    string ItemTitle(int id) => todoItems.Single(x => x.Id == id).Title;
-    
-    void Enter(int listId) => SaveItem(listId);
-    
-    void SaveItem(int id) => todoItems.Single(x => x.Id == id).InEditMode = false;
+    async Task Enter(int listId, KeyboardEventArgs keyboardEvent)
+    {
+        if (keyboardEvent.IsEnter())
+        {
+            await SaveItem(listId);
+        }
+    }
+
+    async Task SaveItem(int id)
+    {
+        var item = todoItems.Single(x => x.Id == id);
+        await Client.UpdateTodoItem(list.Id, id, new UpdateTodoItem(item.Title));
+        todoItems.Single(x => x.Id == id).InEditMode = false;
+    }
 
     async Task EditItem(int id)
     {
         todoItems.Single(x => x.Id == id).InEditMode = true;
-        
+
         // Set focus to the now visible edit input box. This is only possible with JS currently.
         await Js.RetryInvokeAsync("setFocusById", TodoItemId(id));
     }
@@ -141,13 +151,20 @@
 
         if (!result.Cancelled)
         {
+            await Client.DeleteTodoItem(list.Id, id);
             Snackbar.Add($"{listTitle} deleted", Severity.Error);
             todoItems.RemoveAll(x => x.Id == id);
         }
     }
+    
+    async Task OnCompletedChanged(int id)
+    {
+        var todo = todoItems.Single(x => x.Id == id);
+        await Client.MarkTodoItemCompleted(list.Id, id);
+        todo.Done = !todo.Done;
+    }
 
     static string TodoItemId(int id) => $"todo-item-text-{id}";
-
     static Dictionary<string, object> TodoItemAttributes(int id) => new Dictionary<string, object> { { "id", TodoItemId(id) } };
 
     static string StyleForDone(bool done)
@@ -161,5 +178,4 @@
         [StringLength(300, MinimumLength = 3)]
         public string Title { get; set; } = string.Empty;
     }
-
 }
