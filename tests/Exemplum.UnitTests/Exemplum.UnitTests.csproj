@@ -7,11 +7,7 @@
 
     <ItemGroup>
       <PackageReference Include="autofixture" Version="4.17.0" />
-      <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
-      <PackageReference Include="coverlet.msbuild" Version="3.1.0">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        <PrivateAssets>all</PrivateAssets>
-      </PackageReference>
+      <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />      
       <PackageReference Include="FluentAssertions" Version="6.1.0" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
       <PackageReference Include="nsubstitute" Version="4.2.2" />
@@ -24,6 +20,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="3.1.0">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

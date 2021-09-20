@@ -1,44 +1,53 @@
 ﻿@page "/weatherforecast"
-@inject WeatherForecastService ForecastService
+@using Exemplum.WebApp.Features.WeatherForecasts.Client
 
-<h1>Weather forecast</h1>
+@inject IJSRuntime jsRuntime
+@inject IWeatherForecastClient client
 
-<p>This component demonstrates fetching data from a service.</p>
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        <div class="weather-forecast">
+            <MudText Typo="Typo.h1">Weather forecast</MudText>
+            <MudText Typo="Typo.body1">This component demonstrates fetching data from a service and the use of the browser geolocation API.</MudText>
+            <br/>
+            <br/>
+            <MudTable Items="@forecasts" Hover="true"
+                      Breakpoint="Breakpoint.Sm"
+                      Loading="@loading"
+                      LoadingProgressColor="Color.Info">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Forecasts</MudText>
+                    <MudSpacer/>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Location</MudTh>
+                    <MudTh>Temp. (C)</MudTh>
+                    <MudTh>Summary</MudTh>
+                    <MudTh>Description</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Temp">@context.Main.Temp</MudTd>
+                    <MudTd DataLabel="Summary">@context.Weather.First().Main</MudTd>
+                    <MudTd DataLabel="Description">@context.Weather.First().Description</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </div>
+    </MudContainer>
+</MudMainContent>
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
 
 @code {
-    private WeatherForecastDto[] forecasts = new WeatherForecastDto[]{};
+
+    List<WeatherForecast>? forecasts;
+    WeatherForecast? forecast;
+    bool loading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        forecast = await client.GetForecast(11.96, 108.43);
+        forecasts = new List<WeatherForecast> { forecast };
+        loading = false;
     }
+
 }

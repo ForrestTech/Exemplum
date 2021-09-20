@@ -1,4 +1,4 @@
-﻿namespace Exemplum.WebApp.Features.TodoLists.Clients
+﻿namespace Exemplum.WebApp.Features.TodoLists.Client
 {
     public record UpdateTodoItem(string Title)
     {

@@ -1,7 +1,7 @@
 namespace Exemplum.WebApp
 {
-    using Features.TodoLists.Clients;
-    using Features.WeatherForecasts;
+    using Features.TodoLists.Client;
+    using Features.WeatherForecasts.Client;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using MudBlazor.Services;
@@ -42,16 +42,17 @@ namespace Exemplum.WebApp
 
         private static void ConfigureServices(WebAssemblyHostBuilder builder)
         {
-            builder.Services.AddSingleton<WeatherForecastService>();
-
             builder.Services.AddRefitClient<ITodoClient>()
-                .ConfigureHttpClient(c =>
-                    c.BaseAddress = new Uri("https://localhost:5001")
-                );
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri));
+
+            builder.Services.AddRefitClient<IWeatherForecastClient>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri));
 
             builder.Services.AddMudServices();
 
             builder.Logging.AddSerilog();
         }
+
+        private const string ApiHostUri = "https://localhost:5001";
     }
 }

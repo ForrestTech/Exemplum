@@ -1,4 +1,4 @@
-﻿namespace Exemplum.WebApp.Features.TodoLists.Clients
+﻿namespace Exemplum.WebApp.Features.TodoLists.Client
 {
     using Refit;
     using System.Threading.Tasks;
