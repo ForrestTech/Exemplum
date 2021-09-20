@@ -15,8 +15,6 @@ namespace Exemplum.WebApp
     {
         // TODO migrate to teal palette
         // TODO create logo for exemplum
-        // TODO move create list to its own component
-        // TODO review code to see if we need more seperation
         public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()

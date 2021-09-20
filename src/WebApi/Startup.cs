@@ -17,15 +17,12 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // Todo add basic todo UI to blazor
-    // Todo sort out CORS
     // Todo add mocking example using nsubstitute to application unit tests
     // Todo add health checks
     // Todo add some custom health checks
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add full user support for Auditable items
-    // Todo Migrate to using refit 
     // Todo add docker support using project tye
     // Todo add seq to docker/tye
     // Todo add docker support for sql/redis ??
@@ -39,6 +36,8 @@ namespace Exemplum.WebApi
     // Todo .net 6 simple endpoints
     public class Startup
     {
+        private const string DefaultCorsPolicy = "Default";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -54,7 +53,7 @@ namespace Exemplum.WebApi
 
             services.AddCors(options =>
             {
-                options.AddPolicy("Default", builder =>
+                options.AddPolicy(DefaultCorsPolicy, builder =>
                 {
                     builder.WithOrigins("https://localhost:6001")
                         .AllowAnyOrigin()
@@ -106,7 +105,7 @@ namespace Exemplum.WebApi
 
             app.UseRouting();
 
-            app.UseCors("Default");
+            app.UseCors(DefaultCorsPolicy);
 
             app.UseAuthorization();
 

@@ -1,42 +1,12 @@
 ﻿@page "/todolists"
 @using Exemplum.WebApp.Extensions
-@using System.ComponentModel.DataAnnotations
 @using Exemplum.WebApp.Features.TodoLists.Clients
 
 <MudMainContent>
     <MudContainer MaxWidth="MaxWidth.Medium">
         <div class="todo-lists">
             <MudText Typo="Typo.h1">Todo Lists</MudText>
-            <EditForm Model="@newTodoList" OnValidSubmit="@AddNewList">
-                <DataAnnotationsValidator/>
-                <MudGrid>
-                    <MudItem xs="7">
-                        <MudTextField Label="New list name"
-                                      @bind-Value="@newTodoList.Title"
-                                      For="@(() => newTodoList.Title)"
-                                      Immediate="true"
-                                      RequiredError="List name is required!"/>
-                    </MudItem>
-                    <MudItem xs="2">
-                        <MudColorPicker Label="" @bind-Text="newTodoList.Colour"
-                                        PickerVariant="PickerVariant.Inline"
-                                        ColorPickerMode="ColorPickerMode.HEX"
-                                        DisableAlpha="true"
-                                        DisableInputs="true" DisableModeSwitch="true"
-                                        AllowKeyboardInput="false"
-                                        Style="@($"color: {newTodoList.Colour};")"/>
-                    </MudItem>
-                    <MudItem xs="3">
-                        <MudButton Disabled="@(!CanAdd())"
-                                   Class="ml-auto add-button"
-                                   ButtonType="ButtonType.Submit"
-                                   Variant="Variant.Filled"
-                                   Color="Color.Primary">
-                            Add
-                        </MudButton>
-                    </MudItem>
-                </MudGrid>
-            </EditForm>
+            <AddTodoListForm OnAddNewList="AddNewList" />
             <MudGrid>
                 <MudItem xs="12">
                     @foreach (var list in todoLists)
@@ -97,10 +67,7 @@
     
     [Inject]
     IJSRuntime Js { get; set; } = default!;
-
-
-    string colourValue = string.Empty;
-    NewTodoList newTodoList = new();
+        
     List<TodoList> todoLists = new List<TodoList>();
 
     protected override async Task OnInitializedAsync()
@@ -110,14 +77,11 @@
         todoLists = todoPage.Items;
     }
 
-    async Task AddNewList()
+    async Task AddNewList(AddTodoListForm.NewTodoList newTodoList)
     {
         var todoItem = await Client.CreateTodoList(new CreateTodoList(newTodoList.Title, newTodoList.Colour));        
         todoLists.Add(todoItem);
-        newTodoList = new NewTodoList();
     }
-
-    bool CanAdd() => newTodoList.Title.HasValue() && newTodoList.Title.Length > 2;
 
     async Task Enter(int listId, KeyboardEventArgs keyboardEvent)
     {
@@ -163,12 +127,4 @@
     static string TodoListId(int id) => $"todo-list-text-{id}";
     static Dictionary<string, object> TodoListAttributes(int id) => new Dictionary<string, object> { { "id", TodoListId(id) } };
 
-    private class NewTodoList
-    {
-        [Required]
-        [StringLength(300, MinimumLength = 3)]
-        public string Title { get; set; } = string.Empty;
-
-        public string? Colour { get; set; }
-    }
 }

@@ -1,0 +1,60 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Exemplum.WebApp.Extensions
+<div class="add-todo-list">
+<EditForm Model="@newTodoList" OnValidSubmit="@AddTodoList">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="7">
+            <MudTextField Label="New list name"
+                          @bind-Value="@newTodoList.Title"
+                          For="@(() => newTodoList.Title)"
+                          Immediate="true"
+                          RequiredError="List name is required!"/>
+        </MudItem>
+        <MudItem xs="2">
+            <MudColorPicker Label="" @bind-Text="newTodoList.Colour"
+                            PickerVariant="PickerVariant.Inline"
+                            ColorPickerMode="ColorPickerMode.HEX"
+                            DisableAlpha="true"
+                            DisableInputs="true" DisableModeSwitch="true"
+                            AllowKeyboardInput="false"
+                            Style="@($"color: {newTodoList.Colour};")"/>
+        </MudItem>
+        <MudItem xs="3">
+            <MudButton Disabled="@(!CanAdd())"
+                       Class="ml-auto add-button"
+                       ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary">
+                Add
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<NewTodoList> OnAddNewList { get; set; }
+
+    NewTodoList newTodoList = new();
+
+    async Task AddTodoList()
+    {
+        await OnAddNewList.InvokeAsync(newTodoList);
+        newTodoList = new();
+    }
+
+    bool CanAdd() => newTodoList.Title.HasValue() && newTodoList.Title.Length > 2;
+
+    public class NewTodoList
+    {
+        [Required]
+        [StringLength(300, MinimumLength = 3)]
+        public string Title { get; set; } = string.Empty;
+
+        public string? Colour { get; set; }
+    }
+
+}

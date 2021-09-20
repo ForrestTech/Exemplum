@@ -93,34 +93,38 @@
         [Fact]
         public async Task Todo_complete_item_and_ensure_state()
         {
-            var response = await _client.PostAsync("api/todolist/1/todo/1/completed", new StringContent(string.Empty));
-        
-            response.EnsureSuccessStatusCode();
-        
-            var newTodoResponse = await _client.GetAsync("api/todolist/1/todo/1");
-        
-            newTodoResponse.EnsureSuccessStatusCode();
-        
-            var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
-        
+            const string todoTitle = "To be completed";
+
+            var response = await _client.PostAsJsonAsync("api/todolist/1/todo",
+                new CreateTodoItemCommand { Title = todoTitle, Note = "Some note" });
+
+            var completedResponse = await _client.PostAsync($"{response.Headers.Location}/completed",
+                new StringContent(string.Empty));
+            completedResponse.EnsureSuccessStatusCode();
+
+            var completedTodo = await _client.GetAsync(response.Headers.Location);
+            completedTodo.EnsureSuccessStatusCode();
+
+            var newTodo = await completedTodo.Content.ReadFromJsonAsync<TodoItemDto>();
+
             newTodo?.Done.Should().Be(true);
         }
-        
+
         [Fact]
         public async Task Todo_set_priority_and_ensure_state()
         {
             string priorityLevel = PriorityLevel.High.ToString();
             var response = await _client.PostAsJsonAsync("api/todolist/1/todo/1/priority",
                 new SetPriorityCommand { PriorityLevel = priorityLevel });
-        
+
             response.EnsureSuccessStatusCode();
-        
+
             var newTodoResponse = await _client.GetAsync("api/todolist/1/todo/1");
-        
+
             newTodoResponse.EnsureSuccessStatusCode();
-        
+
             var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
-        
+
             newTodo?.Priority.Should().Be(priorityLevel);
         }
     }
