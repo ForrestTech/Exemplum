@@ -43,11 +43,8 @@
 <script src="_framework/blazor.webassembly.js"></script>
 <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 <script>
-    window.setFocusById = (id) => {
-        console.log("trying to set focus")
-        console.log(id)
-        let element = document.getElementById(id);
-        console.log(element)
+    window.setFocusById = (id) => {     
+        let element = document.getElementById(id);       
         if (element == null)
             return false;
         else {

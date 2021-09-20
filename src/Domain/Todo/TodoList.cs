@@ -12,15 +12,20 @@
         private TodoList()
         { }
         
+        public TodoList(string title)
+        {
+            Title = title;
+        }
+        
         public TodoList(string title, Colour colour)
         {
             Title = title;
             Colour = colour;
         }
 
-        public string Title { get; private set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
 
-        public Colour Colour { get; private set; } = Colour.White;
+        public Colour? Colour { get; set; }
 
         private readonly List<TodoItem> _items = new List<TodoItem>();
         public IEnumerable<TodoItem> Items => _items.AsReadOnly();

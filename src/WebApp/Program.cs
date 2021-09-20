@@ -1,6 +1,7 @@
 namespace Exemplum.WebApp
 {
     using Features.TodoLists;
+    using Features.TodoLists.Clients;
     using Features.WeatherForecasts;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +14,6 @@ namespace Exemplum.WebApp
 
     public class Program
     {
-        // TODO link up all todo list actions to API (may need to add an update method)
         // TODO link up all todo item actions to API 
         // TODO migrate to using fluent validation https://blog.stevensanderson.com/2019/09/04/blazor-fluentvalidation/
         // TODO migrate to teal palette

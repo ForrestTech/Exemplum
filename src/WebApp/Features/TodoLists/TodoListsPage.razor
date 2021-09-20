@@ -1,6 +1,7 @@
 ﻿@page "/todolists"
 @using Exemplum.WebApp.Extensions
 @using System.ComponentModel.DataAnnotations
+@using Exemplum.WebApp.Features.TodoLists.Clients
 
 <MudMainContent>
     <MudContainer MaxWidth="MaxWidth.Medium">
@@ -26,8 +27,7 @@
                                         Style="@($"color: {newTodoList.Colour};")"/>
                     </MudItem>
                     <MudItem xs="3">
-                        <MudButton @onclick="AddNewList"
-                                   Disabled="@(!CanAdd())"
+                        <MudButton Disabled="@(!CanAdd())"
                                    Class="ml-auto add-button"
                                    ButtonType="ButtonType.Submit"
                                    Variant="Variant.Filled"
@@ -46,7 +46,8 @@
                             {
                                 <MudTextField @bind-Value="@list.Title"
                                               Immediate="true"
-                                              @onkeypress="(args) => {if (args.IsEnter()) Enter(list.Id);}"/>
+                                              UserAttributes="@TodoListAttributes(list.Id)"
+                                              @onkeypress="(args) => Enter(list.Id, args)"/>
                                 <span class="todo-lists-icons">
                                     <MudTooltip Text="Edit">
                                         <MudIconButton Icon="@Icons.Material.Filled.Save"
@@ -82,7 +83,6 @@
 
 
 @code{
-
     [Inject]
     public ITodoClient Client { get; set; } = default!;
 
@@ -94,6 +94,10 @@
 
     [Inject]
     ISnackbar Snackbar { get; set; } = default!;
+    
+    [Inject]
+    IJSRuntime Js { get; set; } = default!;
+
 
     string colourValue = string.Empty;
     NewTodoList newTodoList = new();
@@ -106,27 +110,40 @@
         todoLists = todoPage.Items;
     }
 
-    void AddNewList()
+    async Task AddNewList()
     {
-        todoLists.Add(new TodoList
-        {
-            Id = todoLists.Max(x => x.Id) + 1,
-            Title = newTodoList.Title,
-            Colour = newTodoList.Colour
-        });
+        var todoItem = await Client.CreateTodoList(new CreateTodoListCommand(newTodoList.Title, newTodoList.Colour));        
+        todoLists.Add(todoItem);
         newTodoList = new NewTodoList();
     }
 
     bool CanAdd() => newTodoList.Title.HasValue() && newTodoList.Title.Length > 2;
 
-    void Enter(int listId) => SaveList(listId);
-    
-    void SaveList(int id) => todoLists.Single(x => x.Id == id).InEditMode = false;
+    async Task Enter(int listId, KeyboardEventArgs keyboardEvent)
+    {
+        if (keyboardEvent.IsEnter())
+        {
+            await SaveList(listId);
+        }
+    }
 
-    void EditList(int id) => todoLists.Single(x => x.Id == id).InEditMode = true;
+    async Task EditList(int id)
+    {
+        todoLists.Single(x => x.Id == id).InEditMode = true;
+        
+        // Set focus to the now visible edit input box. This is only possible with JS currently.
+        await Js.RetryInvokeAsync("setFocusById", TodoListId(id));
+    }
 
     void ViewList(int id) => NavManager.NavigateTo($"todolist/{id}/{ListTitle(id).ToLower()}");
-    
+
+    async Task SaveList(int id)
+    {
+        var todoList = todoLists.Single(x => x.Id == id);
+        await Client.UpdateTodoList(id, new UpdateTodoListCommand(todoList.Title, todoList.Colour));
+        todoLists.Single(x => x.Id == id).InEditMode = false;
+    }
+
     string ListTitle(int id) => todoLists.Single(x => x.Id == id).Title;
 
     async Task DeleteList(int id)
@@ -141,6 +158,9 @@
             todoLists.RemoveAll(x => x.Id == id);
         }       
     }
+    
+    static string TodoListId(int id) => $"todo-list-text-{id}";
+    static Dictionary<string, object> TodoListAttributes(int id) => new Dictionary<string, object> { { "id", TodoListId(id) } };
 
     private class NewTodoList
     {
@@ -148,6 +168,6 @@
         [StringLength(300, MinimumLength = 3)]
         public string Title { get; set; } = string.Empty;
 
-        public string Colour { get; set; } = string.Empty;
+        public string? Colour { get; set; }
     }
 }

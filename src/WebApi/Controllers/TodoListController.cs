@@ -43,6 +43,14 @@
             return CreatedAtAction(nameof(GetTodoListById), new { listId = item.Id }, item);
         }
         
+        [HttpPut("todolist/{listId:int}")]
+        public async Task<ActionResult<TodoListDto>> UpdateTodoList(int listId, [FromBody] UpdateTodoListCommand command)
+        {
+            command.ListId = listId;
+            
+            return await _mediator.Send(command);
+        }
+        
         /// <summary>
         /// Get todo list by ID
         /// </summary>

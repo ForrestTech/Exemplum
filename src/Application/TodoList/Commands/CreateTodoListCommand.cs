@@ -14,7 +14,7 @@
     {
         public string Title { get; set; } = string.Empty;
 
-        public string Colour { get; set; } = string.Empty;
+        public string? Colour { get; set; }
     }
 
     public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
@@ -30,16 +30,18 @@
                 .MustAsync(BeUniqueTitle)
                 .WithMessage("Todo list title must be unique");
             
-            RuleFor(x => x.Colour).NotEmpty()
-                .Must(Colour.IsValidColour)
-                .WithMessage("{PropertyName} must be a valid colour not {PropertyValue}");
+            RuleFor(x => x.Colour)
+                .Must(x => x == null || Colour.IsValidColour(x))
+                .WithMessage("{PropertyName} must be a valid Colour");
         }
 
 
         private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
-            return await _context.TodoLists
-                .AllAsync(l => l.Title != title, cancellationToken: cancellationToken);
+            var todo = await _context.TodoLists
+                .SingleOrDefaultAsync(l => l.Title == title, cancellationToken: cancellationToken);
+
+            return todo == null;
         }
     }
     
@@ -56,7 +58,12 @@
         
         public async Task<TodoListDto> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
         {
-            var list = new TodoList(request.Title, Colour.From(request.Colour));
+            var list = new TodoList(request.Title);
+
+            if (request.Colour is not null)
+            {
+                list.Colour = Colour.From(request.Colour);
+            }
 
             _context.TodoLists.Add(list);
 

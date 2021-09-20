@@ -6,7 +6,7 @@
 
         public string Title { get; set; } = string.Empty;
         
-        public string Colour { get; set; } = string.Empty;
+        public string? Colour { get; set; }
 
         public bool InEditMode { get; set; }
     }
