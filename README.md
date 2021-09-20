@@ -25,7 +25,7 @@ Things we need to add to the readme
 9. Support for Auditable entities
 10. Add details about query objects and how we encapsulate query logic
 11. Domain events and transactions  (Transaction behaviour dont save changes in event handlers)
-12. Test framework use of fluent assertions as a better model for assertions, test server setup
+12. Test framework use of fluent assertions as a better model for assertions, test server setup, auto fixture, nsubstitute 
 13. 3rd party service calls, resilience and error handling
 14. Secret management
 15. Shout out to packages used and inspiration for the project
@@ -34,6 +34,18 @@ Things we need to add to the readme
 18. Blazor component libraries
 19. Not publishing a client or contracts !!?
 20. Blazor css scoping
+
+
+Code coverage commands
+
+dotnet test /p:CollectCoverage=true /p:Exclude="[Exemplum.Infrastructure]*" /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute="CompilerGeneratedAttribute" 
+
+Can add this param to fail test on coverate
+/p:Threshold=20 
+
+dotnet tool install -g dotnet-reportgenerator-globaltool
+
+reportgenerator -reports:".\coverage.opencover.xml" -targetdir:"CoverageResults" -reporttypes:HTML
 
 
 ## Docker 

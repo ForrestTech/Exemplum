@@ -1,4 +1,4 @@
-﻿namespace Application.UnitTests.Todo
+﻿namespace Application.UnitTests.Domain.Todo
 {
     using Exemplum.Application.Todo.Queries;
     using Exemplum.Domain.Todo;

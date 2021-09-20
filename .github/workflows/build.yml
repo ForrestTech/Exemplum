@@ -21,8 +21,8 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-build --verbosity normal
-
+        run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:Exclude="[Exemplum.Infrastructure]*" /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute="CompilerGeneratedAttribute" /p:Threshold=15
+        
   check-quality:
     runs-on: ubuntu-latest
     name: Code Inspector Code Quality Checker

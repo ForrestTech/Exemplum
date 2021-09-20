@@ -15,17 +15,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F66A0D66-701E-4ECA-B1B6-7E000FCF524C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.UnitTests", "tests\Domain.UnitTests\Domain.UnitTests.csproj", "{4373B950-9F5C-4A15-84EE-437E5D64E716}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{B4A6FE23-69F7-4090-B96B-F6E29CA6C52A}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		.github\Workflow\dotnet.yml = .github\Workflow\dotnet.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "tests\Application.UnitTests\Application.UnitTests.csproj", "{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exemplum.UnitTests", "tests\Exemplum.UnitTests\Exemplum.UnitTests.csproj", "{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTests", "tests\Application.IntegrationTests\Application.IntegrationTests.csproj", "{1B60DF8B-DB4C-41C4-AFC0-92C83F0F0A8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exemplum.IntegrationTests", "tests\Exemplum.IntegrationTests\Exemplum.IntegrationTests.csproj", "{1B60DF8B-DB4C-41C4-AFC0-92C83F0F0A8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "src\WebApp\WebApp.csproj", "{29195DBA-1041-4028-9D62-C6ACF77B8C2A}"
 EndProject
@@ -90,18 +92,6 @@ Global
 		{AB8B286E-B21F-4DB9-8C0C-D8410CE3C320}.Release|x64.Build.0 = Release|Any CPU
 		{AB8B286E-B21F-4DB9-8C0C-D8410CE3C320}.Release|x86.ActiveCfg = Release|Any CPU
 		{AB8B286E-B21F-4DB9-8C0C-D8410CE3C320}.Release|x86.Build.0 = Release|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Debug|x64.Build.0 = Debug|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Debug|x86.Build.0 = Debug|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Release|x64.ActiveCfg = Release|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Release|x64.Build.0 = Release|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Release|x86.ActiveCfg = Release|Any CPU
-		{4373B950-9F5C-4A15-84EE-437E5D64E716}.Release|x86.Build.0 = Release|Any CPU
 		{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -144,7 +134,6 @@ Global
 		{D2CCABCC-98B6-4E23-9629-26D4FFD1F4E9} = {7C90A133-27C5-4B07-95CA-523245F4FC0F}
 		{F8796887-D4E2-4F2C-8366-8073BF17D9D9} = {7C90A133-27C5-4B07-95CA-523245F4FC0F}
 		{AB8B286E-B21F-4DB9-8C0C-D8410CE3C320} = {7C90A133-27C5-4B07-95CA-523245F4FC0F}
-		{4373B950-9F5C-4A15-84EE-437E5D64E716} = {F66A0D66-701E-4ECA-B1B6-7E000FCF524C}
 		{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B} = {F66A0D66-701E-4ECA-B1B6-7E000FCF524C}
 		{1B60DF8B-DB4C-41C4-AFC0-92C83F0F0A8A} = {F66A0D66-701E-4ECA-B1B6-7E000FCF524C}
 		{29195DBA-1041-4028-9D62-C6ACF77B8C2A} = {7C90A133-27C5-4B07-95CA-523245F4FC0F}

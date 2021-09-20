@@ -39,12 +39,7 @@
         
         public void AddToDo(List<TodoItem> items)
         {
-            items.ForEach(x =>
-            {
-                _items.Add(x);
-
-                DomainEvents.Add(new TodoItemCreatedEvent(x));    
-            });
+            items.ForEach(AddToDo);
         }
     }
 }

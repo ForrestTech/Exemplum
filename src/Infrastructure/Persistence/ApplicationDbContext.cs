@@ -2,10 +2,12 @@
 {
     using Application.Common.DomainEvents;
     using Application.Persistence;
+    using DateAndTime;
     using Domain.Audit;
     using Domain.Common;
     using Domain.Common.DateAndTime;
     using Domain.Todo;
+    using DomainEvents;
     using ExceptionHandling;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -19,6 +21,14 @@
         private readonly IHandleDbExceptions _idbExceptions;
         private readonly IPublishDomainEvents _publishDomainEvents;
         private readonly IClock _clock;
+
+        public ApplicationDbContext(DbContextOptions options) :
+            this(options,
+                new NoOpHandleDbExceptions(),
+                new NoOpDomainEventsPublisher(),
+                new Clock())
+        {
+        }
 
         public ApplicationDbContext(DbContextOptions options,
             IHandleDbExceptions idbExceptions,

@@ -238,3 +238,7 @@ _Pvt_Extensions
 
 
 App_Data/
+TestResults/
+CoverageResults/
+coverage.opencover.xml
+coverage.json

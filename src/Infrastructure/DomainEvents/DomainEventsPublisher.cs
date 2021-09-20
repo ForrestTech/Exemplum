@@ -2,6 +2,7 @@
 {
     using Application.Common.DomainEvents;
     using Domain.Common;
+    using Domain.Common.DateAndTime;
     using MediatR;
     using Microsoft.Extensions.Logging;
     using System;
@@ -11,16 +12,22 @@
     {
         private readonly ILogger<DomainEventsPublisher> _logger;
         private readonly IPublisher _mediator;
+        private readonly IClock _clock;
 
-        public DomainEventsPublisher(ILogger<DomainEventsPublisher> logger, IPublisher mediator)
+        public DomainEventsPublisher(ILogger<DomainEventsPublisher> logger, 
+            IPublisher mediator, 
+            IClock clock)
         {
             _logger = logger;
             _mediator = mediator;
+            _clock = clock;
         }
 
         public async Task Publish(DomainEvent domainEvent)
         {
             _logger.LogInformation("Publishing domain event. Event - {Event}", domainEvent.GetType().Name);
+
+            domainEvent.DateOccurred = _clock.Now;
             
             var notification = GetNotificationCorrespondingToDomainEvent(domainEvent);
 
@@ -33,9 +40,9 @@
         private static INotification? GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
         {
             var instance = Activator.CreateInstance(typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType()), domainEvent);
-            if (instance != null)
+            if (instance is not null)
             {
-                INotification? notification = (INotification)instance;
+                var notification = (INotification)instance;
                 return notification;
             }
 

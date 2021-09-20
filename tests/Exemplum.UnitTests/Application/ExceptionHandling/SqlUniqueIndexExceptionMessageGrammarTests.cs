@@ -1,4 +1,4 @@
-﻿namespace Application.UnitTests.ExceptionHandling
+﻿namespace Application.UnitTests.Application.ExceptionHandling
 {
     using Exemplum.Infrastructure.Persistence.ExceptionHandling.Handlers;
     using FluentAssertions;

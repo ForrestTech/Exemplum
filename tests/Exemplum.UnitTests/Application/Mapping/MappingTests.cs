@@ -1,4 +1,4 @@
-﻿namespace Application.UnitTests.Mapping
+﻿namespace Application.UnitTests.Application.Mapping
 {
     using AutoMapper;
     using Exemplum.Application.Common.Mapping;

@@ -5,6 +5,9 @@
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// A single mapping profile that handles creating all the maps from DTO decorated with the IMapFrom interface
+    /// </summary>
     public class MappingProfile : Profile
     {
         public MappingProfile()

@@ -77,7 +77,7 @@
             const string todoTitle = "To be deleted";
 
             var response = await _client.PostAsJsonAsync("api/todolist",
-                new CreateTodoListCommand { Title = todoTitle, Colour = Colour.White });
+                new CreateTodoListCommand { Title = todoTitle, Colour = Colour.Blue });
 
             await _client.DeleteAsync(response.Headers.Location);
 
@@ -92,7 +92,7 @@
             const string todoTitle = "New todo";
 
             var response = await _client.PostAsJsonAsync("api/todolist",
-                new CreateTodoListCommand { Title = todoTitle, Colour = Colour.White });
+                new CreateTodoListCommand { Title = todoTitle, Colour = Colour.Blue });
 
             response.EnsureSuccessStatusCode();
 
@@ -103,7 +103,7 @@
             var newList = await newTodoResponse.Content.ReadFromJsonAsync<TodoListDto>();
 
             newList?.Title.Should().Be(todoTitle);
-            newList?.Colour.Should().Be(Colour.White);
+            newList?.Colour.Should().Be(Colour.Blue);
         }
     }
 }

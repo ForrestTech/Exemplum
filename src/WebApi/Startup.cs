@@ -17,7 +17,8 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // Todo add mocking example using nsubstitute to application unit tests
+    // Todo add more handler unit tests examples but dont aim for full coverate
+    // Migrate forecast in blazor to using API  
     // Todo add health checks
     // Todo add some custom health checks
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)

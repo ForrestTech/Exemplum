@@ -9,17 +9,21 @@
         public static string GetAllMessages(this Exception exception)
         {
             var message = exception.Message;
-            var innerExceptionMessages = string.Join($"InnerException: ", exception.GetInnerExceptions().Select(x => x.Message));
-            return $"{message}  {innerExceptionMessages}";
+            var messages = exception.GetInnerExceptions()
+                .Select(x => x.Message)
+                .ToList();
+            
+            if (messages.Any())
+            {
+                message += "InnerException: ";
+                message += string.Join("", messages);
+            }
+            
+            return message;
         }
 
         private static IEnumerable<Exception> GetInnerExceptions(this Exception exception)
         {
-            if (exception == null)
-            {
-                throw new ArgumentNullException(nameof(exception));
-            }
-
             var innerException = exception.InnerException;
 
             while (innerException != null)

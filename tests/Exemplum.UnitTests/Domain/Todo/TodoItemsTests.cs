@@ -1,10 +1,9 @@
-﻿namespace Domain.UnitTests.Todo
+﻿namespace Application.UnitTests.Domain.Todo
 {
     using Exemplum.Domain.Todo;
     using Exemplum.Infrastructure.DateAndTime;
     using FluentAssertions;
     using System;
-    using System.Diagnostics.SymbolStore;
     using Xunit;
 
     public class TodoItemsTests

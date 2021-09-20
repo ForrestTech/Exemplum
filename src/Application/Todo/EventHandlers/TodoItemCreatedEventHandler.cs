@@ -2,6 +2,7 @@
 {
     using Common.DomainEvents;
     using Domain.Audit;
+    using Domain.Common.DateAndTime;
     using Domain.Todo.Events;
     using MediatR;
     using Microsoft.Extensions.Logging;
@@ -18,12 +19,15 @@
     public class TodoItemCreatedEventHandler : INotificationHandler<DomainEventNotification<TodoItemCreatedEvent>>
     {
         private readonly IEventHandlerDbContext _context;
+        private readonly IClock _clock;
         private readonly ILogger<TodoItemCreatedEventHandler> _logger;
 
-        public TodoItemCreatedEventHandler(IEventHandlerDbContext context, 
+        public TodoItemCreatedEventHandler(IEventHandlerDbContext context,
+            IClock clock,
             ILogger<TodoItemCreatedEventHandler> logger)
         {
             _context = context;
+            _clock = clock;
             _logger = logger;
         }
 
@@ -38,7 +42,7 @@
                 ReferenceHandler = ReferenceHandler.Preserve
             };
             
-            _context.AuditItems.Add(new AuditItem
+            _context.AuditItems.Add(new AuditItem(_clock)
             {
                 EventType = domainEvent.GetType().Name,
                 EventData = System.Text.Json.JsonSerializer.Serialize(domainEvent.Item, options)
