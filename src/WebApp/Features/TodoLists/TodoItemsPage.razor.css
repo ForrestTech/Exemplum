@@ -1,23 +1,19 @@
-﻿.todo-lists  {
-    
+﻿.todo-items  {
+
 }
 
 ::deep .add-button{
     margin-top: 15px;
 }
 
-::deep .hide-input input{
-    visibility:hidden;
-}
-
-::deep .todo-lists-paper {    
+::deep .todo-items-paper {
     padding: 10px;
-    display: flex;    
+    display: flex;
     align-items: center;
     margin-top: 10px;
     width: 500px;
 }
 
-::deep .todo-lists-icons {
+::deep .todo-items-icons {
     margin-left: auto;
 }

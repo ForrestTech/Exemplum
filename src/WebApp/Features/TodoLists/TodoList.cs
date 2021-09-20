@@ -8,6 +8,6 @@
         
         public string Colour { get; set; } = string.Empty;
 
-        public bool EditMode { get; set; }
+        public bool InEditMode { get; set; }
     }
 }

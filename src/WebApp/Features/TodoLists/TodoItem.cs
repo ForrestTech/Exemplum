@@ -11,5 +11,7 @@
         public string Priority { get; set; } = string.Empty;
 
         public bool Done { get; set; }
+
+        public bool InEditMode { get; set; }
     }
 }

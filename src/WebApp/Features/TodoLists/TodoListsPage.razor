@@ -4,7 +4,7 @@
 
 <MudMainContent>
     <MudContainer MaxWidth="MaxWidth.Medium">
-        <div class="todolist">
+        <div class="todo-lists">
             <MudText Typo="Typo.h1">Todo Lists</MudText>
             <EditForm Model="@newTodoList" OnValidSubmit="@AddNewList">
                 <DataAnnotationsValidator/>
@@ -28,7 +28,7 @@
                     <MudItem xs="3">
                         <MudButton @onclick="AddNewList"
                                    Disabled="@(!CanAdd())"
-                                   Class="ml-auto add-list-button"
+                                   Class="ml-auto add-button"
                                    ButtonType="ButtonType.Submit"
                                    Variant="Variant.Filled"
                                    Color="Color.Primary">
@@ -41,13 +41,13 @@
                 <MudItem xs="12">
                     @foreach (var list in todoLists)
                     {
-                        <MudPaper Elevation="2" Class="todolist-paper">
-                            @if (list.EditMode)
+                        <MudPaper Elevation="2" Class="todo-lists-paper">
+                            @if (list.InEditMode)
                             {
                                 <MudTextField @bind-Value="@list.Title"
                                               Immediate="true"
-                                              @onkeypress="(args) => {if (args.IsEnter()) Enter(list.Id, args);}"/>
-                                <span class="todolist-icons">
+                                              @onkeypress="(args) => {if (args.IsEnter()) Enter(list.Id);}"/>
+                                <span class="todo-lists-icons">
                                     <MudTooltip Text="Edit">
                                         <MudIconButton Icon="@Icons.Material.Filled.Save"
                                                        @onclick="() => SaveList(list.Id)"/>
@@ -57,7 +57,7 @@
                             else
                             {
                                 <span style="color:@list.Colour">@list.Title</span>
-                                <span class="todolist-icons">
+                                <span class="todo-lists-icons">
                                     <MudTooltip Text="Edit">
                                         <MudIconButton Icon="@Icons.Material.Outlined.Create"
                                                        @onclick="() => EditList(list.Id)"/>
@@ -119,24 +119,25 @@
 
     bool CanAdd() => newTodoList.Title.HasValue() && newTodoList.Title.Length > 2;
 
-    void Enter(int listId, KeyboardEventArgs keyboardEvent) => SaveList(listId);
+    void Enter(int listId) => SaveList(listId);
     
-    void SaveList(int id) => todoLists.Single(x => x.Id == id).EditMode = false;
+    void SaveList(int id) => todoLists.Single(x => x.Id == id).InEditMode = false;
 
-    void EditList(int id) => todoLists.Single(x => x.Id == id).EditMode = true;
+    void EditList(int id) => todoLists.Single(x => x.Id == id).InEditMode = true;
 
-    void ViewList(int id) => NavManager.NavigateTo($"todolist/{id}");
-
+    void ViewList(int id) => NavManager.NavigateTo($"todolist/{id}/{ListTitle(id).ToLower()}");
+    
+    string ListTitle(int id) => todoLists.Single(x => x.Id == id).Title;
 
     async Task DeleteList(int id)
     {
-        var listTitle = todoLists.Single(x => x.Id == id).Title;
+        var listTitle = ListTitle(id);
         var dialogText = $"Do you really want to delete the list {listTitle}? This process cannot be undone.";
         var result = await ConfirmationDialog.ShowDeleteDialog(DialogService, dialogText);
 
         if (!result.Cancelled)
         {
-            Snackbar.Add($"List {listTitle} deleted", Severity.Success);
+            Snackbar.Add($"List {listTitle} deleted", Severity.Error);
             todoLists.RemoveAll(x => x.Id == id);
         }       
     }

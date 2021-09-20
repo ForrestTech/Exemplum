@@ -1,0 +1,164 @@
+﻿@page "/todolist/{ListId:int}/{ListName}"
+@using Microsoft.AspNetCore.Components
+@using Exemplum.WebApp.Extensions
+@using System.ComponentModel.DataAnnotations
+
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        <div class="todo-items">
+            <MudText Typo="Typo.h1">@list.Title</MudText>
+            <EditForm Model="@newTodoItem" OnValidSubmit="@AddNewItem">
+                <DataAnnotationsValidator/>
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudTextField Label="New list name"
+                                      @bind-Value="@newTodoItem.Title"
+                                      For="@(() => newTodoItem.Title)"
+                                      Immediate="true"
+                                      RequiredError="List name is required!"/>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudButton @onclick="AddNewItem"
+                                   Disabled="@(!CanAdd())"
+                                   Class="ml-auto add-button"
+                                   ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary">
+                            Add
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+            <MudGrid>
+                <MudItem xs="12">
+                    @foreach (var item in todoItems)
+                    {
+                        <MudPaper Elevation="2" Class="todo-items-paper">
+                            @if (item.InEditMode)
+                            {
+                                <MudTextField @bind-Value="item.Title"
+                                              UserAttributes="TodoItemAttributes(item.Id)"
+                                              Immediate="true"
+                                              @onkeypress="(args) => {if (args.IsEnter()) Enter(item.Id);}"/>
+                                <span class="todo-items-icons">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Save"
+                                                       @onclick="() => SaveItem(item.Id)"/>
+                                    </MudTooltip>
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="@StyleForDone(item.Done)">@item.Title</span>
+                                <span class="todo-items-icons">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.Create"
+                                                       Disabled="item.Done"
+                                                       @onclick="() => EditItem(item.Id)"/>
+                                    </MudTooltip>
+                                    <MudTooltip Text="Mark as done">
+                                        <MudSwitch @bind-Checked="item.Done" 
+                                                   Color="Color.Primary"/>
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.Delete"
+                                                       @onclick="() => DeleteItem(item.Id)"/>
+                                    </MudTooltip>
+                                </span>
+                            }
+                        </MudPaper>
+                    }
+                </MudItem>
+            </MudGrid>
+        </div>
+    </MudContainer>
+</MudMainContent>
+
+@code{
+
+    [Parameter]
+    public int ListId { get; set; }
+
+    [Parameter]
+    public string ListName { get; set; } = string.Empty;
+
+    [Inject]
+    public ITodoClient Client { get; set; } = default!;
+
+    [Inject]
+    IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    IJSRuntime Js { get; set; } = default!;
+
+    List<TodoItem> todoItems = new List<TodoItem>();
+    TodoList list = new TodoList();
+    NewTodoItem newTodoItem = new NewTodoItem();
+
+    protected override async Task OnInitializedAsync()
+    {
+        list = await Client.GetTodoList(ListId);
+
+        var pagedList = await Client.GetTodoItemsInList(ListId, 1, 100);
+        todoItems = pagedList.Items;
+    }
+    
+    bool CanAdd() => newTodoItem.Title.HasValue() && newTodoItem.Title.Length > 2;
+
+    void AddNewItem()
+    {
+        todoItems.Add(new TodoItem
+        {
+            Id = todoItems.Max(x => x.Id) + 1,
+            Title = newTodoItem.Title
+        });
+        newTodoItem = new NewTodoItem();
+    }
+
+    string ItemTitle(int id) => todoItems.Single(x => x.Id == id).Title;
+    
+    void Enter(int listId) => SaveItem(listId);
+    
+    void SaveItem(int id) => todoItems.Single(x => x.Id == id).InEditMode = false;
+
+    async Task EditItem(int id)
+    {
+        todoItems.Single(x => x.Id == id).InEditMode = true;
+        
+        // Set focus to the now visible edit input box. This is only possible with JS currently.
+        await Js.RetryInvokeAsync("setFocusById", TodoItemId(id));
+    }
+
+    async Task DeleteItem(int id)
+    {
+        var listTitle = ItemTitle(id);
+        var dialogText = $"Do you really want to delete {listTitle}? This process cannot be undone.";
+        var result = await ConfirmationDialog.ShowDeleteDialog(DialogService, dialogText);
+
+        if (!result.Cancelled)
+        {
+            Snackbar.Add($"{listTitle} deleted", Severity.Error);
+            todoItems.RemoveAll(x => x.Id == id);
+        }
+    }
+
+    static string TodoItemId(int id) => $"todo-item-text-{id}";
+
+    static Dictionary<string, object> TodoItemAttributes(int id) => new Dictionary<string, object> { { "id", TodoItemId(id) } };
+
+    static string StyleForDone(bool done)
+    {
+        return done ? "text-decoration: line-through;" : string.Empty;
+    }
+
+    private class NewTodoItem
+    {
+        [Required]
+        [StringLength(300, MinimumLength = 3)]
+        public string Title { get; set; } = string.Empty;
+    }
+
+}
