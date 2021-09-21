@@ -43,6 +43,12 @@
             return CreatedAtAction(nameof(GetTodoListById), new { listId = item.Id }, item);
         }
         
+        /// <summary>
+        /// Update the todo list
+        /// </summary>
+        /// <param name="listId">The id of the list</param>
+        /// <param name="command">The details to update</param>
+        /// <returns>The updated list</returns>
         [HttpPut("todolist/{listId:int}")]
         public async Task<ActionResult<TodoListDto>> UpdateTodoList(int listId, [FromBody] UpdateTodoListCommand command)
         {

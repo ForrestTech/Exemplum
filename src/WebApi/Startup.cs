@@ -19,7 +19,7 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // Todo add more handler unit tests examples but dont aim for full coverage
+    // Todo Add unit tests for weather forecast caching logi
     // Todo add redis for caching (need in mem fall back)
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices

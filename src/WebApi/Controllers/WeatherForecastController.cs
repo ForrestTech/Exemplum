@@ -18,9 +18,13 @@
         /// <summary>
         /// Get weather forecast for a given location
         /// </summary>
+        /// /// <remarks>
+        /// Sample request:
+        ///     GET /weatherforecast?lat=11.96&amp;lon=108.4 
+        /// </remarks>
         /// <param name="lat">Latitude</param>
         /// <param name="lon">Longitude</param>
-        /// <returns>Weatherforecast</returns>
+        /// <returns>A weather forecast</returns>
         [HttpGet("weatherforecast")]
         public async Task<ActionResult<WeatherForecast>> Get(decimal lat, decimal lon)
         {

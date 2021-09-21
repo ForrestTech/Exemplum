@@ -27,13 +27,14 @@ Things we need to add to the readme
 11. Domain events and transactions  (Transaction behaviour dont save changes in event handlers)
 12. Test framework use of fluent assertions as a better model for assertions, test server setup, auto fixture, nsubstitute 
 13. 3rd party service calls, resilience and error handling
-14. Secret management
-15. Shout out to packages used and inspiration for the project
-16. Nullable
-17. Generated client
-18. Blazor component libraries
-19. Not publishing a client or contracts !!?
-20. Blazor css scoping
+14. Health checks and the health check monitor ui
+15. Secret management
+16. Shout out to packages used and inspiration for the project
+17. Nullable
+18. Generated client
+19. Blazor component libraries
+20. Not publishing a client or contracts !!?
+21. Blazor css scoping
 
 
 Code coverage commands

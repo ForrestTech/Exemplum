@@ -7,9 +7,10 @@
     using Exemplum.Application.Persistence;
     using Exemplum.Infrastructure.Persistence;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Reflection;
 
-    public class HandlerTestBase
+    public class HandlerTestBase 
     {
         protected virtual IFixture CreateFixture()
         {
@@ -17,8 +18,11 @@
                 .Customize(new AutoNSubstituteCustomization());
 
             var dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("Exemplum").Options;
+                .UseInMemoryDatabase($"ExemplumTestDb_{Guid.NewGuid()}").Options;
+            
             var context = new ApplicationDbContext(dbContextOptions);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
 
             fixture.Inject<IApplicationDbContext>(context);
 
