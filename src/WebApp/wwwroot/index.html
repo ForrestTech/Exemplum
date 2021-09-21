@@ -43,8 +43,8 @@
 <script src="_framework/blazor.webassembly.js"></script>
 <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 <script>
-    window.setFocusById = (id) => {     
-        let element = document.getElementById(id);       
+    window.setFocusById = (id) => {
+        let element = document.getElementById(id);
         if (element == null)
             return false;
         else {
@@ -52,6 +52,28 @@
             return true;
         }
     }
+
+    window.getPosition = () => {
+        return new Promise(function (resolve, reject) {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+    }
+
+    window.getCurrentLocation = async () => {
+        if (navigator.geolocation) {
+            try {
+                const position = await getPosition();
+                return {
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude
+                }
+            } catch (err) {
+                return null;
+            }
+        }
+        return null;
+    }
+
 </script>
 </body>
 

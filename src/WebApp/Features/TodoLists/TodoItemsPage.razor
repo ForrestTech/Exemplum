@@ -1,8 +1,13 @@
 ﻿@page "/todolist/{ListId:int}/{ListName}"
+
 @using Microsoft.AspNetCore.Components
-@using Exemplum.WebApp.Extensions
 @using System.ComponentModel.DataAnnotations
 @using Exemplum.WebApp.Features.TodoLists.Client
+
+@inject ITodoClient Client
+@inject ISnackbar Snackbar;
+@inject IJSRuntime JsRuntime;
+@inject IDialogService DialogService;
 
 <MudMainContent>
     <MudContainer MaxWidth="MaxWidth.Medium">
@@ -16,7 +21,7 @@
                                       @bind-Value="@newTodoItem.Title"
                                       For="@(() => newTodoItem.Title)"
                                       Immediate="true"
-                                      RequiredError="List name is required!"/>
+                                      RequiredError="Todo item is required!"/>
                     </MudItem>
                     <MudItem xs="4">
                         <MudButton @onclick="AddNewItem"
@@ -85,18 +90,6 @@
     [Parameter]
     public string ListName { get; set; } = string.Empty;
 
-    [Inject]
-    public ITodoClient Client { get; set; } = default!;
-
-    [Inject]
-    IDialogService DialogService { get; set; } = default!;
-
-    [Inject]
-    ISnackbar Snackbar { get; set; } = default!;
-
-    [Inject]
-    IJSRuntime Js { get; set; } = default!;
-
     List<TodoItem> todoItems = new List<TodoItem>();
     TodoList list = new TodoList();
     NewTodoItem newTodoItem = new NewTodoItem();
@@ -140,7 +133,7 @@
         todoItems.Single(x => x.Id == id).InEditMode = true;
 
         // Set focus to the now visible edit input box. This is only possible with JS currently.
-        await Js.RetryInvokeAsync("setFocusById", TodoItemId(id));
+        await JsRuntime.RetryInvokeAsync("setFocusById", TodoItemId(id));
     }
 
     async Task DeleteItem(int id)
@@ -172,7 +165,7 @@
         return done ? "text-decoration: line-through;" : string.Empty;
     }
 
-    private class NewTodoItem
+    class NewTodoItem
     {
         [Required]
         [StringLength(300, MinimumLength = 3)]

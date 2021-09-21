@@ -4,7 +4,6 @@ namespace Exemplum.WebApi
     using FluentValidation.AspNetCore;
     using HealthChecks.UI.Client;
     using Infrastructure;
-    using Infrastructure.Persistence;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
@@ -21,8 +20,6 @@ namespace Exemplum.WebApi
     using System.Reflection;
 
     // Todo add more handler unit tests examples but dont aim for full coverage
-    // Todo migrate blazor host value to config
-    // Todo Migrate forecast in blazor to using API
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add full user support for Auditable items

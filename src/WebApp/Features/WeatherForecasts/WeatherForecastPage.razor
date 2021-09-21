@@ -1,8 +1,9 @@
 ﻿@page "/weatherforecast"
 @using Exemplum.WebApp.Features.WeatherForecasts.Client
+@using Exemplum.WebApp.Location
 
-@inject IJSRuntime jsRuntime
-@inject IWeatherForecastClient client
+@inject IWeatherForecastClient Client
+@inject ILocationService LocationService
 
 <MudMainContent>
     <MudContainer MaxWidth="MaxWidth.Medium">
@@ -45,9 +46,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        forecast = await client.GetForecast(11.96, 108.43);
+        var geolocation = await LocationService.GetCurrentLocation() ?? new GeoLocation
+        {
+            Lat = 51.5d,
+            Lon = 0.12d
+        };
+
+        forecast = await Client.GetForecast(geolocation.Lat, geolocation.Lon);
         forecasts = new List<WeatherForecast> { forecast };
         loading = false;
     }
-
 }

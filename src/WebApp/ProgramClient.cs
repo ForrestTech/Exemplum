@@ -1,7 +1,9 @@
 namespace Exemplum.WebApp
 {
+    using Features;
     using Features.TodoLists.Client;
     using Features.WeatherForecasts.Client;
+    using Location;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using MudBlazor.Services;
@@ -48,6 +50,7 @@ namespace Exemplum.WebApp
             builder.Services.AddRefitClient<IWeatherForecastClient>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri));
 
+            builder.Services.AddTransient<ILocationService, LocationService>();
             builder.Services.AddMudServices();
 
             builder.Logging.AddSerilog();

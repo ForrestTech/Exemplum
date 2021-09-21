@@ -25,7 +25,7 @@
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
     
-    public static async Task<DialogResult> ShowDeleteDialog(IDialogService service, string dialogText)
+    public static async Task<DialogResult> ShowDeleteDialog(IDialogService dialogService, string dialogText)
     {
         const string delete = "Delete";
         var parameters = new DialogParameters
@@ -36,7 +36,7 @@
         };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = service.Show<ConfirmationDialog>(delete, parameters, options);
+        var dialog = dialogService.Show<ConfirmationDialog>(delete, parameters, options);
         var result = await dialog.Result;
         return result;
     }

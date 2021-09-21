@@ -1,6 +1,11 @@
 ﻿@page "/todolists"
-@using Exemplum.WebApp.Extensions
 @using Exemplum.WebApp.Features.TodoLists.Client
+
+@inject ITodoClient Client;
+@inject NavigationManager NavManager
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar 
+@inject  IJSRuntime JsRuntime
 
 <MudMainContent>
     <MudContainer MaxWidth="MaxWidth.Medium">
@@ -53,21 +58,7 @@
 
 
 @code{
-    [Inject]
-    public ITodoClient Client { get; set; } = default!;
 
-    [Inject]
-    public NavigationManager NavManager { get; set; } = default!;
-
-    [Inject]
-    IDialogService DialogService { get; set; } = default!;
-
-    [Inject]
-    ISnackbar Snackbar { get; set; } = default!;
-    
-    [Inject]
-    IJSRuntime Js { get; set; } = default!;
-        
     List<TodoList> todoLists = new List<TodoList>();
 
     protected override async Task OnInitializedAsync()
@@ -96,7 +87,7 @@
         todoLists.Single(x => x.Id == id).InEditMode = true;
         
         // Set focus to the now visible edit input box. This is only possible with JS currently.
-        await Js.RetryInvokeAsync("setFocusById", TodoListId(id));
+        await JsRuntime.RetryInvokeAsync("setFocusById", TodoListId(id));
     }
 
     void ViewList(int id) => NavManager.NavigateTo($"todolist/{id}/{ListTitle(id).ToLower()}");
@@ -115,7 +106,7 @@
         var listTitle = ListTitle(id);
         var dialogText = $"Do you really want to delete the list {listTitle}? This process cannot be undone.";
         var result = await ConfirmationDialog.ShowDeleteDialog(DialogService, dialogText);
-
+        
         if (!result.Cancelled)
         {
             Snackbar.Add($"List {listTitle} deleted", Severity.Error);
