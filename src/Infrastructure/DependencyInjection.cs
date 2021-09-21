@@ -13,9 +13,10 @@
 
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, 
+            IConfiguration configuration)
         {
-            if (bool.Parse(configuration["UseInMemoryDatabase"]))
+            if (configuration.UseInMemoryDatabase())
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseInMemoryDatabase("Exemplum"));
@@ -23,7 +24,7 @@
             else
             {
                 services.AddDbContext<ApplicationDbContext>(options => 
-                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                    options.UseSqlServer(configuration.GetDefaultConnection(),
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
 

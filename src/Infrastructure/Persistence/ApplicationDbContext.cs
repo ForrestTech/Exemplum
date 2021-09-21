@@ -22,7 +22,7 @@
         private readonly IPublishDomainEvents _publishDomainEvents;
         private readonly IClock _clock;
 
-        public ApplicationDbContext(DbContextOptions options) :
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
             this(options,
                 new NoOpHandleDbExceptions(),
                 new NoOpDomainEventsPublisher(),
@@ -30,7 +30,7 @@
         {
         }
 
-        public ApplicationDbContext(DbContextOptions options,
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
             IHandleDbExceptions idbExceptions,
             IPublishDomainEvents publishDomainEvents,
             IClock clock) : base(options)

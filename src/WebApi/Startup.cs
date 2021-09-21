@@ -2,8 +2,11 @@ namespace Exemplum.WebApi
 {
     using Application;
     using FluentValidation.AspNetCore;
+    using HealthChecks.UI.Client;
     using Infrastructure;
+    using Infrastructure.Persistence;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
@@ -17,16 +20,16 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // Todo add more handler unit tests examples but dont aim for full coverate
-    // Migrate forecast in blazor to using API  
-    // Todo add health checks
-    // Todo add some custom health checks
+    // Todo add more handler unit tests examples but dont aim for full coverage
+    // Todo migrate blazor host value to config
+    // Todo Migrate forecast in blazor to using API
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add full user support for Auditable items
     // Todo add docker support using project tye
-    // Todo add seq to docker/tye
+    // Todo add seq to docker/tye (configure health checks)
     // Todo add docker support for sql/redis ??
+    // Todo add support for metric pushing to grafana
     // Todo add redis for caching
     // Todo create nuget template package
     // Todo add github release drafting system
@@ -62,6 +65,16 @@ namespace Exemplum.WebApi
                         .AllowAnyMethod();
                 });
             });
+            
+            var hcBuilder = services.AddHealthChecks();
+            
+            if(!Configuration.UseInMemoryDatabase())
+            {
+                hcBuilder.AddSqlServer(Configuration.GetDefaultConnection());
+            }
+
+            services.AddHealthChecksUI()
+                .AddInMemoryStorage();
 
             services.AddControllers(options =>
             {
@@ -109,9 +122,21 @@ namespace Exemplum.WebApi
             app.UseCors(DefaultCorsPolicy);
 
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
+                //with a more complex set of health checks we can separate checks by tag
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions()
+                {
+                    Predicate = (_) => false
+                });
+                
+                endpoints.MapHealthChecksUI();
                 endpoints.MapControllers();
             });
         }
