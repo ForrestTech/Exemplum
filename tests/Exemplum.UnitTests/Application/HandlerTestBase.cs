@@ -11,7 +11,7 @@
 
     public class HandlerTestBase
     {
-        protected static IFixture SetupFixture()
+        protected virtual IFixture CreateFixture()
         {
             var fixture = new Fixture()
                 .Customize(new AutoNSubstituteCustomization());
@@ -22,8 +22,9 @@
 
             fixture.Inject<IApplicationDbContext>(context);
 
-            var mappingConfiguration =
-                new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetAssembly(typeof(MappingProfile))));
+            var mappingConfiguration = new MapperConfiguration(config => 
+                config.AddMaps(Assembly.GetAssembly(typeof(MappingProfile))));
+            
             fixture.Inject<IMapper>(mappingConfiguration.CreateMapper());
             return fixture;
         }

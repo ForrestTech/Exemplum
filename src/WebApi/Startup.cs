@@ -20,6 +20,7 @@ namespace Exemplum.WebApi
     using System.Reflection;
 
     // Todo add more handler unit tests examples but dont aim for full coverage
+    // Todo add redis for caching (need in mem fall back)
     // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
     // Todo add authorization including adding roles and resolving polices
     // Todo add full user support for Auditable items
@@ -27,7 +28,6 @@ namespace Exemplum.WebApi
     // Todo add seq to docker/tye (configure health checks)
     // Todo add docker support for sql/redis ??
     // Todo add support for metric pushing to grafana
-    // Todo add redis for caching
     // Todo create nuget template package
     // Todo add github release drafting system
     // Todo add github code coverage

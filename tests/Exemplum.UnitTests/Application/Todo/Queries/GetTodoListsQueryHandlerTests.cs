@@ -13,7 +13,7 @@
         [Fact]
         public async Task Handle_returns_lists_in_database()
         {
-            var fixture = SetupFixture();
+            var fixture = CreateFixture();
 
             fixture.SeedData((context) =>
             {
