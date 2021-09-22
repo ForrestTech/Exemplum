@@ -4,9 +4,9 @@
 
     public static class ConfigurationExtensions
     {
-        public static bool UseInMemoryDatabase(this IConfiguration config)
+        public static bool UseInMemoryStorage(this IConfiguration config)
         {
-            return bool.Parse(config["UseInMemoryDatabase"]);
+            return bool.Parse(config["UseInMemoryStorage"]);
         }
         
         public static string GetDefaultConnection(this IConfiguration config)

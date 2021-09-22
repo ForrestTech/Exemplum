@@ -65,14 +65,14 @@ namespace Exemplum.WebApi
             
             var hcBuilder = services.AddHealthChecks();
             
-            if(!Configuration.UseInMemoryDatabase())
+            if(!Configuration.UseInMemoryStorage())
             {
                 hcBuilder.AddSqlServer(Configuration.GetDefaultConnection());
             }
 
             services.AddHealthChecksUI()
                 .AddInMemoryStorage();
-
+            
             services.AddControllers(options =>
             {
                 options.Filters.Add<ApiExceptionFilterAttribute>();

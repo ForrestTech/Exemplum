@@ -1,10 +1,7 @@
 ﻿namespace Exemplum.Infrastructure.ExecutionPolicies
 {
     using Application.Common.Policies;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Polly;
-    using Polly.Caching;
     using Polly.Contrib.WaitAndRetry;
     using Polly.Extensions.Http;
     using Polly.Registry;
@@ -31,25 +28,6 @@
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
                 .WaitAndRetryAsync(delay);
             return retry;
-        }
-
-        public static void RegisterCachingPolicy(PolicyRegistry registry, IServiceProvider serviceProvider, TimeSpan cacheFor)
-        {
-            var cache = CreateCachingPolicy(serviceProvider, cacheFor);
-
-            registry.Add(ExecutionPolicy.CachingPolicy, cache);
-        }
-
-        private static AsyncCachePolicy CreateCachingPolicy(IServiceProvider serviceProvider,
-            TimeSpan cacheFor)
-        {
-            var cacheProvider = serviceProvider.GetRequiredService<IAsyncCacheProvider>();
-
-            var cache = Policy.CacheAsync(
-                cacheProvider,
-                cacheFor);
-            
-            return cache;
         }
     }
 }

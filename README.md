@@ -31,10 +31,11 @@ Things we need to add to the readme
 15. Secret management
 16. Shout out to packages used and inspiration for the project
 17. Nullable
-18. Generated client
-19. Blazor component libraries
-20. Not publishing a client or contracts !!?
-21. Blazor css scoping
+18. Caching and why there is not a great cache story in the .net space well sort off
+19. Generated client
+20. Blazor component libraries
+21. Not publishing a client or contracts !!?
+22. Blazor css scoping
 
 
 Code coverage commands

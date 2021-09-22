@@ -1,13 +1,10 @@
 ﻿namespace Exemplum.Application.WeatherForecast.Query
 {
-    using Common.Policies;
+    using Common.Caching;
     using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.Options;
     using Model;
-    using Polly;
-    using Polly.Caching;
-    using Polly.Registry;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,7 +15,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(GetWeatherForecastQuery)}_{Lat}_{Lon}";
+            return $"{Lat}-{Lon}";
         }
     }
 
@@ -30,26 +27,27 @@
             RuleFor(x => x.Lon).GreaterThanOrEqualTo(1);
         }
     }
-    
+
     public class GetWeatherForecastQueryHandler : IRequestHandler<GetWeatherForecastQuery, WeatherForecast>
     {
         private readonly IWeatherForecastClient _client;
+        private readonly IApplicationCache<WeatherForecast> _cache;
         private readonly WeatherForecastOptions _options;
-        private readonly AsyncCachePolicy _cachePolicy;
 
         public GetWeatherForecastQueryHandler(IWeatherForecastClient client,
             IOptions<WeatherForecastOptions> options,
-            IReadOnlyPolicyRegistry<string> policyRegistry)
+            IApplicationCache<WeatherForecast> cache)
         {
             _client = client;
-            _cachePolicy = policyRegistry.Get<AsyncCachePolicy>(ExecutionPolicy.CachingPolicy); 
+            _cache = cache;
             _options = options.Value;
         }
-        
+
         public async Task<WeatherForecast> Handle(GetWeatherForecastQuery request, CancellationToken cancellationToken)
         {
-            var weatherForecast = await _cachePolicy.ExecuteAsync(context => _client.GetForecast(request.Lat, request.Lon, _options.AppId), 
-                new Context(request.ToString()));
+            var weatherForecast = await _cache.GetOrAddAsync(request.ToString(),
+                () => _client.GetForecast(request.Lat, request.Lon, _options.AppId, cancellationToken),
+                cancellationToken: cancellationToken);
 
             return weatherForecast;
         }
