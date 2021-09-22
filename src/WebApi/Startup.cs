@@ -19,6 +19,8 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
     
+    // TODO style front end 
+    // TODO basic outline for readme and start making blog posts
     // TODO add docker support using project tye
     // TODO add seq to docker/tye (configure health checks)
     // TODO add docker support for sql/redis ??
