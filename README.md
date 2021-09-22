@@ -1,16 +1,4 @@
-<style>
-.logo img{
-    float:left;
-    width:116px;
-    height:116px;
-}
-</style>
-
-<span class="logo">
-
-![Logo](logo.png)
-
-</span>
+<img align="left" width="116" height="116" src="https://raw.githubusercontent.com/ForrestTech/Exemplum/main/logo.png" />
 
 # Exemplum
 
