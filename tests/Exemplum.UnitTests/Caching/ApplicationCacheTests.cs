@@ -216,7 +216,7 @@
                 }
             };
             
-            var cacheItemConfigurators = new Dictionary<Type, DistributedCacheEntryOptions?>
+            var cacheItemConfigurators = new Dictionary<Type, DistributedCacheEntryOptions>
             {
                 {
                     typeof(CacheItem),
@@ -225,7 +225,7 @@
             };
             
             options.CacheConfigurators.Add(cacheItemType =>
-                cacheItemConfigurators.TryGetValue(cacheItemType, out DistributedCacheEntryOptions? cacheItemEntryOptions)
+                cacheItemConfigurators.TryGetValue(cacheItemType, out DistributedCacheEntryOptions cacheItemEntryOptions)
                     ? cacheItemEntryOptions
                     : null);
 

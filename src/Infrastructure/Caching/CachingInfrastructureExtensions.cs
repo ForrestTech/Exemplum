@@ -1,7 +1,7 @@
 ﻿namespace Exemplum.Infrastructure.Caching
 {
     using Application.Common.Caching;
-    using Application.WeatherForecast.Model;
+    using Application.WeatherForecasts.Models;
     using Microsoft.Extensions.Caching.Distributed;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;

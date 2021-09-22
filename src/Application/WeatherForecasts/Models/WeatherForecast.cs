@@ -1,4 +1,4 @@
-﻿namespace Exemplum.Application.WeatherForecast.Model
+﻿namespace Exemplum.Application.WeatherForecasts.Models
 {
     using System.Collections.Generic;
 

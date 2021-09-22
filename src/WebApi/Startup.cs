@@ -19,7 +19,6 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
     
-    // TODO Caching decorator for specific handler
     // TODO add docker support using project tye
     // TODO add seq to docker/tye (configure health checks)
     // TODO add docker support for sql/redis ??

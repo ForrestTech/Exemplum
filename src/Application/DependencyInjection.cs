@@ -7,7 +7,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System.Reflection;
-    using WeatherForecast;
+    using WeatherForecasts;
+    using WeatherForecasts.Models;
+    using WeatherForecasts.Query;
 
     public static class DependencyInjection
     {
@@ -20,6 +22,9 @@
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+            
+            
+            services.AddTransient(typeof(IPipelineBehavior<GetWeatherForecastQuery, WeatherForecast>), typeof(CacheForecastBehaviour));
             
             services.Configure<WeatherForecastOptions>(configuration.GetSection(WeatherForecastOptions.Section));
 

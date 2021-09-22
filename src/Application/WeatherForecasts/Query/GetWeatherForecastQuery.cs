@@ -1,10 +1,9 @@
-﻿namespace Exemplum.Application.WeatherForecast.Query
+﻿namespace Exemplum.Application.WeatherForecasts.Query
 {
-    using Common.Caching;
     using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.Options;
-    using Model;
+    using Models;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -31,25 +30,18 @@
     public class GetWeatherForecastQueryHandler : IRequestHandler<GetWeatherForecastQuery, WeatherForecast>
     {
         private readonly IWeatherForecastClient _client;
-        private readonly IApplicationCache<WeatherForecast> _cache;
         private readonly WeatherForecastOptions _options;
 
         public GetWeatherForecastQueryHandler(IWeatherForecastClient client,
-            IOptions<WeatherForecastOptions> options,
-            IApplicationCache<WeatherForecast> cache)
+            IOptions<WeatherForecastOptions> options)
         {
             _client = client;
-            _cache = cache;
             _options = options.Value;
         }
 
-        public async Task<WeatherForecast> Handle(GetWeatherForecastQuery request, CancellationToken cancellationToken)
+        public Task<WeatherForecast> Handle(GetWeatherForecastQuery request, CancellationToken cancellationToken)
         {
-            var weatherForecast = await _cache.GetOrAddAsync(request.ToString(),
-                () => _client.GetForecast(request.Lat, request.Lon, _options.AppId, cancellationToken),
-                cancellationToken: cancellationToken);
-
-            return weatherForecast;
+            return _client.GetForecast(request.Lat, request.Lon, _options.AppId, cancellationToken);
         }
     }
 }

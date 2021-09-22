@@ -1,4 +1,4 @@
-﻿namespace Exemplum.Application.WeatherForecast
+﻿namespace Exemplum.Application.WeatherForecasts
 {
     public class WeatherForecastOptions
     {

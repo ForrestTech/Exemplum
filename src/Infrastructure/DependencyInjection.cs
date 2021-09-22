@@ -3,7 +3,7 @@
     using Application.Common.DomainEvents;
     using Application.Common.Policies;
     using Application.Persistence;
-    using Application.WeatherForecast;
+    using Application.WeatherForecasts;
     using Caching;
     using DateAndTime;
     using Domain.Common.DateAndTime;

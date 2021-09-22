@@ -1,7 +1,7 @@
 ﻿namespace Exemplum.WebApi.Controllers
 {
-    using Application.WeatherForecast.Model;
-    using Application.WeatherForecast.Query;
+    using Application.WeatherForecasts.Models;
+    using Application.WeatherForecasts.Query;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;

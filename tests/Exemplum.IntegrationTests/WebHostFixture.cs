@@ -1,6 +1,6 @@
 ﻿namespace Application.IntegrationTests
 {
-    using Exemplum.Application.WeatherForecast;
+    using Exemplum.Application.WeatherForecasts;
     using Exemplum.Infrastructure.Persistence;
     using Exemplum.WebApi;
     using Microsoft.AspNetCore.Hosting;

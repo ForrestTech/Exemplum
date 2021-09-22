@@ -1,6 +1,6 @@
-﻿namespace Exemplum.Application.WeatherForecast
+﻿namespace Exemplum.Application.WeatherForecasts
 {
-    using Model;
+    using Models;
     using Refit;
     using System.Threading;
     using System.Threading.Tasks;
