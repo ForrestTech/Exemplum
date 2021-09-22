@@ -2,6 +2,7 @@
 {
     using Application.Common.Caching;
     using Application.WeatherForecast.Model;
+    using Microsoft.Extensions.Caching.Distributed;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System;
@@ -12,33 +13,36 @@
         public static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton(typeof(IApplicationCache<>), typeof(ApplicationCache<>));
-
-            if (configuration.UseInMemoryStorage())
-            {
-                services.AddMemoryCache();
-                services.AddTransient<ICacheProvider, InMemoryCacheProvider>();
-            }
-
+            
             services.AddTransient<ICacheSerializer, Utf8JsonCacheSerializer>();
+            services.AddDistributedMemoryCache();
+            
+            if (!configuration.UseInMemoryStorage())
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = "localhost";
+                });
+            }
 
             services.Configure<CacheOptions>(options =>
             {
                 options.KeyPrefix = "Exemplum";
                 options.HideErrors = false;
-                options.GlobalCacheEntryOptions = new CacheEntryOptions
+                options.GlobalCacheEntryOptions = new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
                 };
 
-                var cacheItemConfigurators = new Dictionary<Type, CacheEntryOptions?>
+                var cacheItemConfigurators = new Dictionary<Type, DistributedCacheEntryOptions?>
                 {
                     {
                         typeof(WeatherForecast),
-                        new CacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) }
+                        new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) }
                     }
                 };
                 options.CacheConfigurators.Add(cacheItemType =>
-                    cacheItemConfigurators.TryGetValue(cacheItemType, out CacheEntryOptions? cacheItemEntryOptions)
+                    cacheItemConfigurators.TryGetValue(cacheItemType, out DistributedCacheEntryOptions? cacheItemEntryOptions)
                         ? cacheItemEntryOptions
                         : null);
             });

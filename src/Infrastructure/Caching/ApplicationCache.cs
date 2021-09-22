@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Infrastructure.Caching
 {
     using Application.Common.Caching;
+    using Microsoft.Extensions.Caching.Distributed;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using System;
@@ -9,19 +10,19 @@
 
     public class ApplicationCache<TCacheItem> : IApplicationCache<TCacheItem> where TCacheItem : class
     {
-        private readonly CacheEntryOptions _defaultCacheEntryOptions;
-        private readonly ICacheProvider _cacheProvider;
+        private readonly DistributedCacheEntryOptions _defaultCacheEntryOptions;
+        private readonly IDistributedCache _distributedCache;
         private readonly CacheOptions _options;
         private readonly ICacheSerializer _cacheSerializer;
         private readonly ILogger<ApplicationCache<TCacheItem>> _logger;
         private readonly SemaphoreSlim _syncSemaphore;
 
-        public ApplicationCache(ICacheProvider cacheProvider,
+        public ApplicationCache(IDistributedCache distributedCache,
             IOptions<CacheOptions> options,
             ICacheSerializer cacheSerializer,
             ILogger<ApplicationCache<TCacheItem>> logger)
         {
-            _cacheProvider = cacheProvider;
+            _distributedCache = distributedCache;
             _options = options.Value;
             _cacheSerializer = cacheSerializer;
             _logger = logger;
@@ -33,7 +34,7 @@
 
         public async Task<TCacheItem> GetOrAddAsync(string key,
             Func<Task<TCacheItem>> factory,
-            CacheEntryOptions? options,
+            DistributedCacheEntryOptions? options,
             bool? hideErrors = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -85,7 +86,7 @@
 
             try
             {
-                cachedBytes = await _cacheProvider.GetAsync(NormalizeKey(key), cancellationToken);
+                cachedBytes = await _distributedCache.GetAsync(NormalizeKey(key), cancellationToken);
             }
             catch (Exception ex)
             {
@@ -108,7 +109,7 @@
 
         public async Task SetAsync(string key,
             TCacheItem item,
-            CacheEntryOptions? options,
+            DistributedCacheEntryOptions? options,
             bool? hideErrors = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -118,7 +119,7 @@
             {
                 var data = _cacheSerializer.Serialize(item);
 
-                await _cacheProvider.SetAsync(NormalizeKey(key), data, options ?? _defaultCacheEntryOptions, cancellationToken);
+                await _distributedCache.SetAsync(NormalizeKey(key), data, options ?? _defaultCacheEntryOptions, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -132,7 +133,7 @@
             }
         }
 
-        private static CacheEntryOptions GetDefaultCacheEntryOptions(CacheOptions cacheOptions)
+        private static DistributedCacheEntryOptions GetDefaultCacheEntryOptions(CacheOptions cacheOptions)
         {
             foreach (var configure in cacheOptions.CacheConfigurators)
             {
@@ -148,7 +149,7 @@
 
         private string NormalizeKey(string key)
         {
-            return $"{_options.KeyPrefix}-{CacheName()}-{key}";
+            return $"{_options.KeyPrefix}:{CacheName()}:{key}";
         }
 
         private static string CacheName()

@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Infrastructure.Caching
 {
     using Application.Common.Caching;
+    using Microsoft.Extensions.Caching.Distributed;
     using System;
     using System.Collections.Generic;
 
@@ -19,12 +20,12 @@
         /// <summary>
         /// The default options when caching any value if no options are provided or there is no CacheConfigurators for the CacheItem type this will be used
         /// </summary>
-        public CacheEntryOptions GlobalCacheEntryOptions { get; set; } = new CacheEntryOptions();
+        public DistributedCacheEntryOptions GlobalCacheEntryOptions { get; set; } = new DistributedCacheEntryOptions();
 
         /// <summary>
         /// A list of configuration entry options for CacheItem types if no options are provided when an item is cache we will check for a configurator
         /// for the CacheItem type here 
         /// </summary>
-        public List<Func<Type, CacheEntryOptions?>> CacheConfigurators { get; set; } = new List<Func<Type, CacheEntryOptions?>>();
+        public List<Func<Type, DistributedCacheEntryOptions?>> CacheConfigurators { get; set; } = new List<Func<Type, DistributedCacheEntryOptions?>>();
     }
 }

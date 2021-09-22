@@ -1,5 +1,6 @@
 ﻿namespace Exemplum.Application.Common.Caching
 {
+    using Microsoft.Extensions.Caching.Distributed;
     using System;
     using System.Threading;
     using System.Threading.Tasks;
@@ -11,12 +12,12 @@
             TimeSpan expireIn,
             bool? hideErrors = null,
             CancellationToken cancellationToken = default(CancellationToken)) => GetOrAddAsync(key, factory,
-            new CacheEntryOptions { AbsoluteExpirationRelativeToNow = expireIn }, hideErrors,
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expireIn }, hideErrors,
             cancellationToken);
         
         Task<TCacheItem> GetOrAddAsync(string key,
             Func<Task<TCacheItem>> factory,
-            CacheEntryOptions? options = null,
+            DistributedCacheEntryOptions? options = null,
             bool? hideErrors = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
@@ -26,7 +27,7 @@
 
         Task SetAsync(string key,
             TCacheItem item,
-            CacheEntryOptions? options,
+            DistributedCacheEntryOptions? options,
             bool? hideErrors = null,
             CancellationToken cancellationToken = default(CancellationToken));
     }
