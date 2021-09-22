@@ -19,22 +19,23 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // Todo Add unit tests for weather forecast caching logi
-    // Todo add redis for caching (need in mem fall back)
-    // Todo add Authentications of users (ideally we would not looks to add a super specific solution)
-    // Todo add authorization including adding roles and resolving polices
-    // Todo add full user support for Auditable items
-    // Todo add docker support using project tye
-    // Todo add seq to docker/tye (configure health checks)
-    // Todo add docker support for sql/redis ??
-    // Todo add support for metric pushing to grafana
-    // Todo create nuget template package
-    // Todo add github release drafting system
-    // Todo add github code coverage
-    // Todo add distributed tracing support
-    // Todo add integration event emission using rabbit MQ
-    // Todo add rabbit to docker
-    // Todo .net 6 simple endpoints
+    // TODO add cancellation token to all endpoints
+    // TODO Caching unit test
+    // TODO Caching decorator for specific handler
+    // TODO add docker support using project tye
+    // TODO add seq to docker/tye (configure health checks)
+    // TODO add docker support for sql/redis ??
+    // TODO add Authentications of users (ideally we would not looks to add a super specific solution)
+    // TODO add authorization including adding roles and resolving polices
+    // TODO add full user support for Auditable items
+    // TODO add support for metric pushing to grafana
+    // TODO create nuget template package
+    // TODO add github release drafting system
+    // TODO add github code coverage
+    // TODO add distributed tracing support
+    // TODO add integration event emission using rabbit MQ
+    // TODO add rabbit to docker
+    // TODO .net 6 simple endpoints
     public class Startup
     {
         private const string DefaultCorsPolicy = "Default";

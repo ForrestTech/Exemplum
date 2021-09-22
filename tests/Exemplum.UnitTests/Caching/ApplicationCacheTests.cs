@@ -3,7 +3,6 @@
     using AutoFixture;
     using AutoFixture.AutoNSubstitute;
     using Exemplum.Infrastructure.Caching;
-    using FluentAssertions;
     using Microsoft.Extensions.Caching.Distributed;
     using Microsoft.Extensions.Options;
     using NSubstitute;
