@@ -34,9 +34,9 @@
 
         public async Task<TCacheItem> GetOrAddAsync(string key,
             Func<Task<TCacheItem>> factory,
-            DistributedCacheEntryOptions? options,
+            DistributedCacheEntryOptions? options = null,
             bool? hideErrors = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             hideErrors ??= _options.HideErrors;
 
@@ -78,7 +78,7 @@
 
         public async Task<TCacheItem?> GetAsync(string key,
             bool? hideErrors = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             hideErrors ??= _options.HideErrors;
 
@@ -99,19 +99,16 @@
                 throw;
             }
 
-            if (cachedBytes == null)
-            {
-                return null;
-            }
-
-            return _cacheSerializer.Deserialize<TCacheItem>(cachedBytes);
+            return cachedBytes != null
+                ? _cacheSerializer.Deserialize<TCacheItem>(cachedBytes)
+                : null;
         }
 
         public async Task SetAsync(string key,
             TCacheItem item,
-            DistributedCacheEntryOptions? options,
+            DistributedCacheEntryOptions? options = null,
             bool? hideErrors = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             hideErrors ??= _options.HideErrors;
 
@@ -119,7 +116,8 @@
             {
                 var data = _cacheSerializer.Serialize(item);
 
-                await _distributedCache.SetAsync(NormalizeKey(key), data, options ?? _defaultCacheEntryOptions, cancellationToken);
+                await _distributedCache.SetAsync(NormalizeKey(key), data, options ?? _defaultCacheEntryOptions,
+                    cancellationToken);
             }
             catch (Exception ex)
             {

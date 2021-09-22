@@ -18,9 +18,7 @@ namespace Exemplum.WebApi
     using System;
     using System.IO;
     using System.Reflection;
-
-    // TODO add cancellation token to all endpoints
-    // TODO Caching unit test
+    
     // TODO Caching decorator for specific handler
     // TODO add docker support using project tye
     // TODO add seq to docker/tye (configure health checks)
