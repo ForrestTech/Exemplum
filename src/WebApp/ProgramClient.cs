@@ -1,22 +1,22 @@
 namespace Exemplum.WebApp
 {
-    using Features;
     using Features.TodoLists.Client;
     using Features.WeatherForecasts.Client;
     using Location;
+    using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using MudBlazor.Services;
     using Refit;
     using Serilog;
     using Serilog.Events;
     using System;
+    using System.Net.Http;
     using System.Threading.Tasks;
 
     public class ProgramClient
     {
-        // TODO migrate to teal palette
-        // TODO create logo for exemplum
         public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -44,11 +44,21 @@ namespace Exemplum.WebApp
 
         private static void ConfigureServices(WebAssemblyHostBuilder builder)
         {
+            builder.Services.AddOidcAuthentication(options =>
+            {
+                builder.Configuration.Bind("Auth0", options.ProviderOptions);
+                options.ProviderOptions.ResponseType = "code";
+            });
+
             builder.Services.AddRefitClient<ITodoClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri));
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri))
+                .AddHttpMessageHandler(sp => sp.GetRequiredService<AuthorizationMessageHandler>()
+                    .ConfigureHandler(new[] { ApiHostUri }));
 
             builder.Services.AddRefitClient<IWeatherForecastClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri));
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri))
+                .AddHttpMessageHandler(sp => sp.GetRequiredService<AuthorizationMessageHandler>()
+                    .ConfigureHandler(new[] { ApiHostUri }));
 
             builder.Services.AddTransient<ILocationService, LocationService>();
             builder.Services.AddMudServices();

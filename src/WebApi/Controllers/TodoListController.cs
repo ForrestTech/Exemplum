@@ -5,10 +5,12 @@
     using Application.TodoList.Models;
     using Application.TodoList.Queries;
     using MediatR;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]           
     public class TodoListController : ApiControllerBase
     {
         private readonly ISender _mediator;

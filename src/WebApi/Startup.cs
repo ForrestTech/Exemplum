@@ -4,6 +4,8 @@ namespace Exemplum.WebApi
     using FluentValidation.AspNetCore;
     using HealthChecks.UI.Client;
     using Infrastructure;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
@@ -12,6 +14,7 @@ namespace Exemplum.WebApi
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
     using Serilog;
     using Swashbuckle.AspNetCore.SwaggerGen;
@@ -19,7 +22,11 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
     
-    // TODO style front end 
+    // TODO style front end (move to teal pallette)
+    // TODO change login/ out to be an icon in top bar (use avatar image if possible)
+    // TODO Update profile page to use Mudblazor compoments
+    // TODO add support for policy permissions
+     
     // TODO basic outline for readme and start making blog posts
     // TODO add docker support using project tye
     // TODO add seq to docker/tye (configure health checks)
@@ -61,6 +68,21 @@ namespace Exemplum.WebApi
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+            });
+            
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = Configuration["Auth0:Authority"];
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "https://schemas.dev-ememplum.com/roles"
+                };
             });
             
             var hcBuilder = services.AddHealthChecks();
@@ -115,8 +137,11 @@ namespace Exemplum.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             app.UseCors(DefaultCorsPolicy);
+            
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseAuthorization();
             
@@ -134,7 +159,18 @@ namespace Exemplum.WebApi
                 });
                 
                 endpoints.MapHealthChecksUI();
-                endpoints.MapControllers();
+                
+                 
+                if (env.IsDevelopment())
+                {
+                    // auth can be a real pain when testing locally this turns off auth for local comment out if you want to test auth
+                    endpoints.MapControllers().WithMetadata(new AllowAnonymousAttribute());
+                    //endpoints.MapControllers();
+                }
+                else
+                {
+                    endpoints.MapControllers();
+                }
             });
         }
     }

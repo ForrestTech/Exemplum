@@ -9,12 +9,22 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.9" PrivateAssets="all" />
     <PackageReference Include="MudBlazor" Version="5.1.4" />
     <PackageReference Include="refit" Version="6.0.94" />
     <PackageReference Include="Refit.HttpClientFactory" Version="6.0.94" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />    
     <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />    
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

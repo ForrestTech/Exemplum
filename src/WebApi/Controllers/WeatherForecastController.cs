@@ -3,9 +3,12 @@
     using Application.WeatherForecasts.Models;
     using Application.WeatherForecasts.Query;
     using MediatR;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
 
+    [Authorize]
+    [Authorize(Roles = "Forecaster")]
     public class WeatherForecastController : ApiControllerBase
     {
         private readonly ISender _mediator;
