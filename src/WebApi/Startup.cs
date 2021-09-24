@@ -21,11 +21,7 @@ namespace Exemplum.WebApi
     using System;
     using System.IO;
     using System.Reflection;
-    
-    // TODO change login/ out to be an icon in top bar (use avatar image if possible)
-    // TODO Update profile page to use Mudblazor compoments
-    // TODO add support for policy permissions
-     
+
     // TODO basic outline for readme and start making blog posts
     // TODO add docker support using project tye
     // TODO add seq to docker/tye (configure health checks)

@@ -2,6 +2,8 @@
 @using Exemplum.WebApp.Features.WeatherForecasts.Client
 @using Exemplum.WebApp.Location
 
+@attribute [Authorize(Roles = "Forecaster")]
+
 @inject IWeatherForecastClient Client
 @inject ILocationService LocationService
 
@@ -37,7 +39,6 @@
     </MudContainer>
 </MudMainContent>
 
-
 @code {
 
     List<WeatherForecast>? forecasts;
@@ -56,4 +57,5 @@
         forecasts = new List<WeatherForecast> { forecast };
         loading = false;
     }
+
 }

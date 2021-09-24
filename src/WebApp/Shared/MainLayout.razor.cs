@@ -2,12 +2,20 @@
 {
     using Extensions;
     using Microsoft.AspNetCore.Components;
+    using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
     using MudBlazor;
 
     public partial class MainLayout : LayoutComponentBase
     {
+        [Inject]
+        public SignOutSessionStateManager SignOutManager { get; set; } = default!;
+
+        [Inject] 
+        public NavigationManager Navigation { get; set; } = default!;
+
         bool drawerOpen = false;
         MudTheme currentTheme = new();
+
         readonly MudTheme defaultTheme = new() { Palette = new Palette
         {
             Primary = "#009688",
@@ -15,13 +23,11 @@
             AppbarBackground = "#009688"
         } };
 
-        [Inject] public NavigationManager NavigationManager { get; set; } = default!;
-        
         protected override void OnInitialized()
         {
             currentTheme = defaultTheme;
             //if not home page, the navbar starts open
-            if (!NavigationManager.IsHomePage())
+            if (!Navigation.IsHomePage())
             {
                 drawerOpen = true;
             }

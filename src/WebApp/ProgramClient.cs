@@ -31,6 +31,8 @@ namespace Exemplum.WebApp
                 var builder = WebAssemblyHostBuilder.CreateDefault(args);
                 builder.RootComponents.Add<App>("#app");
 
+                builder.Logging.AddSerilog();
+
                 ConfigureServices(builder);
 
                 await builder.Build().RunAsync();
@@ -50,6 +52,16 @@ namespace Exemplum.WebApp
                 options.ProviderOptions.ResponseType = "code";
             });
 
+            builder.Services.AddApiAuthorization().AddAccountClaimsPrincipalFactory<CustomUserFactory>();
+
+            builder.Services.AddAuthorizationCore(options =>
+            {
+                options.AddPolicy("TodoWriteAccess", policy =>
+                    policy.RequireClaim("permissions", "read:todo", "write:todo"));
+                options.AddPolicy("TodoDeleteAccess", policy =>
+                    policy.RequireClaim("permissions", "delete:todo"));
+            });
+
             builder.Services.AddRefitClient<ITodoClient>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri))
                 .AddHttpMessageHandler(sp => sp.GetRequiredService<AuthorizationMessageHandler>()
@@ -62,8 +74,6 @@ namespace Exemplum.WebApp
 
             builder.Services.AddTransient<ILocationService, LocationService>();
             builder.Services.AddMudServices();
-
-            builder.Logging.AddSerilog();
         }
 
         private const string ApiHostUri = "https://localhost:5001";

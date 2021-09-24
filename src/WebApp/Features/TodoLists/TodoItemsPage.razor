@@ -4,13 +4,15 @@
 @using System.ComponentModel.DataAnnotations
 @using Exemplum.WebApp.Features.TodoLists.Client
 
+@attribute [Authorize]
+
 @inject ITodoClient Client
 @inject ISnackbar Snackbar;
 @inject IJSRuntime JsRuntime;
 @inject IDialogService DialogService;
 
 <MudMainContent>
-    <MudContainer MaxWidth="MaxWidth.Medium">
+    <MudContainer MaxWidth="MaxWidth.Large">
         <div class="todo-items">
             <MudText Typo="Typo.h1">@list.Title</MudText>
             <EditForm Model="@newTodoItem" OnValidSubmit="@AddNewItem">

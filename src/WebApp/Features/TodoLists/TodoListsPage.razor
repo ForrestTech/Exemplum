@@ -1,17 +1,19 @@
 ﻿@page "/todolists"
 @using Exemplum.WebApp.Features.TodoLists.Client
 
+@attribute [Authorize(Policy = "TodoWriteAccess")]
+
 @inject ITodoClient Client;
 @inject NavigationManager NavManager
 @inject IDialogService DialogService
-@inject ISnackbar Snackbar 
+@inject ISnackbar Snackbar
 @inject  IJSRuntime JsRuntime
 
 <MudMainContent>
-    <MudContainer MaxWidth="MaxWidth.Medium">
+    <MudContainer MaxWidth="MaxWidth.Large">
         <div class="todo-lists">
             <MudText Typo="Typo.h1">Todo Lists</MudText>
-            <AddTodoListForm OnAddNewList="AddNewList" />
+            <AddTodoListForm OnAddNewList="AddNewList"/>
             <MudGrid>
                 <MudItem xs="12">
                     @foreach (var list in todoLists)
@@ -42,10 +44,12 @@
                                         <MudIconButton Icon="@Icons.Material.Outlined.List"
                                                        @onclick="() => ViewList(list.Id)"/>
                                     </MudTooltip>
-                                    <MudTooltip Text="Delete List">
-                                        <MudIconButton Icon="@Icons.Material.Outlined.Delete"
-                                                       @onclick="() => DeleteList(list.Id)"/>
-                                    </MudTooltip>
+                                    <AuthorizeView Policy="TodoDeleteAccess">
+                                        <MudTooltip Text="Delete List">
+                                            <MudIconButton Icon="@Icons.Material.Outlined.Delete"
+                                                           @onclick="() => DeleteList(list.Id)"/>
+                                        </MudTooltip>
+                                    </AuthorizeView>
                                 </span>
                             }
                         </MudPaper>
@@ -70,7 +74,7 @@
 
     async Task AddNewList(AddTodoListForm.NewTodoList newTodoList)
     {
-        var todoItem = await Client.CreateTodoList(new CreateTodoList(newTodoList.Title, newTodoList.Colour));        
+        var todoItem = await Client.CreateTodoList(new CreateTodoList(newTodoList.Title, newTodoList.Colour));
         todoLists.Add(todoItem);
     }
 
@@ -85,8 +89,8 @@
     async Task EditList(int id)
     {
         todoLists.Single(x => x.Id == id).InEditMode = true;
-        
-        // Set focus to the now visible edit input box. This is only possible with JS currently.
+
+    // Set focus to the now visible edit input box. This is only possible with JS currently.
         await JsRuntime.RetryInvokeAsync("setFocusById", TodoListId(id));
     }
 
@@ -106,15 +110,15 @@
         var listTitle = ListTitle(id);
         var dialogText = $"Do you really want to delete the list {listTitle}? This process cannot be undone.";
         var result = await ConfirmationDialog.ShowDeleteDialog(DialogService, dialogText);
-        
+
         if (!result.Cancelled)
         {
             Snackbar.Add($"List {listTitle} deleted", Severity.Error);
             await Client.DeleteTodoList(id);
             todoLists.RemoveAll(x => x.Id == id);
-        }       
+        }
     }
-    
+
     static string TodoListId(int id) => $"todo-list-text-{id}";
     static Dictionary<string, object> TodoListAttributes(int id) => new Dictionary<string, object> { { "id", TodoListId(id) } };
 

@@ -6,20 +6,25 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="#" @onclick="BeginSignOut">Log out @context.User.Identity.Name!</a>
         <MudTooltip Text="Log out">
-        <MudIconButton @onclick="BeginSignOut"
-                       Target="_blank"
-                       Icon="@Icons.Filled.Person"
-                       Color="Color.Inherit"
-                       aria-label="Log out"/>
+            <MudIconButton @onclick="BeginSignOut"
+                           Icon="@Icons.Filled.Logout"
+                           Color="Color.Inherit"
+                           aria-label="Log out"/>
         </MudTooltip>
     </Authorized>
+    <Authorizing>
+        <MudTooltip Text="Log in">
+            <MudIconButton Link="authentication/login"
+                           Icon="@Icons.Filled.Login"
+                           Color="Color.Inherit"
+                           aria-label="Log in"/>
+        </MudTooltip>
+    </Authorizing>
     <NotAuthorized>
         <MudTooltip Text="Log in">
             <MudIconButton Link="authentication/login"
-                           Target="_blank"
-                           Icon="@Icons.Filled.Person"
+                           Icon="@Icons.Filled.Login"
                            Color="Color.Inherit"
                            aria-label="Log in"/>
         </MudTooltip>

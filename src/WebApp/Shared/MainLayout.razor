@@ -30,13 +30,14 @@
                                Icon="@Icons.Custom.Brands.GitHub"
                                Color="Color.Inherit"
                                aria-label="github"/>
-                <AccessControl />  
+                <AccessControl/>
             </div>
             <MudMenu Icon="@Icons.Filled.Settings" Color="Color.Inherit" Dense="true" Direction="Direction.Right" OffsetY="true" Class="d-md-none">
                 <div class="px-2">
                     <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@((e) => DarkMode())"/>
                     <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/ForrestTech/Exemplum"
                                    Target="_blank"/>
+                    <AccessControl/>
                 </div>
                 <MudText Typo="Typo.body2" Class="px-4 py-2">
                     <b>Community Support</b>
