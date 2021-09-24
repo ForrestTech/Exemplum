@@ -6,18 +6,32 @@
 
 <AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity.Name!
-        <a href="#" @onclick="BeginSignOut">Log out</a>
+        <a href="#" @onclick="BeginSignOut">Log out @context.User.Identity.Name!</a>
+        <MudTooltip Text="Log out">
+        <MudIconButton @onclick="BeginSignOut"
+                       Target="_blank"
+                       Icon="@Icons.Filled.Person"
+                       Color="Color.Inherit"
+                       aria-label="Log out"/>
+        </MudTooltip>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/login">Log in</a>
+        <MudTooltip Text="Log in">
+            <MudIconButton Link="authentication/login"
+                           Target="_blank"
+                           Icon="@Icons.Filled.Person"
+                           Color="Color.Inherit"
+                           aria-label="Log in"/>
+        </MudTooltip>
     </NotAuthorized>
 </AuthorizeView>
 
 @code{
+
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
         Navigation.NavigateTo("authentication/logout");
     }
+
 }

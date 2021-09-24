@@ -32,7 +32,7 @@
 }
 
 .home-mud-button.get-started {
-    background: transparent linear-gradient(90deg, #594ae2 0%, #776be7 100%) 0% 0% no-repeat padding-box;
+    background: transparent linear-gradient(90deg, var(--mud-palette-primary) 0%, var(--mud-palette-primary-lighten) 100%) 0% 0% no-repeat padding-box;
 }
 
 .home-mud-button.sponsor {
@@ -47,7 +47,7 @@
     letter-spacing: 0.1rem;
     font-size: 2rem;
     font-weight: 300;
-    color: #594ae2ff;
+    color: var(--mud-palette-primary);
 }
 
 @media (min-width: 960px) {
@@ -93,7 +93,7 @@
 
 .exemplum-brand:hover {
     cursor: pointer;
-    color: #594ae2ff;
+    color: var(--mud-palette-primary);
     transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
@@ -105,7 +105,7 @@
 }
 
 .exemplum-appbar-band {
-    background-image: url(../AppbarCorner.svg);
+    background-image: url(../assets/AppbarCorner.svg);
     background-repeat: no-repeat;
     background-position: top right;
     overflow: hidden;

@@ -8,7 +8,12 @@
     {
         bool drawerOpen = false;
         MudTheme currentTheme = new();
-        readonly MudTheme defaultTheme = new() { Palette = new Palette() { Black = "#272c34" } };
+        readonly MudTheme defaultTheme = new() { Palette = new Palette
+        {
+            Primary = "#009688",
+            Black = "#272c34",
+            AppbarBackground = "#009688"
+        } };
 
         [Inject] public NavigationManager NavigationManager { get; set; } = default!;
         

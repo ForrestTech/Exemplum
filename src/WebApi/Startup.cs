@@ -22,7 +22,6 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
     
-    // TODO style front end (move to teal pallette)
     // TODO change login/ out to be an icon in top bar (use avatar image if possible)
     // TODO Update profile page to use Mudblazor compoments
     // TODO add support for policy permissions
