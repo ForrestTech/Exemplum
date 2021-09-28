@@ -70,6 +70,8 @@ By default, the application is configured to run with an in memory database and 
 
 Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to false will configure the application to use SqlServer (which by default is configured to use local DB) and Redis (which is by default using localhost).
 
+To use the Weather data feature of Exemplum you will need to provide an API key for [open weather map](https://openweathermap.org/).  Exemplum uses asp.net core build in local * [Secret Management](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows) system to store the API key.  To set this up locally call `dotnet user-secrets init` this will generate a local secrets file that is not stored in the repository.  Then call `dotnet user-secrets set "WeatherForecast:AppId" "{your-api-key-here}"` to add the secret. 
+
 ### Running Docker
 
 Coming soon.....
@@ -276,7 +278,6 @@ reportgenerator -reports:".\coverage.opencover.xml" -targetdir:"CoverageResults"
 * [Stack Exchange Redis](https://github.com/StackExchange/StackExchange.Redis)
 * [Serilog](https://serilog.net/)
 * [Asp.net core Health Checks](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-5.0)
-* [Secret Management](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows)
 * [Smart Enums](https://github.com/ardalis/SmartEnum)
 
     A base class for quickly and easily creating strongly typed enum replacements in C#
