@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Infrastructure
 {
     using Application.Common.DomainEvents;
+    using Application.Common.Identity;
     using Application.Common.Policies;
     using Application.Persistence;
     using Application.WeatherForecasts;
@@ -9,6 +10,7 @@
     using Domain.Common.DateAndTime;
     using DomainEvents;
     using ExecutionPolicies;
+    using Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +43,7 @@
             services.AddTransient<IHandleDbExceptions, HandleDbExceptions>();
             services.AddTransient<IPublishDomainEvents, DomainEventsPublisher>();
             services.AddTransient<IClock, Clock>();
+            services.AddTransient<ICurrentUserService, CurrentUserService>();
 
             services.AddCaching(configuration);
 

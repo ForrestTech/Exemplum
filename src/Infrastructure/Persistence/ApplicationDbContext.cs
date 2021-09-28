@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Infrastructure.Persistence
 {
     using Application.Common.DomainEvents;
+    using Application.Common.Identity;
     using Application.Persistence;
     using DateAndTime;
     using Domain.Audit;
@@ -9,6 +10,7 @@
     using Domain.Todo;
     using DomainEvents;
     using ExceptionHandling;
+    using Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
@@ -21,23 +23,18 @@
         private readonly IHandleDbExceptions _idbExceptions;
         private readonly IPublishDomainEvents _publishDomainEvents;
         private readonly IClock _clock;
-
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
-            this(options,
-                new NoOpHandleDbExceptions(),
-                new NoOpDomainEventsPublisher(),
-                new Clock())
-        {
-        }
+        private readonly ICurrentUserService _currentUserService;
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
             IHandleDbExceptions idbExceptions,
             IPublishDomainEvents publishDomainEvents,
-            IClock clock) : base(options)
+            IClock clock,
+            ICurrentUserService currentUserService) : base(options)
         {
             _idbExceptions = idbExceptions;
             _publishDomainEvents = publishDomainEvents;
             _clock = clock;
+            _currentUserService = currentUserService;
         }
 
         public DbSet<TodoItem> TodoItems => Set<TodoItem>();
@@ -53,12 +50,11 @@
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        //entry.Entity.CreatedBy = _currentUserService.UserId;
+                        entry.Entity.CreatedBy = _currentUserService.UserId ?? string.Empty;
                         entry.Entity.Created = _clock.Now;
                         break;
-
                     case EntityState.Modified:
-                        //entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                        entry.Entity.LastModifiedBy = _currentUserService.UserId ?? string.Empty;
                         entry.Entity.LastModified = _clock.Now;
                         break;
                 }

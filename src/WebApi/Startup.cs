@@ -22,11 +22,9 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // TODO basic outline for readme and start making blog posts
     // TODO add docker support using project tye
     // TODO add seq to docker/tye (configure health checks)
     // TODO add docker support for sql/redis ??
-    // TODO add full user support for Auditable items
     // TODO add support for metric pushing to grafana
     // TODO create nuget template package
     // TODO add github release drafting system
