@@ -26,15 +26,12 @@ namespace Exemplum.WebApi
     // TODO add docker support using project tye
     // TODO add seq to docker/tye (configure health checks)
     // TODO add docker support for sql/redis ??
-    // TODO add Authentications of users (ideally we would not looks to add a super specific solution)
-    // TODO add authorization including adding roles and resolving polices
     // TODO add full user support for Auditable items
     // TODO add support for metric pushing to grafana
     // TODO create nuget template package
     // TODO add github release drafting system
-    // TODO add github code coverage
     // TODO add distributed tracing support
-    // TODO add integration event emission using rabbit MQ
+    // TODO add integration event emission using rabbit MQ (mass transit)
     // TODO add rabbit to docker
     // TODO .net 6 simple endpoints
     public class Startup
