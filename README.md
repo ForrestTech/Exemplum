@@ -72,6 +72,8 @@ Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to fa
 
 To use the Weather data feature of Exemplum you will need to provide an API key for [open weather map](https://openweathermap.org/).  Exemplum uses asp.net core build in local * [Secret Management](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows) system to store the API key.  To set this up locally call `dotnet user-secrets init` this will generate a local secrets file that is not stored in the repository.  Then call `dotnet user-secrets set "WeatherForecast:AppId" "{your-api-key-here}"` to add the secret. 
 
+Exemplum is setup to use Auth0 as an authentication provider.  It is already configured with a free development account however you want be able to test all features around user Authorization without creating your own account.  You can [sign up](https://auth0.com/signup) for a free account.  You can then follow the [guide](https://auth0.com/blog/securing-blazor-webassembly-apps/) on how to integrate auth0 with Blazor.  You will need to update the Auth0 details in the api and web app `appsettings.json`.  You will also need to add a custom [rule](./auth0/add-roles-to-access-token.js) to auth0 custom rules. 
+
 ### Running Docker
 
 Coming soon.....

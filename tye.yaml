@@ -1,0 +1,18 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: exemplum
+services:
+- name: webapi
+  project: src/WebApi/WebApi.csproj
+  bindings:
+  - port: 5001
+    protocol: https
+- name: webapp
+  project: src/WebApp/WebApp.csproj
+  bindings:
+  - port: 6001
+    protocol: https
