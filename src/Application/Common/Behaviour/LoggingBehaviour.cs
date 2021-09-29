@@ -16,7 +16,6 @@
         public Task Process(TRequest request, CancellationToken cancellationToken)
         {
             var requestName = typeof(TRequest).Name;
-            string userName = string.Empty;
 
             _logger.LogInformation("Handling Request: {Name} {@Request}",
                 requestName, request);

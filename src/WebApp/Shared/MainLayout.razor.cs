@@ -56,7 +56,7 @@
         readonly MudTheme darkTheme =
             new()
             {
-                Palette = new Palette()
+                Palette = new Palette
                 {
                     Primary = "#776be7",
                     Black = "#27272f",

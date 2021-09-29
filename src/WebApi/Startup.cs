@@ -128,12 +128,12 @@ namespace Exemplum.WebApi
             app.UseEndpoints(endpoints =>
             {
                 //with a more complex set of health checks we can separate checks by tag
-                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions
                 {
                     Predicate = (check) => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions()
+                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
                 {
                     Predicate = (_) => false
                 });
@@ -145,7 +145,6 @@ namespace Exemplum.WebApi
                 {
                     // auth can be a real pain when testing locally this turns off auth for local comment out if you want to test auth
                     endpoints.MapControllers().WithMetadata(new AllowAnonymousAttribute());
-                    //endpoints.MapControllers();
                 }
                 else
                 {
