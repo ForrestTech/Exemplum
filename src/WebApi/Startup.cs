@@ -22,10 +22,10 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // TODO add seq to docker/tye (configure health checks)
-    // TODO add support for metric pushing to grafana
     // TODO create nuget template package
+    // TODO create visual studio template package
     // TODO add github release drafting system
+    // TODO add support for metric pushing to grafana
     // TODO add distributed tracing support
     // TODO add integration event emission using rabbit MQ (mass transit)
     // TODO add rabbit to docker

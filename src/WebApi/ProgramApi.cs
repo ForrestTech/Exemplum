@@ -15,6 +15,7 @@ namespace Exemplum.WebApi
     using Serilog.Exceptions.MsSqlServer.Destructurers;
     using Serilog.Formatting.Compact;
     using System;
+    using System.Diagnostics;
     using System.Reflection;
     using System.Threading.Tasks;
 
@@ -22,6 +23,8 @@ namespace Exemplum.WebApi
     {
         public static async Task<int> Main(string[] args)
         {
+            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+                
             var logConfiguration = new LoggerConfiguration()
 #if DEBUG
                 .MinimumLevel.Debug()

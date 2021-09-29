@@ -33,9 +33,12 @@
             }
             else
             {
-                services.AddDbContext<ApplicationDbContext>(options => 
-                    options.UseSqlServer(configuration.GetDefaultConnection(),
-                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(configuration.GetDefaultConnection(), builder =>
+                    {
+                        builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                        builder.EnableRetryOnFailure();
+                    }));
             }
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
@@ -57,7 +60,7 @@
 
             services.AddRefitClient<IWeatherForecastClient>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration
-                        .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value))
+                    .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value))
                 .AddPolicyHandlerFromRegistry(ExecutionPolicy.RetryPolicy);
 
             return services;

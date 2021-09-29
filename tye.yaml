@@ -4,6 +4,11 @@
 # when you've given us a try, we'd love to know what you think:
 #    https://aka.ms/AA7q20u
 #
+
+extensions:
+  - name: seq
+    logPath: ./.logs
+    
 name: exemplum
 services:
   - name: webapi
