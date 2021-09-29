@@ -21,15 +21,7 @@ namespace Exemplum.WebApi
     using System;
     using System.IO;
     using System.Reflection;
-
-    // TODO create nuget template package
-    // TODO create visual studio template package
-    // TODO add github release drafting system
-    // TODO add support for metric pushing to grafana
-    // TODO add distributed tracing support
-    // TODO add integration event emission using rabbit MQ (mass transit)
-    // TODO add rabbit to docker
-    // TODO .net 6 simple endpoints
+    
     public class Startup
     {
         private readonly IConfiguration _configuration;
