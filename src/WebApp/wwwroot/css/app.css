@@ -4,11 +4,11 @@
 }
 
 @media (min-width: 960px) {
-    .home-main-content {
-        padding-top: 100px;
-        padding-bottom: 64px;
-        padding-left: 12px;
-    }
+.home-main-content {
+    padding-top: 100px;
+    padding-bottom: 64px;
+    padding-left: 12px;
+}
 }
 
 .home-index {
@@ -16,9 +16,9 @@
 }
 
 @media (min-width: 960px) {
-    .home-index {
-        margin-top: 70px;
-    }
+.home-index {
+    margin-top: 70px;
+}
 }
 
 .home-index .home-sections {
@@ -51,10 +51,10 @@
 }
 
 @media (min-width: 960px) {
-    .home-text-h5 {
-        font-size: 3rem;
-        letter-spacing: 0.2rem;
-    }
+.home-text-h5 {
+    font-size: 3rem;
+    letter-spacing: 0.2rem;
+}
 }
 
 .home-text-h5.smaller {
@@ -62,9 +62,9 @@
 }
 
 @media (min-width: 960px) {
-    .home-text-h5.smaller {
-        font-size: 2.5rem;
-    }
+.home-text-h5.smaller {
+    font-size: 2.5rem;
+}
 }
 
 .home-description-text {
@@ -81,9 +81,9 @@
 }
 
 @media (max-width: 400px) {
-    .exemplum-appbar-brand-text {
-        letter-spacing: 0.25rem;
-    }
+.exemplum-appbar-brand-text {
+    letter-spacing: 0.25rem;
+}
 }
 
 .exemplum-brand {
@@ -112,8 +112,8 @@
 }
 
 @media (max-width: 600px) {
-    .exemplum-appbar-band {
-        background-position: 14px 0;
-    }
+.exemplum-appbar-band {
+    background-position: 14px 0;
+}
 }
 

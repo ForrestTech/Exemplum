@@ -1,18 +1,18 @@
-﻿.todo-lists  {
-    
+﻿.todo-lists {
+
 }
 
-::deep .add-button{
+::deep .add-button {
     margin-top: 15px;
 }
 
-::deep .hide-input input{
-    visibility:hidden;
+::deep .hide-input input {
+    visibility: hidden;
 }
 
-::deep .todo-lists-paper {    
+::deep .todo-lists-paper {
     padding: 10px;
-    display: flex;    
+    display: flex;
     align-items: center;
     margin-top: 10px;
     width: 500px;

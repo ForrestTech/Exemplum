@@ -1,8 +1,8 @@
-﻿.todo-items  {
+﻿.todo-items {
 
 }
 
-::deep .add-button{
+::deep .add-button {
     margin-top: 15px;
 }
 
