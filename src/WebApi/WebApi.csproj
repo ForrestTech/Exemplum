@@ -28,7 +28,7 @@
     <PackageReference Include="Serilog.Enrichers.Span" Version="1.4.0" />    
     <PackageReference Include="Serilog.Exceptions" Version="7.0.0" />    
     <PackageReference Include="Serilog.Exceptions.EntityFrameworkCore" Version="7.0.0" />    
-    <PackageReference Include="Serilog.Exceptions.MsSqlServer" Version="7.0.0" />
+    <PackageReference Include="Serilog.Exceptions.MsSqlServer" Version="7.1.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="5.0.1" />
