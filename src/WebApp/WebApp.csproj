@@ -17,7 +17,7 @@
     <PackageReference Include="Refit.HttpClientFactory" Version="6.0.94" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />    
     <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />    
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />    
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />    
   </ItemGroup>
 
   <ItemGroup>
