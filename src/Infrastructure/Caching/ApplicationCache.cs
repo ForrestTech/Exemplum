@@ -8,7 +8,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class ApplicationCache<TCacheItem> : IApplicationCache<TCacheItem> where TCacheItem : class
+    public class ApplicationCache<TCacheItem> : IApplicationCache<TCacheItem>, IDisposable where TCacheItem : class
     {
         private readonly DistributedCacheEntryOptions _defaultCacheEntryOptions;
         private readonly IDistributedCache _distributedCache;
@@ -158,6 +158,11 @@
         private void HandleException(Exception ex)
         {
             _logger.LogError(ex, "An error occured trying to communicate with cache");
+        }
+
+        public void Dispose()
+        {
+            _syncSemaphore.Dispose();
         }
     }
 }

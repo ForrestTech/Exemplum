@@ -2,14 +2,10 @@
 {
     using Extensions;
     using Microsoft.AspNetCore.Components;
-    using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
     using MudBlazor;
 
     public partial class MainLayout : LayoutComponentBase
     {
-        [Inject]
-        public SignOutSessionStateManager SignOutManager { get; set; } = default!;
-
         [Inject] 
         public NavigationManager Navigation { get; set; } = default!;
 
@@ -45,16 +41,15 @@
         
         void OnSwipe(SwipeDirection direction)
         {
-            switch (direction)
+            if (direction == SwipeDirection.LeftToRight && !drawerOpen)
             {
-                case SwipeDirection.LeftToRight when !drawerOpen:
-                    drawerOpen = true;
-                    StateHasChanged();
-                    break;
-                case SwipeDirection.RightToLeft when drawerOpen:
-                    drawerOpen = false;
-                    StateHasChanged();
-                    break;
+                drawerOpen = true;
+                StateHasChanged();
+            }
+            else if (direction == SwipeDirection.RightToLeft && drawerOpen)
+            {
+                drawerOpen = false;
+                StateHasChanged();
             }
         }
         

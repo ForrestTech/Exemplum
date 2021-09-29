@@ -2,6 +2,6 @@
 {
     public static class ExecutionPolicy
     {
-        public static string RetryPolicy = nameof(RetryPolicy);
+        public static readonly string RetryPolicy = nameof(RetryPolicy);
     }
 }

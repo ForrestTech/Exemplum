@@ -57,6 +57,9 @@
                         entry.Entity.LastModifiedBy = _currentUserService.UserId ?? string.Empty;
                         entry.Entity.LastModified = _clock.Now;
                         break;
+                    default:
+                        // we dont need to handle the other entity state for auditability
+                        break;
                 }
             }
 
@@ -114,7 +117,9 @@
             {
                 var entityTypeBuilder = builder.Entity(entityType.ClrType);
                 foreach (var propertyName in propertyNames)
+                {
                     entityTypeBuilder.Ignore(propertyName);
+                }
             }
         }
     }

@@ -3,7 +3,7 @@
     using Ardalis.SmartEnum;
     using System;
 
-    public abstract partial class PriorityLevel : SmartEnum<PriorityLevel, string>
+    public abstract class PriorityLevel : SmartEnum<PriorityLevel, string>
     {
         public static readonly PriorityLevel None = new NoPriority();
         public static readonly PriorityLevel Low = new LowPriorityLevel();
@@ -12,8 +12,7 @@
         
         // You could change this so that the priority level had a method that took in IConfiguration or an Option set and returned a configurable value so this was not hard coded e.g  
         //public abstract TimeSpan GetReminderTime(IConfiguration configuration)
-        
-        
+
         public abstract TimeSpan ReminderTime { get; }
 
         private PriorityLevel(string name, string value) : base(name, value)

@@ -24,7 +24,7 @@
             var cache = fixture.Freeze<IDistributedCache>();
             var cacheData = fixture.Create<byte[]>();
             cache.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-                .Returns(Task.FromResult<byte[]>(cacheData));
+                .Returns(Task.FromResult(cacheData));
 
             var serializer = fixture.Freeze<ICacheSerializer>();
             var cacheItem = fixture.Create<CacheItem>();
@@ -50,7 +50,7 @@
             var sut = fixture.Create<ApplicationCache<CacheItem>>();
 
             const string key = "key";
-            var actual = await sut.GetOrAddAsync(key, () => Task.FromResult(new CacheItem()));
+            await sut.GetOrAddAsync(key, () => Task.FromResult(new CacheItem()));
 
             await cache.Received(2)
                 .GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
@@ -239,13 +239,9 @@
             return fixture;
         }
 
-        public class CacheItem
+        private class CacheItem
         {
-            public string Name { get; set; }
-
-            public int Number { get; set; } = 10;
-
-            public string Foo { get; set; }
+            public string Name { get; set; } = String.Empty;
         }
     }
 }

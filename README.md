@@ -14,17 +14,17 @@ This is a template for creating a asp.net core applications both services (micro
 
 ## Table Of Contents
 
-- [Getting Started](#getting-started)
+* [Getting Started](#getting-started)
     * [Using the dotnet CLI](#using-the-dotnet-cli)
     * [Using Visual Studio template](#using-the-visual-studio-template)
     * [Using Github](#using-github)
     * [Running Locally](#running-locally)
     * [Running Docker](#running-docker)
-- [Motivation](#motivation)
+* [Motivation](#motivation)
     * [Onion Architecture](#onion-architecture)
     * [DDD modelling](#ddd-modelling)
     * [Solution Structure](#solution-structure)
-- [Patterns Used](#patterns-used)
+* [Patterns Used](#patterns-used)
     * [Feature Folders](#feature-folders)
     * [Mediator Pattern](#mediator-pattern)
     * [Command Query Segregation](#command-query-segregation)
@@ -34,17 +34,17 @@ This is a template for creating a asp.net core applications both services (micro
     * [Domain Events](#domain-events)
     * [Transactional Management](#transactional-management)
     * [Caching Decorators](#caching-decorators)
-- [Patterns not Used](#patterns-not-used)
+* [Patterns not Used](#patterns-not-used)
     * [Shared Kernel](#shared-kernel)
     * [Common Contracts Package](#common-contract-package)
     * [Published Clients](#published-clients)
     * [Repositories](#repositories)
-- [Testing](#testing)
+* [Testing](#testing)
     * [Test Types](#test-types)
     * [Integration Tests](#integration-tests)
     * [Fluent Assertions](#fluent-assertions)
     * [Mocking](#mocking)
-- [Technologies Used](#technologies-used)
+* [Technologies Used](#technologies-used)
 
 ## Getting Started
 
