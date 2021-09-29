@@ -8,8 +8,6 @@
     using Exemplum.Application.Common.Mapping;
     using Exemplum.Application.Persistence;
     using Exemplum.Infrastructure.DateAndTime;
-    using Exemplum.Infrastructure.DomainEvents;
-    using Exemplum.Infrastructure.Identity;
     using Exemplum.Infrastructure.Persistence;
     using Exemplum.Infrastructure.Persistence.ExceptionHandling;
     using Microsoft.EntityFrameworkCore;

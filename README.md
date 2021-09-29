@@ -68,7 +68,7 @@ To get started using Github just click the big green Use this template button at
 
 By default, the application is configured to run with an in memory database and within memory caching.  
 
-Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to false will configure the application to use SqlServer (which by default is configured to use local DB) and Redis (which is by default using localhost).
+Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to false will configure the application to use SqlServer (which by default is configured to use local DB) and Redis (which is by default using localhost:6379).
 
 To use the Weather data feature of Exemplum you will need to provide an API key for [open weather map](https://openweathermap.org/).  Exemplum uses asp.net core build in local * [Secret Management](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows) system to store the API key.  To set this up locally call `dotnet user-secrets init` this will generate a local secrets file that is not stored in the repository.  Then call `dotnet user-secrets set "WeatherForecast:AppId" "{your-api-key-here}"` to add the secret. 
 
@@ -76,7 +76,7 @@ Exemplum is setup to use Auth0 as an authentication provider.  It is already con
 
 ### Running Docker
 
-Coming soon.....
+Exemplum ships with configuration to run using [Project Tye](https://github.com/dotnet/tye) locally.  You can install tye using the details on the project page and run the application using `tye run`.  The project are configured to fall back to local app settings or defaults if tye service discovery information cannot be found.  
 
 ## Motivation
 

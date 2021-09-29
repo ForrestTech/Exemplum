@@ -6,13 +6,28 @@
 #
 name: exemplum
 services:
-- name: webapi
-  project: src/WebApi/WebApi.csproj
-  bindings:
-  - port: 5001
-    protocol: https
-- name: webapp
-  project: src/WebApp/WebApp.csproj
-  bindings:
-  - port: 6001
-    protocol: https
+  - name: webapi
+    project: src/WebApi/WebApi.csproj
+    bindings:
+      - port: 5001
+        protocol: https
+  - name: webapp
+    project: src/WebApp/WebApp.csproj
+    bindings:
+      - port: 6001
+        protocol: https
+  - name: redis
+    image: redis
+    bindings:
+      - port: 6379
+        connectionString: "${host}:${port}"
+  - name: mssql
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    env:
+      - name: SA_PASSWORD
+        value: "AVeryStrong@Passw0rd"
+      - name: ACCEPT_EULA
+        value: "Y"
+    bindings:
+      - port: 1433
+        connectionString: Server=${host}, ${port};Database=Exemplum;MultipleActiveResultSets=true;User Id=sa;Password=${env:SA_PASSWORD}

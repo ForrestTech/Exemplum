@@ -11,7 +11,7 @@
         
         public static string GetDefaultConnection(this IConfiguration config)
         {
-            return config.GetConnectionString("Default");
+            return config.GetConnectionString("mssql");
         }
     }
 }

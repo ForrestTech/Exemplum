@@ -12,7 +12,6 @@ namespace Exemplum.WebApp
     using Serilog;
     using Serilog.Events;
     using System;
-    using System.Net.Http;
     using System.Threading.Tasks;
 
     public class ProgramClient
@@ -62,20 +61,22 @@ namespace Exemplum.WebApp
                     policy.RequireClaim("permissions", "delete:todo"));
             });
 
+            var apiHostUri = builder.Configuration.GetServiceUri("webapi") ?? ApiHostUri;
+
             builder.Services.AddRefitClient<ITodoClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri))
+                .ConfigureHttpClient(c => c.BaseAddress = apiHostUri)
                 .AddHttpMessageHandler(sp => sp.GetRequiredService<AuthorizationMessageHandler>()
-                    .ConfigureHandler(new[] { ApiHostUri }));
+                    .ConfigureHandler(new[] { apiHostUri.ToString() }));
 
             builder.Services.AddRefitClient<IWeatherForecastClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(ApiHostUri))
+                .ConfigureHttpClient(c => c.BaseAddress = apiHostUri)
                 .AddHttpMessageHandler(sp => sp.GetRequiredService<AuthorizationMessageHandler>()
-                    .ConfigureHandler(new[] { ApiHostUri }));
+                    .ConfigureHandler(new[] { apiHostUri.ToString() }));
 
             builder.Services.AddTransient<ILocationService, LocationService>();
             builder.Services.AddMudServices();
         }
 
-        private const string ApiHostUri = "https://localhost:5001";
+        private static readonly Uri ApiHostUri = new Uri("https://localhost:5001");
     }
 }

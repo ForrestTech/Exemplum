@@ -22,8 +22,6 @@ namespace Exemplum.WebApi
     using System.IO;
     using System.Reflection;
 
-    // TODO add docker support using project tye
-    // TODO add docker support for sql/redis ??
     // TODO add seq to docker/tye (configure health checks)
     // TODO add support for metric pushing to grafana
     // TODO create nuget template package
@@ -34,26 +32,26 @@ namespace Exemplum.WebApi
     // TODO .net 6 simple endpoints
     public class Startup
     {
+        private readonly IConfiguration _configuration;
         private const string DefaultCorsPolicy = "Default";
+        private const string WebAppDefaultUri = "https://localhost:6001";
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication(Configuration);
-            services.AddInfrastructure(Configuration);
+            services.AddApplication(_configuration);
+            services.AddInfrastructure(_configuration);
 
             services.AddCors(options =>
             {
                 options.AddPolicy(DefaultCorsPolicy, builder =>
                 {
-                    builder.WithOrigins("https://localhost:6001")
+                    builder.WithOrigins(_configuration.GetServiceUri("webapp")?.ToString() ??  WebAppDefaultUri)
                         .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
@@ -66,8 +64,8 @@ namespace Exemplum.WebApi
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = Configuration["Auth0:Authority"];
-                options.Audience = Configuration["Auth0:ApiIdentifier"];
+                options.Authority = _configuration["Auth0:Authority"];
+                options.Audience = _configuration["Auth0:ApiIdentifier"];
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = "name",
@@ -77,9 +75,9 @@ namespace Exemplum.WebApi
             
             var hcBuilder = services.AddHealthChecks();
             
-            if(!Configuration.UseInMemoryStorage())
+            if(!_configuration.UseInMemoryStorage())
             {
-                hcBuilder.AddSqlServer(Configuration.GetDefaultConnection());
+                hcBuilder.AddSqlServer(_configuration.GetDefaultConnection());
             }
 
             services.AddHealthChecksUI()
