@@ -24,7 +24,7 @@ namespace Exemplum.WebApi
         public static async Task<int> Main(string[] args)
         {
             Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-                
+
             var logConfiguration = new LoggerConfiguration()
 #if DEBUG
                 .MinimumLevel.Debug()
@@ -46,10 +46,9 @@ namespace Exemplum.WebApi
                     .WithDestructurers(new[] { new DbUpdateExceptionDestructurer() }))
                 .Enrich.WithProperty("ApplicationName", "Exemplum.Api")
                 .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
-                .WriteTo.Console();
-                // if you want local file logging
-                // .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data/Logs/ExemplumApi-Logs-.txt",
-                //         rollingInterval: RollingInterval.Day));
+                .WriteTo.Console()
+                .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data\\Logs\\ExemplumApi-Logs.txt",
+                         rollingInterval: RollingInterval.Day));
 
             Log.Logger = logConfiguration.CreateLogger();
 
