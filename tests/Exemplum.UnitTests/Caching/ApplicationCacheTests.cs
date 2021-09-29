@@ -239,7 +239,7 @@
             return fixture;
         }
 
-        private class CacheItem
+        public class CacheItem
         {
             public string Name { get; set; } = String.Empty;
         }
