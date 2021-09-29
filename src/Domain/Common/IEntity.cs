@@ -1,6 +1,6 @@
 ﻿namespace Exemplum.Domain.Common
 {
-    public interface IEntity<TKey>
+    public interface IEntity<out TKey>
     {
         public TKey Id { get; }
     }

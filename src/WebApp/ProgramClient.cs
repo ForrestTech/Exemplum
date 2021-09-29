@@ -14,7 +14,7 @@ namespace Exemplum.WebApp
     using System;
     using System.Threading.Tasks;
 
-    public class ProgramClient
+    public static class ProgramClient
     {
         public static async Task Main(string[] args)
         {

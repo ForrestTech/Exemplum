@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public abstract class ValueObject
+    public abstract class ValueObject 
     {
         public static bool EqualOperator(ValueObject left, ValueObject right)
         {

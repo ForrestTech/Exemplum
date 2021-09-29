@@ -19,7 +19,7 @@ namespace Exemplum.WebApi
     using System.Reflection;
     using System.Threading.Tasks;
 
-    public class ProgramApi
+    public static class ProgramApi
     {
         public static async Task<int> Main(string[] args)
         {
