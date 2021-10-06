@@ -15,8 +15,7 @@ This is a template for creating a asp.net core applications both services (micro
 ## Table Of Contents
 
 * [Getting Started](#getting-started)
-    * [Using the dotnet CLI](#using-the-dotnet-cli)
-    * [Using Visual Studio template](#using-the-visual-studio-template)
+    * [Using the dotnet CLI](#using-the-dotnet-cli)    
     * [Using Github](#using-github)
     * [Running Locally](#running-locally)
     * [Running Docker](#running-docker)
@@ -50,11 +49,17 @@ This is a template for creating a asp.net core applications both services (micro
 
 ### Using the dotnet CLI
 
-Coming soon.....
+The template can be installed from the dotnet command
 
-### Using Visual Studio template
+````
+dotnet new -i Exemplum.Template
+````
 
-Coming soon.....
+You can then create a new project based on Exemplum using the command
+
+````
+dotnet new exemplum -o Your.ProjectName
+````
 
 ### Using Github
 
