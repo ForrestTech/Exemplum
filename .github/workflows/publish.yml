@@ -14,7 +14,7 @@ jobs:
 
       - uses: nuget/setup-nuget@v1
         with:
-          nuget-version: '0.1.x'
+          nuget-version: '5.x'
 
       - name: Package the template
         run: nuget pack Exemplum.nuspec
