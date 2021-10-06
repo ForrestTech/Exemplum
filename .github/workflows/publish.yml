@@ -1,8 +1,7 @@
 name: Publish Exemplum Template to nuget
 on:
   push:
-    branches:
-      - main 
+    branches: [ main ]
     paths:
       - 'Exemplum.nuspec'
 jobs:
