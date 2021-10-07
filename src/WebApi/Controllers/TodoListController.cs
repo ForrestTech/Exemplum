@@ -10,7 +10,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]           
     public class TodoListController : ApiControllerBase
     {
         private readonly ISender _mediator;
@@ -44,7 +43,7 @@
         /// <returns>The created todo list</returns>
         [HttpPost("todolist")]
         public async Task<ActionResult<TodoListDto>> CreateTodoList(CreateTodoListCommand command,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var item = await _mediator.Send(command, cancellationToken);
 
@@ -61,7 +60,7 @@
         [HttpPut("todolist/{listId:int}")]
         public async Task<ActionResult<TodoListDto>> UpdateTodoList(int listId,
             UpdateTodoListCommand command,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             command.ListId = listId;
 
@@ -75,7 +74,7 @@
         /// <param name="cancellationToken">Cancellation token</param>
         [HttpGet("todolist/{listId:int}")]
         public async Task<ActionResult<TodoListDto>> GetTodoListById(int listId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await _mediator.Send(new GetTodoListByIdQuery { ListId = listId }, cancellationToken);
         }
@@ -87,7 +86,7 @@
         /// <param name="cancellationToken">Cancellation token</param>
         [HttpDelete("todolist/{listId:int}")]
         public async Task<ActionResult> DeleteTodoList(int listId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await _mediator.Send(new DeleteTodoListCommand { ListId = listId }, cancellationToken);
             return Ok();

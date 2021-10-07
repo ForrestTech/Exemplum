@@ -5,7 +5,6 @@ namespace Exemplum.WebApi
     using HealthChecks.UI.Client;
     using Infrastructure;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
@@ -25,18 +24,22 @@ namespace Exemplum.WebApi
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly IHostEnvironment _currentEnvironment;
+        
         private const string DefaultCorsPolicy = "Default";
         private const string WebAppDefaultUri = "https://localhost:6001";
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, 
+            IHostEnvironment currentEnvironment)
         {
             _configuration = configuration;
+            _currentEnvironment = currentEnvironment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication(_configuration);
+            services.AddApplication(_configuration, _currentEnvironment);
             services.AddInfrastructure(_configuration);
 
             services.AddCors(options =>
@@ -63,6 +66,11 @@ namespace Exemplum.WebApi
                     NameClaimType = "name",
                     RoleClaimType = "https://schemas.dev-ememplum.com/roles"
                 };
+            });
+            
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
             });
             
             var hcBuilder = services.AddHealthChecks();
@@ -122,8 +130,6 @@ namespace Exemplum.WebApi
             
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseAuthorization();
             
             app.UseEndpoints(endpoints =>
             {
@@ -140,16 +146,7 @@ namespace Exemplum.WebApi
                 
                 endpoints.MapHealthChecksUI();
                 
-                 
-                if (env.IsDevelopment())
-                {
-                    // auth can be a real pain when testing locally this turns off auth for local comment out if you want to test auth
-                    endpoints.MapControllers().WithMetadata(new AllowAnonymousAttribute());
-                }
-                else
-                {
-                    endpoints.MapControllers();
-                }
+                endpoints.MapControllers();
             });
         }
     }

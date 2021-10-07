@@ -4,11 +4,11 @@
     using Microsoft.AspNetCore.Http;
     using System.Security.Claims;
 
-    public class CurrentUserService : ICurrentUserService
+    public class CurrentUser : ICurrentUser
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+        public CurrentUser(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

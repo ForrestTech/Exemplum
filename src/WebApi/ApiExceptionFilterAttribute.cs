@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.WebApi
 {
     using Application.Common.Exceptions;
+    using Application.Common.Security;
     using Domain.Common.Extensions;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -27,6 +28,7 @@
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(DatabaseValidationException), HandleDatabaseException },
                 { typeof(ApiException), HandleApiException },
+                { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
             };
         }
 
@@ -144,6 +146,23 @@
             };
 
             context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status401Unauthorized };
+
+            context.ExceptionHandled = true;
+        }
+        
+        private static void HandleForbiddenAccessException(ExceptionContext context)
+        {
+            var details = new ProblemDetails
+            {
+                Status = StatusCodes.Status403Forbidden,
+                Title = "Forbidden",
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
 
             context.ExceptionHandled = true;
         }

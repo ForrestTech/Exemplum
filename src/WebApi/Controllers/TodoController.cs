@@ -10,8 +10,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Threading;
     using System.Threading.Tasks;
-
-    [Authorize]
+    
     public class TodoController : ApiControllerBase
     {
         private readonly ISender _mediator;
