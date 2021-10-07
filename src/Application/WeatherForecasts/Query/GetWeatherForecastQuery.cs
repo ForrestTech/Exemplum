@@ -1,5 +1,6 @@
 ﻿namespace Exemplum.Application.WeatherForecasts.Query
 {
+    using Common.Security;
     using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.Options;
@@ -7,6 +8,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize(Roles = "Forecaster")]
     public class GetWeatherForecastQuery : IRequest<WeatherForecast>
     {
         public decimal Lat { get; set; }

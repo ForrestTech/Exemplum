@@ -14,12 +14,13 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Persistence;
     using Persistence.ExceptionHandling;
     using Polly.Registry;
     using Refit;
     using System;
+    using AuthenticationService = Identity.AuthenticationService;
+    using IAuthenticationService = Application.Common.Identity.IAuthenticationService;
 
     public static class DependencyInjection
     {
@@ -47,8 +48,7 @@
             services.AddTransient<IHandleDbExceptions, HandleDbExceptions>();
             services.AddTransient<IPublishDomainEvents, DomainEventsPublisher>();
             services.AddTransient<IClock, Clock>();
-            services.AddTransient<ICurrentUserService, CurrentUserService>();
-
+            
             services.AddCaching(configuration);
 
             services.AddSingleton<IReadOnlyPolicyRegistry<string>, PolicyRegistry>(serviceProvider =>
@@ -62,6 +62,10 @@
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration
                     .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value))
                 .AddPolicyHandlerFromRegistry(ExecutionPolicy.RetryPolicy);
+
+            services.AddTransient<ICurrentUser, CurrentUser>();
+            services.AddTransient<IUserIdentity, UserIdentity>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
             return services;
         }

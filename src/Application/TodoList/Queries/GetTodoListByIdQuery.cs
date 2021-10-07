@@ -3,6 +3,7 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Common.Exceptions;
+    using Common.Security;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class GetTodoListByIdQuery : IRequest<TodoListDto>
     {
         public int ListId { get; set; }

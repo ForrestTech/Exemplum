@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Application.Todo.Commands
 {
     using Common.Exceptions;
+    using Common.Security;
     using Domain.Common.DateAndTime;
     using Domain.Todo;
     using FluentValidation;
@@ -13,6 +14,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class SetPriorityCommand : IRequest
     {
         [JsonIgnore]

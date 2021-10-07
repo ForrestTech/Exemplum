@@ -4,6 +4,7 @@
     using AutoMapper.QueryableExtensions;
     using Common.Mapping;
     using Common.Pagination;
+    using Common.Security;
     using Common.Validation;
     using Domain.Todo;
     using FluentValidation;
@@ -15,6 +16,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class GetCompletedTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
         IPaginatedQuery,
         IQueryObject<TodoItem>

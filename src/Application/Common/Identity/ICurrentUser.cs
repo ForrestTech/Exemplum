@@ -1,7 +1,11 @@
 ﻿namespace Exemplum.Application.Common.Identity
 {
-    public interface ICurrentUserService
+    using System.Security.Claims;
+
+    public interface ICurrentUser
     {
         string? UserId { get; }
+        
+        public ClaimsPrincipal? Principal { get; }
     }
 }

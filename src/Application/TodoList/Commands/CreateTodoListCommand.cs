@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Application.TodoList.Commands
 {
     using AutoMapper;
+    using Common.Security;
     using Domain.Todo;
     using FluentValidation;
     using MediatR;
@@ -10,6 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class CreateTodoListCommand : IRequest<TodoListDto>
     {
         public string Title { get; set; } = string.Empty;

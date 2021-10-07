@@ -1,5 +1,6 @@
 ﻿namespace Exemplum.Application.Todo.Commands
 {
+    using Common.Security;
     using Domain.Todo;
     using FluentValidation;
     using MediatR;
@@ -10,6 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class UpdateTodoCommand : IRequest<TodoItem>
     {
         [JsonIgnore]

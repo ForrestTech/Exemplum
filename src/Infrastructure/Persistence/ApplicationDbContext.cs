@@ -23,18 +23,18 @@
         private readonly IHandleDbExceptions _idbExceptions;
         private readonly IPublishDomainEvents _publishDomainEvents;
         private readonly IClock _clock;
-        private readonly ICurrentUserService _currentUserService;
+        private readonly ICurrentUser _currentUser;
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
             IHandleDbExceptions idbExceptions,
             IPublishDomainEvents publishDomainEvents,
             IClock clock,
-            ICurrentUserService currentUserService) : base(options)
+            ICurrentUser currentUser) : base(options)
         {
             _idbExceptions = idbExceptions;
             _publishDomainEvents = publishDomainEvents;
             _clock = clock;
-            _currentUserService = currentUserService;
+            _currentUser = currentUser;
         }
 
         public DbSet<TodoItem> TodoItems => Set<TodoItem>();
@@ -50,11 +50,11 @@
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = _currentUserService.UserId ?? string.Empty;
+                        entry.Entity.CreatedBy = _currentUser.UserId ?? string.Empty;
                         entry.Entity.Created = _clock.Now;
                         break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = _currentUserService.UserId ?? string.Empty;
+                        entry.Entity.LastModifiedBy = _currentUser.UserId ?? string.Empty;
                         entry.Entity.LastModified = _clock.Now;
                         break;
                     default:

@@ -1,20 +1,15 @@
 namespace Exemplum.Infrastructure.Identity
 {
     using Application.Common.Identity;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using System.Linq;
-    using System.Threading.Tasks;
+    using System.Security.Claims;
 
     public class UserIdentity : IUserIdentity
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUser _currentUser;
 
-        public UserIdentity(UserManager<ApplicationUser> userManager, 
-            ICurrentUser currentUser)
+        public UserIdentity(ICurrentUser currentUser)
         {
-            _userManager = userManager;
             _currentUser = currentUser;
         }
 
@@ -26,23 +21,25 @@ namespace Exemplum.Infrastructure.Identity
             }
         }
 
-        public async Task<string> GetUserNameAsync()
+        public string? GetUserNameAsync()
         {
-            var user = await _userManager.Users.FirstAsync(u => u.Id == _currentUser.UserId);
+            var user = _currentUser.UserId;
 
-            return user.UserName;
+            return user;
         }
         
-        public async Task<bool> IsInRoleAsync(string role)
+        public bool IsInRoleAsync(string role)
         {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == _currentUser.UserId);
-
-            if (user == null)
+            if (_currentUser.Principal?.Claims == null)
             {
                 return false;
             }
 
-            return await _userManager.IsInRoleAsync(user, role);
+            var roles = _currentUser.Principal?.Claims
+                .Where(x => x.Type == ClaimTypes.Role)
+                .Select(x => x.Value);
+
+            return roles != null && roles.Contains(role);
         }
     }
 }

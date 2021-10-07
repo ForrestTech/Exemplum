@@ -4,6 +4,7 @@
     using AutoMapper.QueryableExtensions;
     using Common.Mapping;
     using Common.Pagination;
+    using Common.Security;
     using Common.Validation;
     using FluentValidation;
     using MediatR;
@@ -14,6 +15,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class GetTodoListsQuery : IRequest<PaginatedList<TodoListDto>>,
         IPaginatedQuery
     {

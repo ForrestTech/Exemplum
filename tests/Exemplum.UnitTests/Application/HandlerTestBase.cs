@@ -28,7 +28,7 @@
                 fixture.Create<IHandleDbExceptions>(),
                 fixture.Create<IPublishDomainEvents>(),
                 new Clock(),
-                fixture.Create<ICurrentUserService>());
+                fixture.Create<ICurrentUser>());
 
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();

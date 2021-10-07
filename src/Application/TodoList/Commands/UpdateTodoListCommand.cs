@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Common.Exceptions;
+    using Common.Security;
     using Domain.Todo;
     using FluentValidation;
     using MediatR;
@@ -11,6 +12,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class UpdateTodoListCommand : IRequest<TodoListDto>
     {
         public int ListId { get; set; }

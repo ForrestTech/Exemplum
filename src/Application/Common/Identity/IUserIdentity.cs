@@ -2,13 +2,12 @@ namespace Exemplum.Application.Common.Identity
 {
     using System.Threading.Tasks;
 
-    public interface IIdentity
+    public interface IUserIdentity
     {
-        Task<string> GetUserNameAsync(string userId);
-    }
+        string? UserId { get; }
+        
+        string? GetUserNameAsync();
 
-    public interface IAuthenticationService
-    {
-        Task<bool> AuthorizeAsync(string userId, string policyName);
+        bool IsInRoleAsync(string role);
     }
 }
