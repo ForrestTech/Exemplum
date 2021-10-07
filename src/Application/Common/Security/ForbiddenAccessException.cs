@@ -4,6 +4,6 @@ namespace Exemplum.Application.Common.Security
 
     public class ForbiddenAccessException : Exception
     {
-        public ForbiddenAccessException() : base() { }
+        
     }
 }
