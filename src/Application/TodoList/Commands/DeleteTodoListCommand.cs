@@ -23,7 +23,7 @@
             RuleFor(x => x.ListId).GreaterThanOrEqualTo(1);
         }
     }
-    
+
     public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>
     {
         private readonly IApplicationDbContext _context;
@@ -32,7 +32,7 @@
         {
             _context = context;
         }
-        
+
         public async Task<Unit> Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
         {
             var list = await _context.TodoLists
@@ -43,7 +43,7 @@
                 throw new NotFoundException(nameof(TodoList), new { request.ListId });
             }
 
-            _context.TodoLists.Remove(list);
+            list.IsDeleted = true;
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Exemplum.Infrastructure.Migrations
+namespace Exemplum.Infrastructure.Persistence.Migrations
 {
     public partial class Initial : Migration
     {
@@ -32,7 +32,8 @@ namespace Exemplum.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    Colour = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Colour = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -75,6 +76,11 @@ namespace Exemplum.Infrastructure.Migrations
                 name: "IX_TodoItems_ListId",
                 table: "TodoItems",
                 column: "ListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TodoLists_IsDeleted",
+                table: "TodoLists",
+                column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TodoLists_Title",

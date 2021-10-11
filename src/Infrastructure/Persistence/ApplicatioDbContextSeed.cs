@@ -11,7 +11,10 @@
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
             // Seed, if necessary
-            var lists = await context.TodoLists.ToListAsync();
+            var lists = await context.TodoLists
+                .IgnoreQueryFilters()
+                .ToListAsync();
+
             if (!lists.Any())
             {
                 var list = new TodoList("Shopping", Colour.Blue);

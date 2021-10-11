@@ -12,6 +12,7 @@
     using ExceptionHandling;
     using Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
     using System;
     using System.Linq;
     using System.Reflection;
@@ -45,6 +46,24 @@
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
+            HandleAuditableEntities();
+
+            await DispatchEvents();
+
+            try
+            {
+                var result = await base.SaveChangesAsync(cancellationToken);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _idbExceptions.HandleException(e);
+                throw;
+            }
+        }
+
+        private void HandleAuditableEntities()
+        {
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
                 switch (entry.State)
@@ -61,19 +80,6 @@
                         // we dont need to handle the other entity state for auditability
                         break;
                 }
-            }
-
-            await DispatchEvents();
-
-            try
-            {
-                var result = await base.SaveChangesAsync(cancellationToken);
-                return result;
-            }
-            catch (Exception e)
-            {
-                _idbExceptions.HandleException(e);
-                throw;
             }
         }
 
@@ -94,6 +100,8 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
             IgnoreDomainEvents(builder);
+
+            ConfigureSoftDeleteQueryFilter(builder);
 
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -119,6 +127,17 @@
                 foreach (var propertyName in propertyNames)
                 {
                     entityTypeBuilder.Ignore(propertyName);
+                }
+            }
+        }
+
+        private static void ConfigureSoftDeleteQueryFilter(ModelBuilder builder)
+        {
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                if (typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
+                {
+                    entityType.AddSoftDeleteQueryFilter();
                 }
             }
         }

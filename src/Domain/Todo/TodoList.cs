@@ -4,19 +4,19 @@
     using Events;
     using System.Collections.Generic;
 
-    public class TodoList : BaseEntity, IAggregateRoot
+    public class TodoList : BaseEntity, IAggregateRoot, ISoftDelete
     {
         /// <summary>
         /// EF constructor
         /// </summary>
         private TodoList()
         { }
-        
+
         public TodoList(string title)
         {
             Title = title;
         }
-        
+
         public TodoList(string title, Colour colour)
         {
             Title = title;
@@ -36,10 +36,12 @@
 
             DomainEvents.Add(new TodoItemCreatedEvent(item));
         }
-        
+
         public void AddToDo(List<TodoItem> items)
         {
             items.ForEach(AddToDo);
         }
+
+        public bool IsDeleted { get; set; }
     }
 }
