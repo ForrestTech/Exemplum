@@ -13,8 +13,6 @@ namespace Application.UnitTests.Application.Exceptions
         [Fact]
         public void Convert_should_set_message()
         {
-            var fixture = new Fixture();
-
             var sut = new ExceptionToErrorConverter(new List<ICustomExceptionErrorConverter>
             {
                 new UnauthorizedAccessExceptionConverter()
