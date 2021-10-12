@@ -1,6 +1,6 @@
 ﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling.Handlers
 {
-    using Application.Common.Exceptions;
+    using Application.Common.Validation;
     using Microsoft.Data.SqlClient;
     using Sprache;
     using System;
@@ -17,19 +17,21 @@
 
         public void HandleException(Exception exception)
         {
-            if (exception?.InnerException is SqlException sqlListException)
+            if (exception?.InnerException is not SqlException sqlListException)
             {
-                try
-                {
-                    var (table, field, value) = ErrorMessage.Parse(sqlListException.Message);
+                return;
+            }
 
-                    throw new DatabaseValidationException(field,
-                        $"Duplicate entry. An item already exists that has a '{field}' with the value of: '{value}'.", exception);
-                }
-                catch (ParseException)
-                {
-                  //its find to just swallow this here as the normal DB exception will bubble up and be handled   
-                }
+            try
+            {
+                var (table, field, value) = ErrorMessage.Parse(sqlListException.Message);
+
+                throw new ValidationException(field,
+                    $"Duplicate entry. An item already exists that has a '{field}' with the value of: '{value}'.");
+            }
+            catch (ParseException)
+            {
+                //its find to just swallow this here as the normal DB exception will bubble up and be handled
             }
         }
     }

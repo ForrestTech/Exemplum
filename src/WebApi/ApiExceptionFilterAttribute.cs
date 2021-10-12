@@ -1,86 +1,84 @@
 ﻿namespace Exemplum.WebApi
 {
     using Application.Common.Exceptions;
-    using Application.Common.Security;
-    using Domain.Common.Extensions;
+    using Domain.Extensions;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Hosting;
-    using Refit;
-    using System;
-    using System.Collections.Generic;
+    using System.Collections;
+    using System.Linq;
     using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
+        private readonly IExceptionToErrorConverter _converter;
         private readonly IWebHostEnvironment _env;
-        private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
-        public ApiExceptionFilterAttribute(IWebHostEnvironment env)
+        public ApiExceptionFilterAttribute(IExceptionToErrorConverter converter, IWebHostEnvironment env)
         {
+            _converter = converter;
             _env = env;
-            // Register known exception types and handlers.  If this gets really big it could be refactored to a common interface and then registered at startup
-            _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
-            {
-                { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException },
-                { typeof(DatabaseValidationException), HandleDatabaseException },
-                { typeof(ApiException), HandleApiException },
-                { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
-            };
         }
 
         public override void OnException(ExceptionContext context)
         {
+            if (!ShouldHandleException(context))
+            {
+                return;
+            }
+
             HandleException(context);
 
             base.OnException(context);
         }
 
-        private void HandleException(ExceptionContext context)
+        private static bool ShouldHandleException(ActionContext context)
         {
-            Type type = context.Exception.GetType();
-            if (_exceptionHandlers.ContainsKey(type))
+            if (context.ActionDescriptor is ControllerActionDescriptor)
             {
-                _exceptionHandlers[type].Invoke(context);
-                return;
+                return true;
             }
 
+            return context.HttpContext.Request.CanAccept(MimeTypes.Application.Json) ||
+                   context.HttpContext.Request.IsAjax();
+        }
+
+        private void HandleException(ExceptionContext context)
+        {
             if (!context.ModelState.IsValid)
             {
                 HandleInvalidModelStateException(context);
                 return;
             }
 
-            HandleUnknownException(context);
-        }
+            var errorInfo = _converter.Convert(context.Exception, _env.IsDevelopment());
 
-        private static void HandleValidationException(ExceptionContext context)
-        {
-            var exception = context.Exception as ValidationException;
-
-            var details = new ValidationProblemDetails(exception?.Errors)
+            if (errorInfo.ValidationErrors.Any())
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-            };
+                var validationProblemDetails = new ValidationProblemDetails(errorInfo.ValidationErrors);
 
-            context.Result = new BadRequestObjectResult(details);
+                context.Result = new BadRequestObjectResult(validationProblemDetails);
 
-            context.ExceptionHandled = true;
-        }
-        
-        private static void HandleDatabaseException(ExceptionContext context)
-        {
-            var exception = context.Exception as DatabaseValidationException;
+                context.ExceptionHandled = true;
 
-            var details = new ValidationProblemDetails(exception?.Errors)
+                return;
+            }
+
+            var details = new ProblemDetails { Title = errorInfo.Message, Detail = errorInfo.Details };
+
+            if (errorInfo.Code.HasValue())
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-            };
+                details.Extensions.Add("Code", errorInfo.Code);
+            }
 
-            context.Result = new BadRequestObjectResult(details);
+            foreach (DictionaryEntry data in errorInfo.Data)
+            {
+                details.Extensions.Add(data.Key.ToString() ?? string.Empty, data.Value);
+            }
+
+            context.Result = new ObjectResult(details) { StatusCode = (int)errorInfo.ResponseCode };
 
             context.ExceptionHandled = true;
         }
@@ -93,95 +91,6 @@
             };
 
             context.Result = new BadRequestObjectResult(details);
-
-            context.ExceptionHandled = true;
-        }
-
-        private static void HandleNotFoundException(ExceptionContext context)
-        {
-            var exception = context.Exception as NotFoundException;
-
-            var details = new ProblemDetails
-            {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-                Title = "The specified resource was not found.",
-                Detail = exception?.Message
-            };
-
-            context.Result = new NotFoundObjectResult(details);
-
-            context.ExceptionHandled = true;
-        }
-        
-        private void HandleApiException(ExceptionContext context)
-        {
-            var exception = context.Exception as ApiException;
-            
-            var details = new ProblemDetails
-            {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = "An error occurred while processing your request.",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
-            };
-
-            if (_env.IsDevelopment())
-            {
-                details.Detail = $"Exception calling external system.  Uri:'{exception?.Uri}' " +
-                                 $"StatusCode: '{exception?.StatusCode}' Reason:'{exception?.ReasonPhrase}' " +
-                                 $"Message:'{exception?.Message}'";
-            }
-
-            context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status500InternalServerError };
-
-            context.ExceptionHandled = true;
-        }
-
-        private static void HandleUnauthorizedAccessException(ExceptionContext context)
-        {
-            var details = new ProblemDetails
-            {
-                Status = StatusCodes.Status401Unauthorized,
-                Title = "Unauthorized",
-                Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
-            };
-
-            context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status401Unauthorized };
-
-            context.ExceptionHandled = true;
-        }
-        
-        private static void HandleForbiddenAccessException(ExceptionContext context)
-        {
-            var details = new ProblemDetails
-            {
-                Status = StatusCodes.Status403Forbidden,
-                Title = "Forbidden",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
-            };
-
-            context.Result = new ObjectResult(details)
-            {
-                StatusCode = StatusCodes.Status403Forbidden
-            };
-
-            context.ExceptionHandled = true;
-        }
-
-        private void HandleUnknownException(ExceptionContext context)
-        {
-            var details = new ProblemDetails
-            {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = "An error occurred while processing your request.",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
-            };
-
-            if (_env.IsDevelopment())
-            {
-                details.Detail = context.Exception.GetAllMessages();
-            }
-
-            context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status500InternalServerError };
 
             context.ExceptionHandled = true;
         }

@@ -1,5 +1,6 @@
 ﻿namespace Exemplum.Application.Common.Behaviour
 {
+    using Domain.Exceptions;
     using MediatR;
     using Microsoft.Extensions.Logging;
     using System;
@@ -25,10 +26,20 @@
             }
             catch (Exception ex)
             {
-                var requestName = typeof(TRequest).Name;
+                LogLevel logLevel = LogLevel.Error;
+                if (ex is IHaveLogLevel hasLogLevel)
+                {
+                    logLevel = hasLogLevel.LogLevel;
+                }
 
-                _logger.LogError(ex, "Request: Unhandled Exception for Request {Name} {@Request}", requestName,
+                var requestName = typeof(TRequest).Name;
+                _logger.Log(logLevel, ex, "Request: Unhandled Exception for Request {Name} {@Request}", requestName,
                     request);
+
+                if (ex is IExceptionWithSelfLogging withSelfLogging)
+                {
+                    withSelfLogging.Log(_logger);
+                }
 
                 throw;
             }

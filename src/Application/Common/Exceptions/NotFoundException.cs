@@ -1,26 +1,22 @@
 ﻿namespace Exemplum.Application.Common.Exceptions
 {
+    using Domain.Exceptions;
     using System;
+    using System.Net;
 
-    public class NotFoundException : Exception
+    public class NotFoundException :
+        Exception,
+        IHaveResponseCode
     {
         public NotFoundException()
         {
         }
 
-        public NotFoundException(string message)
-            : base(message)
-        {
-        }
-
-        public NotFoundException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
         public NotFoundException(string name, object key)
-            : base($"Entity '{name}' with key '{key}' was not found.")
+            : base($"The resource does not exist. Resource Type '{name}' with key '{key}' was not found.")
         {
         }
+
+        public HttpStatusCode StatusCode { get; } = HttpStatusCode.NotFound;
     }
 }

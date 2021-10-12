@@ -1,4 +1,4 @@
-﻿namespace Application.UnitTests.Application.ExceptionHandling
+﻿namespace Application.UnitTests.Application.Exceptions
 {
     using Exemplum.Infrastructure.Persistence.ExceptionHandling.Handlers;
     using FluentAssertions;
@@ -18,7 +18,7 @@
             actual.Field.Should().Be("Title");
             actual.Value.Should().Be("Shopping");
         }
-        
+
         [Theory]
         [InlineData("Wrong")]
         [InlineData("Cannot insert duplicate key row in object 'noperiod' with unique index 'nounderscores'. The duplicate key value is (Shopping).")]
@@ -31,7 +31,5 @@
 
             actual.Should().Throw<ParseException>();
         }
-        
-        
     }
 }

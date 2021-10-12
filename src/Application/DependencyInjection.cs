@@ -1,6 +1,8 @@
 ﻿namespace Exemplum.Application
 {
     using Common.Behaviour;
+    using Common.Exceptions;
+    using Common.Exceptions.Converters;
     using Common.Security;
     using FluentValidation;
     using MediatR;
@@ -21,6 +23,10 @@
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            services.AddTransient<IExceptionToErrorConverter, ExceptionToErrorConverter>();
+            services.AddTransient<ICustomExceptionErrorConverter, RefitApiExceptionConverter>();
+            services.AddTransient<ICustomExceptionErrorConverter, UnauthorizedAccessExceptionConverter>();
 
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));

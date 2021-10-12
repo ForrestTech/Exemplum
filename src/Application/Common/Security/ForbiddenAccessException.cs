@@ -1,9 +1,11 @@
 namespace Exemplum.Application.Common.Security
 {
-    using System;
+    using Domain.Exceptions;
 
-    public class ForbiddenAccessException : Exception
+    public class ForbiddenAccessException : BusinessException
     {
-        
+        public ForbiddenAccessException() : base("Forbidden")
+        {
+        }
     }
 }
