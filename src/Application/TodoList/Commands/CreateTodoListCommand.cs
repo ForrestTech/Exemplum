@@ -2,12 +2,15 @@
 {
     using AutoMapper;
     using Common.Security;
+    using Domain.Exceptions;
     using Domain.Todo;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using Models;
     using Persistence;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -31,7 +34,7 @@
                 .MaximumLength(300)
                 .MustAsync(BeUniqueTitle)
                 .WithMessage("Todo list title must be unique");
-            
+
             RuleFor(x => x.Colour)
                 .Must(x => x == null || Colour.IsValidColour(x))
                 .WithMessage("{PropertyName} must be a valid Colour");
@@ -46,7 +49,7 @@
             return todo == null;
         }
     }
-    
+
     public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, TodoListDto>
     {
         private readonly IApplicationDbContext _context;
@@ -57,7 +60,7 @@
             _context = context;
             _mapper = mapper;
         }
-        
+
         public async Task<TodoListDto> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
         {
             var list = new TodoList(request.Title);
