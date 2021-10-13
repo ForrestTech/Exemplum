@@ -7,26 +7,30 @@
 <AuthorizeView>
     <Authorized>
         <MudTooltip Text="Log out">
-            <MudIconButton @onclick="BeginSignOut"
-                           Icon="@Icons.Filled.Logout"
-                           Color="Color.Inherit"
-                           aria-label="Log out"/>
+            <MudIconButton
+                id="log-out"
+                @onclick="BeginSignOut"
+                Icon="@Icons.Filled.Logout"
+                Color="Color.Inherit"
+                aria-label="Log out"/>
         </MudTooltip>
     </Authorized>
     <Authorizing>
-        <MudTooltip Text="Log in">
-            <MudIconButton Link="authentication/login"
-                           Icon="@Icons.Filled.Login"
-                           Color="Color.Inherit"
-                           aria-label="Log in"/>
+        <MudTooltip Text="Log in" id="log-in">
+            <MudIconButton
+                Link="authentication/login"
+                Icon="@Icons.Filled.Login"
+                Color="Color.Inherit"
+                aria-label="Log in"/>
         </MudTooltip>
     </Authorizing>
     <NotAuthorized>
-        <MudTooltip Text="Log in">
-            <MudIconButton Link="authentication/login"
-                           Icon="@Icons.Filled.Login"
-                           Color="Color.Inherit"
-                           aria-label="Log in"/>
+        <MudTooltip Text="Log in" id="log-in">
+            <MudIconButton
+                Link="authentication/login"
+                Icon="@Icons.Filled.Login"
+                Color="Color.Inherit"
+                aria-label="Log in"/>
         </MudTooltip>
     </NotAuthorized>
 </AuthorizeView>

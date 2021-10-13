@@ -30,11 +30,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exemplum.UnitTests", "tests\Exemplum.UnitTests\Exemplum.UnitTests.csproj", "{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exemplum.UnitTests", "tests\UnitTests\UnitTests.csproj", "{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exemplum.IntegrationTests", "tests\Exemplum.IntegrationTests\Exemplum.IntegrationTests.csproj", "{1B60DF8B-DB4C-41C4-AFC0-92C83F0F0A8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exemplum.IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{1B60DF8B-DB4C-41C4-AFC0-92C83F0F0A8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "src\WebApp\WebApp.csproj", "{29195DBA-1041-4028-9D62-C6ACF77B8C2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EndToEndTests", "tests\EndToEndTests\EndToEndTests.csproj", "{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +135,18 @@ Global
 		{29195DBA-1041-4028-9D62-C6ACF77B8C2A}.Release|x64.Build.0 = Release|Any CPU
 		{29195DBA-1041-4028-9D62-C6ACF77B8C2A}.Release|x86.ActiveCfg = Release|Any CPU
 		{29195DBA-1041-4028-9D62-C6ACF77B8C2A}.Release|x86.Build.0 = Release|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Debug|x86.Build.0 = Debug|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Release|x64.Build.0 = Release|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B7581427-99C4-431B-A09F-9D1552591785} = {7C90A133-27C5-4B07-95CA-523245F4FC0F}
@@ -142,5 +156,6 @@ Global
 		{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B} = {F66A0D66-701E-4ECA-B1B6-7E000FCF524C}
 		{1B60DF8B-DB4C-41C4-AFC0-92C83F0F0A8A} = {F66A0D66-701E-4ECA-B1B6-7E000FCF524C}
 		{29195DBA-1041-4028-9D62-C6ACF77B8C2A} = {7C90A133-27C5-4B07-95CA-523245F4FC0F}
+		{4F4B168D-D50D-429F-A1C6-DF7FE05C8854} = {F66A0D66-701E-4ECA-B1B6-7E000FCF524C}
 	EndGlobalSection
 EndGlobal
