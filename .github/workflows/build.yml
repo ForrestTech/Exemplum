@@ -21,4 +21,4 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-build  --verbosity normal /p:CollectCoverage=true /p:Exclude="[Exemplum.Infrastructure]*" /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute="CompilerGeneratedAttribute" /p:Threshold=15
+        run: dotnet test --no-build  --filter FullyQualifiedName!~Exemplum.EndToEndTests --verbosity normal /p:CollectCoverage=true /p:Exclude="[Exemplum.Infrastructure]*" /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute="CompilerGeneratedAttribute" /p:Threshold=15
