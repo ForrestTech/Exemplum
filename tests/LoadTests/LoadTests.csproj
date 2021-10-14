@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Exemplum.LoadTests</RootNamespace>
+    <AssemblyName>Exemplum.LoadTests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NBomber" Version="2.1.0" />
+    <PackageReference Include="NBomber.Http" Version="2.0.1" />
+  </ItemGroup>
+
+</Project>
