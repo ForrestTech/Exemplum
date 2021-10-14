@@ -7,7 +7,7 @@
 
     class Program
     {
-        static void Main(string[] args)
+        protected static void Main(string[] args)
         {
             var step = Step.Create("get_task_list",
                 clientFactory: HttpClientFactory.Create(),
