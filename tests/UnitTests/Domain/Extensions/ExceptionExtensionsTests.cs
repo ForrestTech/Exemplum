@@ -1,4 +1,4 @@
-﻿namespace Exemplum.IntegrationTests.Domain.Extensions
+﻿namespace Exemplum.UnitTests.Domain.Extensions
 {
     using Exemplum.Domain.Common.Extensions;
     using FluentAssertions;

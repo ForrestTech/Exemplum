@@ -14,36 +14,39 @@ This is a template for creating a asp.net core applications both services (micro
 
 ## Table Of Contents
 
-* [Getting Started](#getting-started)
-    * [Using the dotnet CLI](#using-the-dotnet-cli)    
-    * [Using Github](#using-github)
-    * [Running Locally](#running-locally)
-    * [Running Docker](#running-docker)
-* [Motivation](#motivation)
-    * [Onion Architecture](#onion-architecture)
-    * [DDD modelling](#ddd-modelling)
-    * [Solution Structure](#solution-structure)
-* [Patterns Used](#patterns-used)
-    * [Feature Folders](#feature-folders)
-    * [Mediator Pattern](#mediator-pattern)
-    * [Command Query Segregation](#command-query-segregation)
-    * [Validation Classes](#validation-classes)
-    * [Query objects](#query-object)
-    * [Cross cutting behavior](#cross-cutting-behavior)
-    * [Domain Events](#domain-events)
-    * [Transactional Management](#transactional-management)
-    * [Caching Decorators](#caching-decorators)
-* [Patterns not Used](#patterns-not-used)
-    * [Shared Kernel](#shared-kernel)
-    * [Common Contracts Package](#common-contract-package)
-    * [Published Clients](#published-clients)
-    * [Repositories](#repositories)
-* [Testing](#testing)
-    * [Test Types](#test-types)
-    * [Integration Tests](#integration-tests)
-    * [Fluent Assertions](#fluent-assertions)
-    * [Mocking](#mocking)
-* [Technologies Used](#technologies-used)
+- [Exemplum](#exemplum)
+  - [Table Of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Using the dotnet CLI](#using-the-dotnet-cli)
+    - [Using Github](#using-github)
+    - [Running locally](#running-locally)
+    - [Running Docker](#running-docker)
+  - [Motivation](#motivation)
+    - [Onion Architecture](#onion-architecture)
+    - [DDD modelling](#ddd-modelling)
+    - [Solution Structure](#solution-structure)
+  - [Patterns Used](#patterns-used)
+    - [Feature Folders](#feature-folders)
+    - [Mediator Pattern](#mediator-pattern)
+    - [Command Query Segregation](#command-query-segregation)
+    - [Exception Handling](#exception-handling)
+    - [Validation Classes](#validation-classes)
+    - [Query objects](#query-objects)
+    - [Cross cutting behaviour](#cross-cutting-behaviour)
+    - [Domain Events](#domain-events)
+    - [Transactional Management](#transactional-management)
+    - [Caching](#caching)    
+  - [Patterns not Used](#patterns-not-used)
+    - [Shared Kernel](#shared-kernel)
+    - [Common Contracts Package](#common-contracts-package)
+    - [Published Clients](#published-clients)
+    - [Repositories](#repositories)
+  - [Testing](#testing)
+    - [Test Types](#test-types)
+    - [Integration Tests](#integration-tests)
+    - [End to End Tests](#end-to-end-tests)
+    - [Load Tests>](#load-tests)
+  - [Technologies Used](#technologies-used)
 
 ## Getting Started
 
@@ -150,11 +153,16 @@ Exemplum uses the library [MediatR](https://github.com/jbogard/MediatR) to imple
 
 ### Command Query Segregation
 
-Exemplum encourages command query segregation or [CQS](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation).  This is the separation of all the requests in your system into command and queries.  By doing this it allows us to reason more about what a specific request is doing. For example, queries should never modify the state of the system a such if you see a query handler exercising behaviour on a domain object it should be seen as an anti-pattern.  Commands are expected to modify state in the system or be rejected. [CQS](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation) should not be confused with [CQRS](https://martinfowler.com/bliki/CQRS.html).  They are related concepts, but CQRS takes CQS further and has totally different read write models and even paths through the system for handling read and write requests. A good outline can be found [here](https://cqrs.wordpress.com/documents/cqrs-introduction/). 
+Exemplum encourages command query segregation or [CQS](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation).  This is the separation of all the requests in your system into command and queries.  By doing this it allows us to reason more about what a specific request is doing. For example, queries should never modify the state of the system a such if you see a query handler exercising behaviour on a domain object it should be seen as an anti-pattern.  Commands are expected to modify state in the system or be rejected. [CQS](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation) should not be confused with [CQRS](https://martinfowler.com/bliki/CQRS.html).  They are related concepts, but CQRS takes CQS further and has totally different read write models and even paths through the system for handling read and write requests. A good outline can be found [here](https://cqrs.wordpress.com/documents/cqrs-introduction/).
+
+
+### Exception Handling
+
+Exemplum has a common exception system and a set of exception interfaces and base classes.  Your application, domain logic and infrastructure code can throw exceptions.  You will most commonly throw `Business Exceptions` or some type derived from it.  All exceptions you dont explicitly handle in your own code will be caught by a Pipeline Behaviour in the application layer.  This will log the details of the exception based on the LogLevel of the exception (business exception defaults to warning).  Exceptions can implement their own logging by implementing the `IExceptionWithSelfLogging`. There is an `IExceptionToErrorConverter` that converts a given Exception to a common `ErrorInfo` object. This provides a common data model for all exceptions.  Most properties on this `ErrorInfo` are optional. This common info object is then mapped by an MVC filter into a [problem details](https://datatracker.ietf.org/doc/html/rfc7807) API responses.
 
 ### Validation Classes
 
-Exemplum uses [Fluent Validation](https://fluentvalidation.net/) to handle the validation of request into the system.  This allows us to encapsulate the validation logic of a given requests into a single class. It also means that the validation logic does not have to be included with the request object themselves and these can stay as POCOs.  This stops a common issue have having loads of DataAnnotation of custom validation attributes all over our request objects.  The validation classes also live in our application layer.  We use MediatR [Behaviors](https://github.com/jbogard/MediatR/wiki/Behaviors) to run validators for any request. You can integrate Fluent Validation with asp.net API directly but this is not a great idea as what happens when you have another port into the system you will have to replicate validation there by having it as part of the request pipeline in our application logic its always applied regardless of the request origin. 
+Exemplum uses [Fluent Validation](https://fluentvalidation.net/) to handle the validation of request into the system.  This allows us to encapsulate the validation logic of a given requests into a single class. It also means that the validation logic does not have to be included with the request object themselves and these can stay as POCOs.  This stops a common issue have having loads of DataAnnotation of custom validation attributes all over our request objects.  The validation classes also live in our application layer.  We use MediatR [Behaviors](https://github.com/jbogard/MediatR/wiki/Behaviors) to run validators for any request. If validation fails a ValidationException is thrown.  This is mapped to a validation problem details in the API using the Exception handling method outlined above. You can integrate Fluent Validation with asp.net API directly but this is not a great idea as what happens when you have another port into the system you will have to replicate validation there by having it as part of the request pipeline in our application logic its always applied regardless of the request origin. 
 
 ### Query objects
 
@@ -273,9 +281,39 @@ dotnet tool install -g dotnet-reportgenerator-globaltool
 reportgenerator -reports:".\coverage.opencover.xml" -targetdir:"CoverageResults" -reporttypes:HTML
 
 ### Test Types
+
+Exemplum contains examples of 4 test types 
+
+* Unit Tests
+* Integration Tests
+* End to End Tests
+* Load Tests
+
+### Unit tests
+
+There is a unit test project that is used to test domain and application layer logic.  [NSubstitute](https://nsubstitute.github.io/) is used as a mocking library to support unit testing scenarios.  [Autofixture](https://github.com/AutoFixture/AutoFixture) is used to make it easier to setup system under tests quickly with less code. 
+
+#### Coverage 
+
+You can calculate the code coverage for you solution with Exemplum.  Exemplum uses [coverlet](https://github.com/coverlet-coverage/coverlet) to provide coverage via the msbuild task.  You can generate code coverage with the command line.  
+
+````
+dotnet test /p:CollectCoverage=true
+````
+
+There are parameters that allow you to exclude assemblies from coverage and set the required coverage level see the github actions for examples. 
+
 ### Integration Tests
-### Fluent Assertions
-### Mocking
+
+Exemplum integration tests use the `WebApplicationFactory` to create an in memory api to allow for tests that exercise full API requests.  Exemplum uses the in memory feature of EF core to support these tests without having to have a running database.  The base `WebHostFixture` is used to setup the API.  All integration tests are implemented in a single class `ExemplumApiTests` that inherits from `WebHostFixture`.  This is because you only want a single host fixture.  To break up the tests into logic groups we just implement them as a partial class of `ExemplumApiTests` split across multiple files with different names.  Calls to third party services are mocked to avoid any usage restrictions. 
+
+### End to End Tests
+
+Exemplum end to end tests are implemented using [PlaywrightSharp](https://github.com/microsoft/playwright-dotnet) to drive a automated web UI tests.  The tests are written with [SpecFlow](https://specflow.org/) in the Gherkin syntax.  You will need a plugin for your favourite IDE to run tests from within it.  
+
+### Load Tests
+
+Exemplum uses [Nbomber](https://nbomber.com/) to write basic API load tests
 
 ## Technologies Used
 
@@ -323,8 +361,17 @@ reportgenerator -reports:".\coverage.opencover.xml" -targetdir:"CoverageResults"
 
     A friendly substitute for .NET mocking libraries.
 
+* [SpecFlow](https://specflow.org/)
 
+    For writing human readable tests and acceptance criteria in Gherkin syntax. 
 
+* [PlaywrightSharp](https://github.com/microsoft/playwright-dotnet) 
+
+    For writing automated end to end web UI tests
+
+* [Nbomber](https://nbomber.com/)
+
+    API Load tests
 
 
 

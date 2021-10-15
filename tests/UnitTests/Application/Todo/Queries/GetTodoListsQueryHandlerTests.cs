@@ -1,4 +1,4 @@
-﻿namespace Exemplum.IntegrationTests.Application.Todo.Queries
+﻿namespace Exemplum.UnitTests.Application.Todo.Queries
 {
     using AutoFixture;
     using Exemplum.Application.TodoList.Queries;

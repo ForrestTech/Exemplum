@@ -1,6 +1,6 @@
-﻿namespace Application.IntegrationTests
+﻿namespace Exemplum.IntegrationTests
 {
-    using Exemplum.Application.WeatherForecasts.Models;
+    using Application.WeatherForecasts.Models;
     using FluentAssertions;
     using System.Net.Http.Json;
     using System.Threading.Tasks;

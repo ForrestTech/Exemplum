@@ -1,4 +1,4 @@
-﻿namespace Exemplum.IntegrationTests.Application.Todo.Commands
+﻿namespace Exemplum.UnitTests.Application.Todo.Commands
 {
     using AutoFixture;
     using Exemplum.Application.TodoList.Commands;

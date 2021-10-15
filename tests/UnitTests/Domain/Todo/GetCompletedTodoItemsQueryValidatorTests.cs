@@ -1,4 +1,4 @@
-﻿namespace Exemplum.IntegrationTests.Domain.Todo
+﻿namespace Exemplum.UnitTests.Domain.Todo
 {
     using Exemplum.Application.Todo.Queries;
     using FluentValidation.TestHelper;

@@ -1,4 +1,4 @@
-﻿namespace Exemplum.IntegrationTests
+﻿namespace Exemplum.UnitTests
 {
     using AutoFixture;
     using AutoFixture.Kernel;

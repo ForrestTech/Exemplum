@@ -1,7 +1,7 @@
-﻿namespace Application.IntegrationTests
+﻿namespace Exemplum.IntegrationTests
 {
-    using Exemplum.Application.WeatherForecasts;
-    using Exemplum.Application.WeatherForecasts.Models;
+    using Application.WeatherForecasts;
+    using Application.WeatherForecasts.Models;
     using System.Threading;
     using System.Threading.Tasks;
 

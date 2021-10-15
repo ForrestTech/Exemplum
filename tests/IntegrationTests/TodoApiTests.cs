@@ -1,9 +1,9 @@
-﻿namespace Application.IntegrationTests
+﻿namespace Exemplum.IntegrationTests
 {
-    using Exemplum.Application.Common.Pagination;
-    using Exemplum.Application.Todo.Commands;
-    using Exemplum.Application.Todo.Models;
-    using Exemplum.Domain.Todo;
+    using Application.Common.Pagination;
+    using Application.Todo.Commands;
+    using Application.Todo.Models;
+    using Domain.Todo;
     using FluentAssertions;
     using System.Net;
     using System.Net.Http;

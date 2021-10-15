@@ -1,4 +1,4 @@
-namespace Exemplum.IntegrationTests.Application.Exceptions
+namespace Exemplum.UnitTests.Application.Exceptions
 {
     using AutoFixture;
     using Exemplum.Application.Common.Exceptions;

@@ -1,4 +1,4 @@
-﻿namespace Exemplum.IntegrationTests.Application
+﻿namespace Exemplum.UnitTests.Application
 {
     using AutoFixture;
     using AutoFixture.AutoNSubstitute;

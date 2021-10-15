@@ -2,9 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <RootNamespace>Exemplum.IntegrationTests</RootNamespace>
-        <AssemblyName>Exemplum.IntegrationTests</AssemblyName>
-        <AssemblyName>Exemplum.IntegrationTests</AssemblyName>
+        <RootNamespace>Exemplum.UnitTests</RootNamespace>
+        <AssemblyName>Exemplum.UnitTests</AssemblyName>        
     </PropertyGroup>
 
     <ItemGroup>

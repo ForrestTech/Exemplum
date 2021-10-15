@@ -1,4 +1,4 @@
-﻿namespace Exemplum.IntegrationTests.Caching
+﻿namespace Exemplum.UnitTests.Caching
 {
     using AutoFixture;
     using AutoFixture.AutoNSubstitute;

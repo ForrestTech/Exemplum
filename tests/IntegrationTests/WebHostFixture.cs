@@ -1,8 +1,7 @@
-﻿namespace Application.IntegrationTests
+﻿namespace Exemplum.IntegrationTests
 {
-    using Exemplum.Application.WeatherForecasts;
-    using Exemplum.Infrastructure.Persistence;
-    using Exemplum.WebApi;
+    using Application.WeatherForecasts;
+    using Infrastructure.Persistence;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.Extensions.Configuration;
@@ -11,9 +10,10 @@
     using Microsoft.Extensions.Logging;
     using System;
     using System.IO;
+    using WebApi;
     using Xunit.Abstractions;
 
-    public class WebHostFixture : WebApplicationFactory<Startup>
+    public abstract class WebHostFixture : WebApplicationFactory<Startup>
     {
         public ITestOutputHelper Output { get; set; }
 
