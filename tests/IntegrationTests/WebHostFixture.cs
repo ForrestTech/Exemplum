@@ -13,11 +13,8 @@
     using WebApi;
     using Xunit.Abstractions;
 
-    public abstract class WebHostFixture : WebApplicationFactory<Startup>
+    public class WebHostFixture : WebApplicationFactory<Startup>
     {
-        protected WebHostFixture()
-        { }
-        
         public ITestOutputHelper Output { get; set; }
 
         protected override IHostBuilder CreateHostBuilder()
