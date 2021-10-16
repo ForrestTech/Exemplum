@@ -25,7 +25,8 @@ namespace Exemplum.Infrastructure.Identity
         {
             new(ClaimTypes.NameIdentifier, UserId!),
             new(ClaimTypes.Role, Security.Roles.Forecaster),
-            new(Security.ClaimTypes.Permission, Security.Permissions.WriteTodo)
+            new(Security.ClaimTypes.Permission, Security.Permissions.WriteTodo),
+            new(Security.ClaimTypes.Permission, Security.Permissions.DeleteTodo)
         }));
     }
 }
