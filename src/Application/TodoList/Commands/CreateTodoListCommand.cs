@@ -2,19 +2,16 @@
 {
     using AutoMapper;
     using Common.Security;
-    using Domain.Exceptions;
     using Domain.Todo;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
     using Models;
     using Persistence;
-    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
+    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
     public class CreateTodoListCommand : IRequest<TodoListDto>
     {
         public string Title { get; set; } = string.Empty;

@@ -70,12 +70,12 @@
 
             if (errorInfo.Code.HasValue())
             {
-                details.Extensions.Add("Code", errorInfo.Code);
+                details.Extensions.Add("code", errorInfo.Code);
             }
 
             foreach (DictionaryEntry data in errorInfo.Data)
             {
-                details.Extensions.Add(data.Key.ToString() ?? string.Empty, data.Value);
+                details.Extensions.Add(data.Key.ToString()?.ToLowerInvariant() ?? string.Empty, data.Value);
             }
 
             context.Result = new ObjectResult(details) { StatusCode = (int)errorInfo.ResponseCode };

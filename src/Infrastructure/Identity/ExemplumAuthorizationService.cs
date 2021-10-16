@@ -4,13 +4,12 @@ namespace Exemplum.Infrastructure.Identity
     using Microsoft.AspNetCore.Authorization;
     using System.Threading.Tasks;
 
-    public class AuthenticationService : IAuthenticationService
+    public class ExemplumAuthorizationService : IExemplumAuthorizationService
     {
-        
         private readonly IAuthorizationService _authorizationService;
         private readonly ICurrentUser _currentUser;
 
-        public AuthenticationService(
+        public ExemplumAuthorizationService(
             IAuthorizationService authorizationService,
             ICurrentUser currentUser)
         {

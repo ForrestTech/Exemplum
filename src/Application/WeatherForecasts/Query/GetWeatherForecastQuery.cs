@@ -8,7 +8,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize(Roles = "Forecaster")]
+    [Authorize(Roles = Security.Roles.Forecaster)]
     public class GetWeatherForecastQuery : IRequest<WeatherForecast>
     {
         public decimal Lat { get; set; }

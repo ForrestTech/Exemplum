@@ -14,7 +14,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
+    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
     public class SetPriorityCommand : IRequest
     {
         [JsonIgnore]
@@ -59,11 +59,11 @@
             {
                 throw new NotFoundException(nameof(TodoItem), new { request.ListId, request.TodoId });
             }
-            
+
             todo.SetPriority(PriorityLevel.FromValue(request.PriorityLevel), _clock);
 
             await _context.SaveChangesAsync(cancellationToken);
-            
+
             return Unit.Value;
         }
     }

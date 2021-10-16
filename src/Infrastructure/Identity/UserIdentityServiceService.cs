@@ -4,11 +4,11 @@ namespace Exemplum.Infrastructure.Identity
     using System.Linq;
     using System.Security.Claims;
 
-    public class UserIdentity : IUserIdentity
+    public class UserIdentityService : IUserIdentityService
     {
         private readonly ICurrentUser _currentUser;
 
-        public UserIdentity(ICurrentUser currentUser)
+        public UserIdentityService(ICurrentUser currentUser)
         {
             _currentUser = currentUser;
         }
@@ -27,7 +27,7 @@ namespace Exemplum.Infrastructure.Identity
 
             return user;
         }
-        
+
         public bool IsInRoleAsync(string role)
         {
             if (_currentUser.Principal?.Claims == null)

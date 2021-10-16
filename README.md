@@ -33,9 +33,10 @@ This is a template for creating a asp.net core applications both services (micro
     - [Validation Classes](#validation-classes)
     - [Query objects](#query-objects)
     - [Cross cutting behaviour](#cross-cutting-behaviour)
+    - [Authentication and Authorization](#authentication-and-authorization)
     - [Domain Events](#domain-events)
     - [Transactional Management](#transactional-management)
-    - [Caching](#caching)    
+    - [Caching](#caching)
   - [Patterns not Used](#patterns-not-used)
     - [Shared Kernel](#shared-kernel)
     - [Common Contracts Package](#common-contracts-package)
@@ -43,9 +44,11 @@ This is a template for creating a asp.net core applications both services (micro
     - [Repositories](#repositories)
   - [Testing](#testing)
     - [Test Types](#test-types)
+    - [Unit tests](#unit-tests)
+      - [Coverage](#coverage)
     - [Integration Tests](#integration-tests)
     - [End to End Tests](#end-to-end-tests)
-    - [Load Tests>](#load-tests)
+    - [Load Tests](#load-tests)
   - [Technologies Used](#technologies-used)
 
 ## Getting Started
@@ -205,6 +208,10 @@ One possible advantage to the specification pattern is you can use it coupled wi
 ### Cross cutting behaviour
 
 Exemplum uses MediatR [Behaviors](https://github.com/jbogard/MediatR/wiki/Behaviors) to implement cross cutting code concerns like Logging, Validation, Caching etc. The advantage to having all requests handled by a common mediator and having a common generic interface for all handlers is that it’s very easy to write additional cross cutting behaviour that cab be executed in a pipeline by any request.
+
+### Authentication and Authorization
+
+Authentication and Authorization are built into the application layer of Exemplum. It is not integrated with Asp.net MVC controllers. This allows the same security code to be handled for a given request regardless of source.  The logic is handled in a MediatR behaviour for every request.  Request can be decorated with a custom Authorize attribute that allows you to specify user roles and policies a request must comply with.  Exemplum uses the core authentication and authorization logic provided by asp.net core it just integrates it into the common behaviour pipeline we use for all requests.        
 
 ### Domain Events
 
@@ -372,11 +379,3 @@ Exemplum uses [Nbomber](https://nbomber.com/) to write basic API load tests
 * [Nbomber](https://nbomber.com/)
 
     API Load tests
-
-
-
-
-
-
-
-

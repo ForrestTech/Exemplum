@@ -4,7 +4,6 @@
     using AutoMapper.QueryableExtensions;
     using Common.Mapping;
     using Common.Pagination;
-    using Common.Security;
     using Common.Validation;
     using FluentValidation;
     using MediatR;
@@ -16,17 +15,16 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
-    public class GetTodoItemsInListQuery : IRequest<PaginatedList<TodoItemDto>>, 
+    public class GetTodoItemsInListQuery : IRequest<PaginatedList<TodoItemDto>>,
         IPaginatedQuery
     {
         [JsonIgnore]
         public int ListId { get; set; }
-        
+
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
     }
-    
+
     public class GetTodoItemsQueryValidator : AbstractValidator<GetTodoItemsInListQuery>
     {
         public GetTodoItemsQueryValidator()
@@ -46,7 +44,7 @@
             _context = context;
             _mapper = mapper;
         }
-        
+
         public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoItemsInListQuery request, CancellationToken cancellationToken)
         {
             var list = await _context.TodoItems

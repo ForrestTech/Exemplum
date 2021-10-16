@@ -11,7 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
+    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
     public class UpdateTodoCommand : IRequest<TodoItem>
     {
         [JsonIgnore]
@@ -33,7 +33,7 @@
             RuleFor(x => x.TodoId).GreaterThan(0);
         }
     }
-    
+
     public class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand, TodoItem>
     {
         private readonly IApplicationDbContext _context;
@@ -42,7 +42,7 @@
         {
             _context = context;
         }
-        
+
         public async Task<TodoItem> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
         {
             var todo = await _context.TodoItems

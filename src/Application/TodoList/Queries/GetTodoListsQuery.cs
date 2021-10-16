@@ -15,14 +15,13 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
     public class GetTodoListsQuery : IRequest<PaginatedList<TodoListDto>>,
         IPaginatedQuery
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
     }
-    
+
     public class GetTodoListsQueryValidator : AbstractValidator<GetTodoListsQuery>
     {
         public GetTodoListsQueryValidator()

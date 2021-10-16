@@ -3,7 +3,6 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Common.Exceptions;
-    using Common.Security;
     using FluentValidation;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -13,12 +12,11 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
     public class GetTodoListByIdQuery : IRequest<TodoListDto>
     {
         public int ListId { get; set; }
     }
-    
+
     public class GetTodoListQueryValidator : AbstractValidator<GetTodoListByIdQuery>
     {
         public GetTodoListQueryValidator()
@@ -26,7 +24,7 @@
             RuleFor(x => x.ListId).GreaterThan(0);
         }
     }
-    
+
     public class GetTodoListQueryHandler : IRequestHandler<GetTodoListByIdQuery, TodoListDto>
     {
         private readonly IApplicationDbContext _context;
@@ -51,7 +49,7 @@
             {
                 throw new NotFoundException(nameof(TodoList), new { listId = request.ListId});
             }
-    
+
             return todoList;
         }
     }

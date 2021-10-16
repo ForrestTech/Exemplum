@@ -10,7 +10,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
+    [Authorize(Policy = Security.Policy.TodoDeleteAccess)]
     public class DeleteTodoCommand : IRequest
     {
         public int ListId { get; set; }
@@ -35,11 +35,11 @@
         {
             _context = context;
         }
-        
+
         public async Task<Unit> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
         {
             var todo = await _context.TodoItems
-                .SingleOrDefaultAsync(x => x.ListId == request.ListId && 
+                .SingleOrDefaultAsync(x => x.ListId == request.ListId &&
                                            x.Id == request.TodoId, cancellationToken);
 
             if (todo == null)
@@ -50,7 +50,7 @@
             _context.TodoItems.Remove(todo);
 
             await _context.SaveChangesAsync(cancellationToken);
-            
+
             return Unit.Value;
         }
     }

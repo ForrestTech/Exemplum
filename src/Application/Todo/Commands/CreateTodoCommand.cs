@@ -13,14 +13,14 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
+    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
     public class CreateTodoItemCommand : IRequest<TodoItemDto>
     {
         [JsonIgnore]
         public int ListId { get; set; }
 
         public string Title { get; set; } = string.Empty;
-        
+
         public string Note { get; set; } = string.Empty;
     }
 
@@ -32,7 +32,7 @@
             RuleFor(x => x.Title).NotEmpty()
                 .MaximumLength(200)
                 .WithMessage("Title must not exceed 200 characters.");
-            
+
             RuleFor(x => x.Note).NotEmpty()
                 .MaximumLength(2000);
         }
@@ -59,7 +59,7 @@
             {
                 Note = request.Note
             };
-            
+
             aggregate.AddToDo(entity);
 
             await _context.SaveChangesAsync(cancellationToken);

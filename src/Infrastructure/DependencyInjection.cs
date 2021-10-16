@@ -14,18 +14,18 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Persistence;
     using Persistence.ExceptionHandling;
     using Polly.Registry;
     using Refit;
     using System;
-    using AuthenticationService = Identity.AuthenticationService;
-    using IAuthenticationService = Application.Common.Identity.IAuthenticationService;
 
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IHostEnvironment environment)
         {
             if (configuration.UseInMemoryStorage())
             {
@@ -48,7 +48,7 @@
             services.AddTransient<IHandleDbExceptions, HandleDbExceptions>();
             services.AddTransient<IPublishDomainEvents, DomainEventsPublisher>();
             services.AddTransient<IClock, Clock>();
-            
+
             services.AddCaching(configuration);
 
             services.AddSingleton<IReadOnlyPolicyRegistry<string>, PolicyRegistry>(serviceProvider =>
@@ -63,9 +63,17 @@
                     .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value))
                 .AddPolicyHandlerFromRegistry(ExecutionPolicy.RetryPolicy);
 
-            services.AddTransient<ICurrentUser, CurrentUser>();
-            services.AddTransient<IUserIdentity, UserIdentity>();
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            if (environment.IsDevelopment())
+            {
+                services.AddTransient<ICurrentUser, FakeUser>();
+            }
+            else
+            {
+                services.AddTransient<ICurrentUser, CurrentUser>();
+            }
+
+            services.AddTransient<IUserIdentityService, UserIdentityService>();
+            services.AddTransient<IExemplumAuthorizationService, ExemplumAuthorizationService>();
 
             return services;
         }

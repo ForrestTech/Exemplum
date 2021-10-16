@@ -1,8 +1,6 @@
 namespace Exemplum.Application.Common.Identity
 {
-    using System.Threading.Tasks;
-
-    public interface IUserIdentity
+    public interface IUserIdentityService
     {
         string? UserId { get; }
         

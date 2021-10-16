@@ -17,8 +17,9 @@
 
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration,
-            IHostEnvironment webHostEnvironment)
+        public static IServiceCollection AddApplication(this IServiceCollection services,
+            IConfiguration configuration,
+            IHostEnvironment environment)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -38,20 +39,12 @@
 
             services.Configure<WeatherForecastOptions>(configuration.GetSection(WeatherForecastOptions.Section));
 
-            if (webHostEnvironment.IsDevelopment())
-            {
-                services.Configure<AuthorizationOptions>(x => x.AuthorizationEnabled = false);
-            }
-            else
-            {
-                services.Configure<AuthorizationOptions>(x => x.AuthorizationEnabled = true);
-            }
-
             services.AddAuthorizationCore(options =>
             {
-                options.AddPolicy("TodoWriteAccess",
-                    policy => policy.RequireClaim("permissions", "read:todo", "write:todo"));
-                options.AddPolicy("TodoDeleteAccess", policy => policy.RequireClaim("permissions", "delete:todo"));
+                options.AddPolicy(Security.Policy.TodoWriteAccess,
+                    policy => policy.RequireClaim(Security.ClaimTypes.Permission, Security.Permissions.WriteTodo));
+                options.AddPolicy(Security.Policy.TodoDeleteAccess,
+                    policy => policy.RequireClaim(Security.ClaimTypes.Permission, Security.Permissions.DeleteTodo));
             });
 
             return services;

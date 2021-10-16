@@ -3,7 +3,6 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Common.Exceptions;
-    using Common.Security;
     using Domain.Todo;
     using FluentValidation;
     using MediatR;
@@ -14,7 +13,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
     public class GetTodoItemByIdQuery : IRequest<TodoItemDto>
     {
         public int ListId { get; set; }

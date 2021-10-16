@@ -56,7 +56,7 @@ namespace Exemplum.WebApp
             builder.Services.AddAuthorizationCore(options =>
             {
                 options.AddPolicy("TodoWriteAccess", policy =>
-                    policy.RequireClaim("permissions", "read:todo", "write:todo"));
+                    policy.RequireClaim("permissions", "write:todo"));
                 options.AddPolicy("TodoDeleteAccess", policy =>
                     policy.RequireClaim("permissions", "delete:todo"));
             });

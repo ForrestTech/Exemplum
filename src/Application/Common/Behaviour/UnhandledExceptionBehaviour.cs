@@ -33,7 +33,7 @@
                 }
 
                 var requestName = typeof(TRequest).Name;
-                _logger.Log(logLevel, ex, "Request: Unhandled Exception for Request {Name} {@Request}", requestName,
+                _logger.Log(logLevel, ex, "Request: Unhandled '{Exception}' for Request {Name} {@Request}", ex.GetType().Name, requestName,
                     request);
 
                 if (ex is IExceptionWithSelfLogging withSelfLogging)

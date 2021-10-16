@@ -14,16 +14,16 @@ namespace Exemplum.Application.Common.Security
     public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull
     {
-        private readonly IUserIdentity _identityService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IUserIdentityService _identityServiceService;
+        private readonly IExemplumAuthorizationService _authorizationService;
         private readonly AuthorizationOptions _authorizationOptions;
 
         public AuthorizationBehaviour(IOptions<AuthorizationOptions> options,
-            IUserIdentity identityService,
-            IAuthenticationService authenticationService)
+            IUserIdentityService identityServiceService,
+            IExemplumAuthorizationService authorizationService)
         {
-            _identityService = identityService;
-            _authenticationService = authenticationService;
+            _identityServiceService = identityServiceService;
+            _authorizationService = authorizationService;
             _authorizationOptions = options.Value;
         }
 
@@ -31,24 +31,38 @@ namespace Exemplum.Application.Common.Security
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
-            var authorizeAttributes = request.GetType()
-                .GetCustomAttributes<AuthorizeAttribute>()
-                .ToList();
-
-            if (authorizeAttributes.None())
-            {
-                return await next();
-            }
-
             if (_authorizationOptions.AuthorizationEnabled == false)
             {
                 return await next();
             }
 
-            var unAuthenticatedUser = _identityService.UserId == null;
-            if (unAuthenticatedUser)
+            var allowAnonymousAccessAttributes = request.GetType()
+                .GetCustomAttributes<AllowAnonymousAccessAttribute>()
+                .ToList();
+
+            if (allowAnonymousAccessAttributes.Any())
             {
-                throw new UnauthorizedAccessException();
+                return await next();
+            }
+
+            var authorizeAttributes = request.GetType()
+                .GetCustomAttributes<AuthorizeAttribute>()
+                .ToList();
+
+            var requestRequiresAuthenticatedUser = _authorizationOptions.RequireAuthorizationByDefault || authorizeAttributes.Any();
+            if (requestRequiresAuthenticatedUser)
+            {
+                var unAuthenticatedUser = _identityServiceService.UserId == null;
+                if (unAuthenticatedUser)
+                {
+                    throw new UnauthorizedAccessException();
+                }
+            }
+
+            var requestHasNoAuthorizationRequirements = !authorizeAttributes.Any(x => x.HasAuthenticationRequirements);
+            if (requestHasNoAuthorizationRequirements)
+            {
+                return await next();
             }
 
             HandleRoleAuthorization(authorizeAttributes);
@@ -72,7 +86,7 @@ namespace Exemplum.Application.Common.Security
 
             foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
             {
-                if (roles.Select(role => _identityService.IsInRoleAsync(role.Trim())).Any(isInRole => isInRole))
+                if (roles.Select(role => _identityServiceService.IsInRoleAsync(role.Trim())).Any(isInRole => isInRole))
                 {
                     authorized = true;
                 }
@@ -80,7 +94,10 @@ namespace Exemplum.Application.Common.Security
 
             if (!authorized)
             {
-                throw new ForbiddenAccessException();
+                throw new ForbiddenAccessException(typeof(TRequest))
+                {
+                    Roles = authorizeAttributesWithRoles.Select(x => x.Roles)
+                };
             }
         }
 
@@ -96,18 +113,16 @@ namespace Exemplum.Application.Common.Security
 
             foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
             {
-                var authorized = await _authenticationService.AuthorizeAsync(policy);
+                var authorized = await _authorizationService.AuthorizeAsync(policy);
 
                 if (!authorized)
                 {
-                    throw new ForbiddenAccessException();
+                    throw new ForbiddenAccessException(typeof(TRequest))
+                    {
+                        Policy = policy
+                    };
                 }
             }
         }
-    }
-
-    public class AuthorizationOptions
-    {
-        public bool AuthorizationEnabled { get; set; } 
     }
 }

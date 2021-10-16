@@ -23,8 +23,8 @@ namespace Exemplum.Domain.Exceptions
         public LogLevel LogLevel { get; set; }
 
         public BusinessException(
-            string code = "",
             string message = "",
+            string code = "",
             string details = "",
             HttpStatusCode statusCode = HttpStatusCode.Forbidden,
             Exception innerException = null!,

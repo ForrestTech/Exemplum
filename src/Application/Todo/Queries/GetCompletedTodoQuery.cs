@@ -4,7 +4,6 @@
     using AutoMapper.QueryableExtensions;
     using Common.Mapping;
     using Common.Pagination;
-    using Common.Security;
     using Common.Validation;
     using Domain.Todo;
     using FluentValidation;
@@ -16,8 +15,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
-    public class GetCompletedTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>, 
+    public class GetCompletedTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>,
         IPaginatedQuery,
         IQueryObject<TodoItem>
     {
@@ -27,7 +25,7 @@
 
         public IQueryable<TodoItem> ApplyQuery(IQueryable<TodoItem> query)
         {
-            query = query.Where(x => x.ListId == ListId 
+            query = query.Where(x => x.ListId == ListId
                                      && x.Done)
                 .OrderBy(x => x.Title);
 

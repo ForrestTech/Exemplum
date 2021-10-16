@@ -20,16 +20,16 @@ namespace Exemplum.WebApi
     using System;
     using System.IO;
     using System.Reflection;
-    
+
     public class Startup
     {
         private readonly IConfiguration _configuration;
         private readonly IHostEnvironment _currentEnvironment;
-        
+
         private const string DefaultCorsPolicy = "Default";
         private const string WebAppDefaultUri = "https://localhost:6001";
 
-        public Startup(IConfiguration configuration, 
+        public Startup(IConfiguration configuration,
             IHostEnvironment currentEnvironment)
         {
             _configuration = configuration;
@@ -40,7 +40,7 @@ namespace Exemplum.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication(_configuration, _currentEnvironment);
-            services.AddInfrastructure(_configuration);
+            services.AddInfrastructure(_configuration, _currentEnvironment);
 
             services.AddCors(options =>
             {
@@ -52,7 +52,7 @@ namespace Exemplum.WebApi
                         .AllowAnyMethod();
                 });
             });
-            
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,14 +67,9 @@ namespace Exemplum.WebApi
                     RoleClaimType = "https://schemas.dev-ememplum.com/roles"
                 };
             });
-            
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
-            });
-            
+
             var hcBuilder = services.AddHealthChecks();
-            
+
             if(!_configuration.UseInMemoryStorage())
             {
                 hcBuilder.AddSqlServer(_configuration.GetDefaultConnection());
@@ -82,7 +77,7 @@ namespace Exemplum.WebApi
 
             services.AddHealthChecksUI()
                 .AddInMemoryStorage();
-            
+
             services.AddControllers(options =>
             {
                 options.Filters.Add<ApiExceptionFilterAttribute>();
@@ -125,12 +120,12 @@ namespace Exemplum.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             app.UseCors(DefaultCorsPolicy);
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 //with a more complex set of health checks we can separate checks by tag
@@ -143,9 +138,9 @@ namespace Exemplum.WebApi
                 {
                     Predicate = (_) => false
                 });
-                
+
                 endpoints.MapHealthChecksUI();
-                
+
                 endpoints.MapControllers();
             });
         }

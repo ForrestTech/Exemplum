@@ -12,7 +12,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
+    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
     public class UpdateTodoListCommand : IRequest<TodoListDto>
     {
         public int ListId { get; set; }
@@ -60,7 +60,7 @@
             }
 
             list.Title = request.Title;
-            
+
             if (request.Colour is not null)
             {
                 list.Colour = Colour.From(request.Colour);

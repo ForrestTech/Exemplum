@@ -2,7 +2,6 @@
 {
     using Application.Common.Identity;
     using Microsoft.AspNetCore.Http;
-    using System.Collections.Generic;
     using System.Security.Claims;
 
     public class CurrentUser : ICurrentUser
@@ -15,7 +14,7 @@
         }
 
         public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         public ClaimsPrincipal? Principal => _httpContextAccessor.HttpContext?.User;
     }
 }

@@ -10,7 +10,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Authorize]
+    [Authorize(Policy = Security.Policy.TodoDeleteAccess)]
     public class DeleteTodoListCommand : IRequest
     {
         public int ListId { get; set; }
