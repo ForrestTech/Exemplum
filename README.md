@@ -3,6 +3,7 @@
 # Exemplum
 
 [![.NET](https://github.com/ForrestTech/Exemplum/actions/workflows/build.yml/badge.svg)](https://github.com/ForrestTech/Exemplum/actions/workflows/build.yml)
+[![NuGet](https://img.shields.io/nuget/v/exemplum.template.svg)](https://www.nuget.org/packages/exemplum.template/)
 
 <br/>
 

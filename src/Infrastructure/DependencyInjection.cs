@@ -18,6 +18,7 @@
     using Persistence;
     using Persistence.ExceptionHandling;
     using Polly.Registry;
+    using Prometheus;
     using Refit;
     using System;
 
@@ -61,6 +62,7 @@
             services.AddRefitClient<IWeatherForecastClient>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration
                     .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value))
+                .UseHttpClientMetrics()
                 .AddPolicyHandlerFromRegistry(ExecutionPolicy.RetryPolicy);
 
             if (environment.IsDevelopment())

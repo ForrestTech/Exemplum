@@ -15,6 +15,7 @@ namespace Exemplum.WebApi
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
+    using Prometheus;
     using Serilog;
     using Swashbuckle.AspNetCore.SwaggerGen;
     using System;
@@ -68,7 +69,8 @@ namespace Exemplum.WebApi
                 };
             });
 
-            var hcBuilder = services.AddHealthChecks();
+            var hcBuilder = services.AddHealthChecks()
+                .ForwardToPrometheus();
 
             if(!_configuration.UseInMemoryStorage())
             {
@@ -120,11 +122,14 @@ namespace Exemplum.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseHttpMetrics();
 
             app.UseCors(DefaultCorsPolicy);
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMetricServer();
 
             app.UseEndpoints(endpoints =>
             {
@@ -142,6 +147,8 @@ namespace Exemplum.WebApi
                 endpoints.MapHealthChecksUI();
 
                 endpoints.MapControllers();
+                
+                endpoints.MapMetrics();
             });
         }
     }
