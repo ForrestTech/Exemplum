@@ -1,13 +1,14 @@
 namespace Exemplum.EndToEndTests.Pages
 {
     using FluentAssertions;
-    using PlaywrightSharp;
+    using Microsoft.Playwright;
     using System.Threading.Tasks;
 
     public class LoginPage : BasePage
     {
         public LoginPage(IPage page) : base(page)
-        { }
+        {
+        }
 
         protected override string PagePath => "";
 
@@ -22,13 +23,12 @@ namespace Exemplum.EndToEndTests.Pages
 
         public async Task NavigateToLogin()
         {
-            await Page.GoToAsync(Path("authentication/login"));
+            await Page.GotoAsync(Path("authentication/login"));
         }
 
         public async Task SetEmailAddress()
         {
             await Page.FillAsync(Selector.Input("username"), "richard.a.forrest+st@gmail.com");
-
         }
 
         public async Task SetPassword()
@@ -43,7 +43,8 @@ namespace Exemplum.EndToEndTests.Pages
 
         public async Task ValidateIsLoggedIn()
         {
-            var logoutButton = await Page.WaitForSelectorAsync("#log-out", WaitForState.Attached);
+            var logoutButton = await Page.WaitForSelectorAsync("#log-out",
+                new PageWaitForSelectorOptions {State = WaitForSelectorState.Attached});
             logoutButton.Should().NotBeNull();
         }
     }

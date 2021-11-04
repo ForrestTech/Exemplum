@@ -1,7 +1,7 @@
 namespace Exemplum.EndToEndTests.Pages
 {
     using FluentAssertions;
-    using PlaywrightSharp;
+    using Microsoft.Playwright;
     using System.Threading.Tasks;
 
     public class TaskListPage : BasePage

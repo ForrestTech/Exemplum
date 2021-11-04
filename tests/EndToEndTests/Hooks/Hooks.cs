@@ -3,8 +3,7 @@ namespace Exemplum.EndToEndTests.Hooks
     using AventStack.ExtentReports;
     using AventStack.ExtentReports.Reporter;
     using BoDi;
-    using PlaywrightSharp;
-    using PlaywrightSharp.Chromium;
+    using Microsoft.Playwright;
     using System;
     using System.IO;
     using System.Threading.Tasks;
@@ -45,10 +44,11 @@ namespace Exemplum.EndToEndTests.Hooks
         public async Task NavigateTo()
         {
             var playwright = await Playwright.CreateAsync();
-            var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions { Headless = false });
-            var browserContext = await browser.NewContextAsync(new BrowserContextOptions { BypassCSP = true });
+            var browser =
+                await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {Headless = false});
+            var browserContext = await browser.NewContextAsync(new BrowserNewContextOptions {BypassCSP = true});
             var page = await browserContext.NewPageAsync();
-            await page.GoToAsync(Url.Root);
+            await page.GotoAsync(Url.Root);
             await page.SetViewportSizeAsync(2560, 1284);
 
             _container.RegisterInstanceAs(playwright);
@@ -67,9 +67,9 @@ namespace Exemplum.EndToEndTests.Hooks
         {
             var page = _container.Resolve<IPage>();
             await page.CloseAsync();
-            var context = _container.Resolve<IChromiumBrowserContext>();
+            var context = _container.Resolve<IBrowserContext>();
             await context.DisposeAsync();
-            var browser = _container.Resolve<IChromiumBrowser>();
+            var browser = _container.Resolve<IBrowser>();
             await browser.DisposeAsync();
             var playwright = _container.Resolve<IPlaywright>();
             playwright.Dispose();
@@ -88,7 +88,11 @@ namespace Exemplum.EndToEndTests.Hooks
         {
             var dir = _resultsRoot.CreateSubdirectory("Screenshots");
             var screenshot = await _container.Resolve<IPage>()
-                .ScreenshotAsync(Path.Join(dir.FullName, $"{_scenarioContext.ScenarioInfo.Title}.jpg"));
+                .ScreenshotAsync(new PageScreenshotOptions
+                {
+                    Path = Path.Join(dir.FullName, $"{_scenarioContext.ScenarioInfo.Title}.jpg")
+                });
+
             return screenshot;
         }
 

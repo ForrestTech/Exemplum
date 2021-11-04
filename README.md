@@ -330,7 +330,7 @@ Exemplum integration tests use the `WebApplicationFactory` to create an in memor
 
 ### End to End Tests
 
-Exemplum end to end tests are implemented using [PlaywrightSharp](https://github.com/microsoft/playwright-dotnet) to drive a automated web UI tests.  The tests are written with [SpecFlow](https://specflow.org/) in the Gherkin syntax.  You will need a plugin for your favourite IDE to run tests from within it.  
+Exemplum end to end tests are implemented using [PlaywrightSharp](https://playwright.dev/dotnet/docs/intro/#installation) to drive a automated web UI tests you will need to install playwright to run the tests.  The tests are written with [SpecFlow](https://specflow.org/) in the Gherkin syntax.  You will need a plugin for your favourite IDE to run tests from within it.  
 
 ### Load Tests
 

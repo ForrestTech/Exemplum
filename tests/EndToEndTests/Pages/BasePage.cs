@@ -1,6 +1,6 @@
 namespace Exemplum.EndToEndTests.Pages
 {
-    using PlaywrightSharp;
+    using Microsoft.Playwright;
     using System.Threading.Tasks;
 
     public abstract class BasePage
@@ -16,7 +16,7 @@ namespace Exemplum.EndToEndTests.Pages
 
         public async Task Navigate()
         {
-            await Page.GoToAsync(Path(PagePath));
+            await Page.GotoAsync(Path(PagePath));
         }
 
         protected static string Path(string relativePath)

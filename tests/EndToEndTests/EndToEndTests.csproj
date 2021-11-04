@@ -10,7 +10,7 @@
     <PackageReference Include="ExtentReports" Version="4.1.0" />
     <PackageReference Include="FluentAssertions" Version="6.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="PlaywrightSharp" Version="0.192.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.16.1" />    
     <PackageReference Include="SpecFlow" Version="3.9.22" />
     <PackageReference Include="SpecFlow.xUnit" Version="3.9.22" />
     <PackageReference Include="xunit" Version="2.4.1" />
