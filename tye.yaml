@@ -8,7 +8,7 @@
 extensions:
   - name: seq
     logPath: ./.logs
-    
+
 name: exemplum
 services:
   - name: webapi
@@ -21,6 +21,18 @@ services:
     bindings:
       - port: 6001
         protocol: https
+  - name: summary
+    project: src/Summary/Summary.csproj
+  - name: rabbit
+    image: masstransit/rabbitmq
+    bindings:
+      - name: ui
+        protocol: http
+        port: 15672
+        containerPort: 15672
+      - name: amqp
+        protocol: amqp
+        port: 5672
   - name: redis
     image: redis
     bindings:

@@ -3,10 +3,15 @@
     "systemRamTarget": null,
     "largeObjectHeapCompaction": "Default"
   },
+  "certificates": {
+    "defaultPassword": null,
+    "certificatesPath": null
+  },
   "diagnostics": {
     "internalLogPath": "/data/Logs",
     "internalLoggingLevel": "Information",
     "internalLogServerUrl": null,
+    "internalLogServerApiKey": null,
     "telemetryServerUrl": null,
     "metricsSamplingIntervalSeconds": 300,
     "nativeStorageMetricsSamplingIntervalMinutes": 60
@@ -14,10 +19,16 @@
   "api": {
     "listenUris": [
       "http://localhost:80",
-      "http://localhost:5341"
+      "https://localhost:443",
+      "http://localhost:5341",
+      "https://localhost:45341"
     ],
     "canonicalUri": null,
     "ingestionPort": 5341,
+    "ingestionPorts": [
+      5341,
+      45341
+    ],
     "corsAllowedOrigins": [],
     "frameAllowFrom": [],
     "redirectHttpToHttps": false,
@@ -32,7 +43,8 @@
       "indexerPriority": 0.0,
       "queryParallelism": 4,
       "diskReaderLimit": 5
-    }
+    },
+    "disableFreeDiskSpaceChecking": false
   },
   "metastore": {
     "lmdb": {
@@ -43,12 +55,20 @@
       "schema": null,
       "msiResource": null,
       "msiTenantId": null
+    },
+    "postgres": {
+      "connectionString": null,
+      "schema": null
     }
   },
   "firstRun": {
     "adminUsername": null,
     "adminPasswordHash": null,
     "requireAuthenticationForHttpIngestion": false
+  },
+  "secretKey": {
+    "provider": null,
+    "providerArgs": null
   },
   "services": {
     "servicesBaseUri": null
