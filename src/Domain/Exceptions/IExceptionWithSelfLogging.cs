@@ -1,9 +1,6 @@
-namespace Exemplum.Domain.Exceptions
-{
-    using Microsoft.Extensions.Logging;
+namespace Exemplum.Domain.Exceptions;
 
-    public interface IExceptionWithSelfLogging
-    {
-        void Log(ILogger logger);
-    }
+public interface IExceptionWithSelfLogging
+{
+    void Log(ILogger logger);
 }

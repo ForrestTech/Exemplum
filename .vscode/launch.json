@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/WebApi/bin/Debug/net5.0/WebApi.dll",
+            "program": "${workspaceFolder}/src/WebApi/bin/Debug/net6.0/WebApi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/WebApi",
             "stopAtEntry": false,

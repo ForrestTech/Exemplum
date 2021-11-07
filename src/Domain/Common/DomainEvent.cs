@@ -1,9 +1,6 @@
-﻿namespace Exemplum.Domain.Common
-{
-    using System;
+﻿namespace Exemplum.Domain.Common;
 
-    public abstract class DomainEvent
-    {
-        public DateTimeOffset DateOccurred { get; set; }
-    }
+public abstract class DomainEvent
+{
+    public DateTimeOffset DateOccurred { get; set; }
 }

@@ -1,12 +1,9 @@
-﻿namespace Exemplum.Domain.Todo
-{
-    using System;
+﻿namespace Exemplum.Domain.Todo;
 
-    public class UnsupportedColourException : Exception
+public class UnsupportedColourException : Exception
+{
+    public UnsupportedColourException(string code)
+        : base($"Colour \"{code}\" is unsupported.")
     {
-        public UnsupportedColourException(string code)
-            : base($"Colour \"{code}\" is unsupported.")
-        {
-        }
     }
 }

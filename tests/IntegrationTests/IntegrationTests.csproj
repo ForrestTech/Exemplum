@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Exemplum.IntegrationTests</RootNamespace>
         <AssemblyName>Exemplum.IntegrationTests</AssemblyName>
     </PropertyGroup>
@@ -13,7 +13,7 @@
     <ItemGroup>
       <PackageReference Include="FluentAssertions" Version="6.1.0" />
       <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.2" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.9" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.0-rc.2.*" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
       <PackageReference Include="xunit" Version="2.4.1" />
       <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />

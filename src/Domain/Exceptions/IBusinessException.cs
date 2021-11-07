@@ -1,6 +1,5 @@
-namespace Exemplum.Domain.Exceptions
+namespace Exemplum.Domain.Exceptions;
+
+public interface IBusinessException
 {
-    public interface IBusinessException
-    {
-    }
 }

@@ -1,14 +1,13 @@
-﻿namespace Exemplum.Domain.Todo.Events
+﻿namespace Exemplum.Domain.Todo.Events;
+
+using Common;
+
+public class TodoItemCompletedEvent : DomainEvent
 {
-    using Common;
+    public TodoItem TodoItem { get; }
 
-    public class TodoItemCompletedEvent : DomainEvent
+    public TodoItemCompletedEvent(TodoItem todoItem)
     {
-        public TodoItem TodoItem { get; }
-
-        public TodoItemCompletedEvent(TodoItem todoItem)
-        {
-            TodoItem = todoItem;
-        }
+        TodoItem = todoItem;
     }
 }

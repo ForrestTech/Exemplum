@@ -1,5 +1,6 @@
 ﻿namespace Exemplum.Application.Todo.Commands
 {
+    using Common.Exceptions;
     using Common.Security;
     using Domain.Todo;
     using FluentValidation;
@@ -48,6 +49,9 @@
             var todo = await _context.TodoItems
                 .Where(x => x.ListId == request.ListId && x.Id == request.TodoId)
                 .SingleOrDefaultAsync(cancellationToken);
+
+            if (todo == null)
+                throw new NotFoundException(nameof(TodoItem), new {request.ListId, request.TodoId});
 
             todo.Title = request.Title;
             todo.Note = request.Note;

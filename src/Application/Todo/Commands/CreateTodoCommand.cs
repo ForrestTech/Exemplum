@@ -1,6 +1,7 @@
 ﻿namespace Exemplum.Application.Todo.Commands
 {
     using AutoMapper;
+    using Common.Exceptions;
     using Common.Security;
     using Domain.Todo;
     using FluentValidation;
@@ -53,7 +54,12 @@
         {
             var aggregate = await _context.TodoLists
                 .Where(x => x.Id == request.ListId)
-                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+                .SingleOrDefaultAsync(cancellationToken);
+
+            if (aggregate == null)
+            {
+                throw new NotFoundException(nameof(TodoItem), new { request.ListId });
+            }
 
             var entity = new TodoItem(request.Title)
             {

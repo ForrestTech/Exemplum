@@ -1,14 +1,13 @@
-﻿namespace Exemplum.Domain.Todo.Events
+﻿namespace Exemplum.Domain.Todo.Events;
+
+using Common;
+
+public class TodoItemCreatedEvent : DomainEvent
 {
-    using Common;
-
-    public class TodoItemCreatedEvent: DomainEvent
+    public TodoItemCreatedEvent(TodoItem item)
     {
-        public TodoItemCreatedEvent(TodoItem item)
-        {
-            Item = item;
-        }
-
-        public TodoItem Item { get; }
+        Item = item;
     }
+
+    public TodoItem Item { get; }
 }

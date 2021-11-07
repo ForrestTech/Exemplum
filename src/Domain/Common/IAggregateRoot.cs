@@ -1,4 +1,5 @@
-﻿namespace Exemplum.Domain.Common
+﻿namespace Exemplum.Domain.Common;
+
+public interface IAggregateRoot
 {
-    public interface IAggregateRoot { }
 }

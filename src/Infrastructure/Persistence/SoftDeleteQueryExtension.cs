@@ -22,7 +22,12 @@ namespace Exemplum.Infrastructure.Persistence
                 entityData.SetQueryFilter((LambdaExpression)filter);
             }
 
-            entityData.AddIndex(entityData.FindProperty(nameof(ISoftDelete.IsDeleted)));
+            var isDeletedProperty = entityData.FindProperty(nameof(ISoftDelete.IsDeleted));
+
+            if (isDeletedProperty != null)
+            {
+                entityData.AddIndex(isDeletedProperty);    
+            }
         }
 
         private static LambdaExpression GetSoftDeleteFilter<TEntity>() where TEntity : class, ISoftDelete

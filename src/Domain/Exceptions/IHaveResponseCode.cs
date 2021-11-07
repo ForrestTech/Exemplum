@@ -1,9 +1,8 @@
-namespace Exemplum.Domain.Exceptions
-{
-    using System.Net;
+namespace Exemplum.Domain.Exceptions;
 
-    public interface IHaveResponseCode
-    {
-        HttpStatusCode StatusCode { get; }
-    }
+using System.Net;
+
+public interface IHaveResponseCode
+{
+    HttpStatusCode StatusCode { get; }
 }
