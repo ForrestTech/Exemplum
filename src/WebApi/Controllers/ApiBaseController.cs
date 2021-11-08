@@ -1,12 +1,10 @@
-﻿namespace Exemplum.WebApi.Controllers
-{
-    using Microsoft.AspNetCore.Mvc;
+﻿namespace Exemplum.WebApi.Controllers;
 
-    [ApiController]
-    [Route("api")]
-    [Produces("application/json")]
-    public abstract class ApiControllerBase : ControllerBase
-    {
-        
-    }
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("api")]
+[Produces("application/json")]
+public abstract class ApiControllerBase : ControllerBase
+{
 }
