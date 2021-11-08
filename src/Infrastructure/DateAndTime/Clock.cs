@@ -1,26 +1,25 @@
-﻿namespace Exemplum.Infrastructure.DateAndTime
+﻿namespace Exemplum.Infrastructure.DateAndTime;
+
+using Domain.Common.DateAndTime;
+
+public class Clock : IClock
 {
-    using Domain.Common.DateAndTime;
-    using System;
+    private readonly DateTime? _fixedTime;
 
-    public class Clock : IClock
+    public Clock()
     {
-        private readonly DateTime? _fixedTime;
+    }
 
-        public Clock()
-        { }
-        
-        public Clock(DateTime fixedTime)
+    public Clock(DateTime fixedTime)
+    {
+        _fixedTime = fixedTime;
+    }
+
+    public DateTime Now
+    {
+        get
         {
-            _fixedTime = fixedTime;
-        }
-        
-        public DateTime Now
-        {
-            get
-            {
-                return _fixedTime ?? DateTime.UtcNow;
-            }
+            return _fixedTime ?? DateTime.UtcNow;
         }
     }
 }

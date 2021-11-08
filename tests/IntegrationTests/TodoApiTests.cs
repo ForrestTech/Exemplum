@@ -5,6 +5,7 @@
     using Application.Todo.Models;
     using Domain.Todo;
     using FluentAssertions;
+    using Microsoft.AspNetCore.Mvc;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
@@ -41,15 +42,15 @@
             var response = await _client.PostAsJsonAsync("api/todolist/1/todo",
                 new CreateTodoItemCommand { Title = string.Empty, Note = "Some note" });
 
-            response.EnsureSuccessStatusCode();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+            var error = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
-            newTodoResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            // var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
-            //
-            // newTodo?.Title.Should().Be(todoTitle);
+            error.Should().NotBeNull();
+            error?.Title.Should().Be("One or more validation errors occurred.");
+            error?.Errors.Should().NotBeNull();
+            error?.Errors?.Count.Should().Be(1);
+            error?.Errors?.Should().ContainKey("Title");
         }
 
         [Fact]

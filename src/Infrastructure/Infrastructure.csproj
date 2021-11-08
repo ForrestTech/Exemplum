@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
         <RootNamespace>Exemplum.Infrastructure</RootNamespace>
         <AssemblyName>Exemplum.Infrastructure</AssemblyName>

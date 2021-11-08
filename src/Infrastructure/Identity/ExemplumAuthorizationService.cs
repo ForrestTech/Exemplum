@@ -1,32 +1,30 @@
-namespace Exemplum.Infrastructure.Identity
+namespace Exemplum.Infrastructure.Identity;
+
+using Application.Common.Identity;
+using Microsoft.AspNetCore.Authorization;
+
+public class ExemplumAuthorizationService : IExemplumAuthorizationService
 {
-    using Application.Common.Identity;
-    using Microsoft.AspNetCore.Authorization;
-    using System.Threading.Tasks;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly ICurrentUser _currentUser;
 
-    public class ExemplumAuthorizationService : IExemplumAuthorizationService
+    public ExemplumAuthorizationService(
+        IAuthorizationService authorizationService,
+        ICurrentUser currentUser)
     {
-        private readonly IAuthorizationService _authorizationService;
-        private readonly ICurrentUser _currentUser;
+        _authorizationService = authorizationService;
+        _currentUser = currentUser;
+    }
 
-        public ExemplumAuthorizationService(
-            IAuthorizationService authorizationService,
-            ICurrentUser currentUser)
+    public async Task<bool> AuthorizeAsync(string policyName)
+    {
+        if (_currentUser.Principal == null)
         {
-            _authorizationService = authorizationService;
-            _currentUser = currentUser;
+            return false;
         }
-        
-        public async Task<bool> AuthorizeAsync(string policyName)
-        {
-            if (_currentUser.Principal == null)
-            {
-                return false;
-            }
 
-            var result = await _authorizationService.AuthorizeAsync(_currentUser.Principal, policyName);
+        var result = await _authorizationService.AuthorizeAsync(_currentUser.Principal, policyName);
 
-            return result.Succeeded;
-        }
+        return result.Succeeded;
     }
 }

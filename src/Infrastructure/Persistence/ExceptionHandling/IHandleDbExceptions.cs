@@ -1,9 +1,8 @@
-﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling
-{
-    using System;
+﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling;
 
-    public interface IHandleDbExceptions
-    {
-        void HandleException(Exception exception);
-    }
+using System;
+
+public interface IHandleDbExceptions
+{
+    void HandleException(Exception exception);
 }
