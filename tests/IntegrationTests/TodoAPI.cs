@@ -13,9 +13,14 @@
     using WebApi;
     using Xunit.Abstractions;
 
-    public class WebHostFixture : WebApplicationFactory<Startup>
+    public class TodoAPI : WebApplicationFactory<Startup>
     {
         public ITestOutputHelper Output { get; set; }
+
+        public TodoAPI(ITestOutputHelper output)
+        {
+            Output = output;
+        }
 
         protected override IHostBuilder CreateHostBuilder()
         {
@@ -57,7 +62,7 @@
 
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<ApplicationDbContext>();
-                var logger = scopedServices.GetRequiredService<ILogger<WebHostFixture>>();
+                var logger = scopedServices.GetRequiredService<ILogger<TodoAPI>>();
 
                 try
                 {

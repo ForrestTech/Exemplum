@@ -11,13 +11,24 @@
     using System.Net.Http.Json;
     using System.Threading.Tasks;
     using Xunit;
+    using Xunit.Abstractions;
 
-    public partial class ExemplumApiTests : IClassFixture<WebHostFixture>
+    public class TodoApiTests 
     {
+        private readonly ITestOutputHelper _output;
+
+        public TodoApiTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+        
         [Fact]
         public async Task Todo_get_returns_paginated_list_of_todos()
         {
-            var response = await _client.GetAsync("api/todolist/1/todo");
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
+            var response = await client.GetAsync("api/todolist/1/todo");
 
             var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
 
@@ -29,7 +40,10 @@
         [Fact]
         public async Task Todo_get_completed_should_only_returns_completed_todos()
         {
-            var response = await _client.GetAsync("api/todolist/1/todo/completed");
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
+            var response = await client.GetAsync("api/todolist/1/todo/completed");
 
             var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
 
@@ -39,7 +53,10 @@
         [Fact]
         public async Task Todo_create_with_invalid_values_returns_error()
         {
-            var response = await _client.PostAsJsonAsync("api/todolist/1/todo",
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
+            var response = await client.PostAsJsonAsync("api/todolist/1/todo",
                 new CreateTodoItemCommand { Title = string.Empty, Note = "Some note" });
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -56,14 +73,16 @@
         [Fact]
         public async Task Todo_create_and_ensure_it_retrieved()
         {
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
             const string todoTitle = "New todo";
-
-            var response = await _client.PostAsJsonAsync("api/todolist/1/todo",
+            var response = await client.PostAsJsonAsync("api/todolist/1/todo",
                 new CreateTodoItemCommand { Title = todoTitle, Note = "Some note" });
 
             response.EnsureSuccessStatusCode();
 
-            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+            var newTodoResponse = await client.GetAsync(response.Headers.Location);
 
             newTodoResponse.EnsureSuccessStatusCode();
 
@@ -75,17 +94,18 @@
         [Fact]
         public async Task Todo_update_and_ensure_its_updated()
         {
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
             const string updatedTitle = "Updated todo";
             const string updatedNote = "updated note";
-
             const string todoUrl = "api/todolist/1/todo/1";
 
-            var response = await _client.PutAsJsonAsync(todoUrl,
+            var response = await client.PutAsJsonAsync(todoUrl,
                 new UpdateTodoCommand { Title = updatedTitle, Note = updatedNote });
 
             response.EnsureSuccessStatusCode();
 
-            var newTodoResponse = await _client.GetAsync(todoUrl);
+            var newTodoResponse = await client.GetAsync(todoUrl);
 
             var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
 
@@ -96,14 +116,17 @@
         [Fact]
         public async Task Todo_delete_item_and_ensure_its_removed()
         {
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
             const string todoTitle = "To be deleted";
 
-            var response = await _client.PostAsJsonAsync("api/todolist/1/todo",
+            var response = await client.PostAsJsonAsync("api/todolist/1/todo",
                 new CreateTodoItemCommand { Title = todoTitle, Note = "Some note" });
 
-            await _client.DeleteAsync(response.Headers.Location);
+            await client.DeleteAsync(response.Headers.Location);
 
-            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+            var newTodoResponse = await client.GetAsync(response.Headers.Location);
 
             newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
@@ -111,16 +134,18 @@
         [Fact]
         public async Task Todo_complete_item_and_ensure_state()
         {
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
             const string todoTitle = "To be completed";
-
-            var response = await _client.PostAsJsonAsync("api/todolist/1/todo",
+            var response = await client.PostAsJsonAsync("api/todolist/1/todo",
                 new CreateTodoItemCommand { Title = todoTitle, Note = "Some note" });
 
-            var completedResponse = await _client.PostAsync($"{response.Headers.Location}/completed",
+            var completedResponse = await client.PostAsync($"{response.Headers.Location}/completed",
                 new StringContent(string.Empty));
             completedResponse.EnsureSuccessStatusCode();
 
-            var completedTodo = await _client.GetAsync(response.Headers.Location);
+            var completedTodo = await client.GetAsync(response.Headers.Location);
             completedTodo.EnsureSuccessStatusCode();
 
             var newTodo = await completedTodo.Content.ReadFromJsonAsync<TodoItemDto>();
@@ -131,13 +156,16 @@
         [Fact]
         public async Task Todo_set_priority_and_ensure_state()
         {
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
             string priorityLevel = PriorityLevel.High.ToString();
-            var response = await _client.PostAsJsonAsync("api/todolist/1/todo/1/priority",
+            var response = await client.PostAsJsonAsync("api/todolist/1/todo/1/priority",
                 new SetPriorityCommand { PriorityLevel = priorityLevel });
 
             response.EnsureSuccessStatusCode();
 
-            var newTodoResponse = await _client.GetAsync("api/todolist/1/todo/1");
+            var newTodoResponse = await client.GetAsync("api/todolist/1/todo/1");
 
             newTodoResponse.EnsureSuccessStatusCode();
 

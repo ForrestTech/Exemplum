@@ -16,7 +16,7 @@ using Serilog.Formatting.Compact;
 using System.Diagnostics;
 using System.Reflection;
 
-public static class ProgramAPI
+public static class Program
 {
     public static async Task<int> Main(string[] args)
     {

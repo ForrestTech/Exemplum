@@ -6,28 +6,20 @@
     using Domain.Todo;
     using FluentAssertions;
     using System.Net;
-    using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
     using Xunit;
     using Xunit.Abstractions;
 
-    /// <summary>
-    /// Created as a partial to separate the tests but it allows us to use a single IClassFixture setup and tear down across all API integration tests
-    /// </summary>
-    public partial class ExemplumApiTests : IClassFixture<WebHostFixture>
+    public class TodoListTests
     {
-        private readonly WebHostFixture _fixture;
-        private readonly HttpClient _client;
+        private readonly ITestOutputHelper _output;
 
-        public ExemplumApiTests(WebHostFixture fixture, ITestOutputHelper output)
-
+        public TodoListTests(ITestOutputHelper output)
         {
-            _fixture = fixture;
-            _fixture.Output = output;
-            _client = fixture.CreateClient();
+            _output = output;
         }
-
+        
         [Theory]
         [InlineData("api/todolist")]
         [InlineData("api/todolist/1/todo")]
@@ -37,7 +29,10 @@
         [InlineData("api/todolist/1/todo/999", 404)]
         public async Task Routes_table_tests(string url, int statusCode = 200)
         {
-            var response = await _client.GetAsync(url);
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient();
+            
+            var response = await client.GetAsync(url);
 
             response.StatusCode.Should().Be((HttpStatusCode)statusCode);
 
@@ -52,7 +47,10 @@
         [Fact]
         public async Task Todolist_get_returns_paginated_list()
         {
-            var response = await _client.GetAsync("api/todolist");
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
+            var response = await client.GetAsync("api/todolist");
 
             var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoListDto>>();
 
@@ -64,7 +62,10 @@
         [Fact]
         public async Task Todolist_get_by_id_should_return_single_list()
         {
-            var response = await _client.GetAsync("api/todolist/1");
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
+            var response = await client.GetAsync("api/todolist/1");
 
             var actual = await response.Content.ReadFromJsonAsync<TodoListDto>();
 
@@ -74,14 +75,16 @@
         [Fact]
         public async Task Todolist_delete_and_ensure_its_removed()
         {
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
             const string todoTitle = "To be deleted";
-
-            var response = await _client.PostAsJsonAsync("api/todolist",
+            var response = await client.PostAsJsonAsync("api/todolist",
                 new CreateTodoListCommand { Title = todoTitle, Colour = Colour.Blue });
 
-            await _client.DeleteAsync(response.Headers.Location);
+            await client.DeleteAsync(response.Headers.Location);
 
-            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+            var newTodoResponse = await client.GetAsync(response.Headers.Location);
 
             newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
@@ -89,14 +92,16 @@
         [Fact]
         public async Task Todolist_create_and_ensure_it_retrieved()
         {
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient(); 
+            
             const string todoTitle = "New todo";
-
-            var response = await _client.PostAsJsonAsync("api/todolist",
+            var response = await client.PostAsJsonAsync("api/todolist",
                 new CreateTodoListCommand { Title = todoTitle, Colour = Colour.Blue });
 
             response.EnsureSuccessStatusCode();
 
-            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+            var newTodoResponse = await client.GetAsync(response.Headers.Location);
 
             newTodoResponse.EnsureSuccessStatusCode();
 
