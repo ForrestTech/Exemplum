@@ -1,11 +1,7 @@
-﻿namespace Exemplum.Application.Persistence
-{
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿namespace Exemplum.Application.Persistence;
 
-    public interface IApplicationDbContext : IEventHandlerDbContext
-    {
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-        int SaveChanges();
-    }
+public interface IApplicationDbContext : IEventHandlerDbContext
+{
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    int SaveChanges();
 }

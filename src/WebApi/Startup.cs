@@ -77,8 +77,9 @@ namespace Exemplum.WebApi
                 hcBuilder.AddSqlServer(_configuration.GetDefaultConnection());
             }
 
-            services.AddHealthChecksUI()
-                .AddInMemoryStorage();
+            //This does not seem to work with dotnet 6            
+            // services.AddHealthChecksUI()
+            //     .AddInMemoryStorage();
 
             services.AddControllers(options =>
             {

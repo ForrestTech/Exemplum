@@ -1,48 +1,43 @@
-﻿namespace Exemplum.Application.Common.Behaviour
+﻿namespace Exemplum.Application.Common.Behaviour;
+
+using Domain.Exceptions;
+
+public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
-    using Domain.Exceptions;
-    using MediatR;
-    using Microsoft.Extensions.Logging;
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    private readonly ILogger<UnhandledExceptionBehaviour<TRequest, TResponse>> _logger;
 
-    public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    public UnhandledExceptionBehaviour(ILogger<UnhandledExceptionBehaviour<TRequest, TResponse>> logger)
     {
-        private readonly ILogger<UnhandledExceptionBehaviour<TRequest, TResponse>> _logger;
+        _logger = logger;
+    }
 
-        public UnhandledExceptionBehaviour(ILogger<UnhandledExceptionBehaviour<TRequest, TResponse>> logger)
+    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        RequestHandlerDelegate<TResponse> next)
+    {
+        try
         {
-            _logger = logger;
+            return await next();
         }
-
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
-            RequestHandlerDelegate<TResponse> next)
+        catch (Exception ex)
         {
-            try
+            LogLevel logLevel = LogLevel.Error;
+            if (ex is IHaveLogLevel hasLogLevel)
             {
-                return await next();
+                logLevel = hasLogLevel.LogLevel;
             }
-            catch (Exception ex)
+
+            var requestName = typeof(TRequest).Name;
+            _logger.Log(logLevel, ex, "Request: Unhandled '{Exception}' for Request {Name} {@Request}",
+                ex.GetType().Name, requestName,
+                request);
+
+            if (ex is IExceptionWithSelfLogging withSelfLogging)
             {
-                LogLevel logLevel = LogLevel.Error;
-                if (ex is IHaveLogLevel hasLogLevel)
-                {
-                    logLevel = hasLogLevel.LogLevel;
-                }
-
-                var requestName = typeof(TRequest).Name;
-                _logger.Log(logLevel, ex, "Request: Unhandled '{Exception}' for Request {Name} {@Request}", ex.GetType().Name, requestName,
-                    request);
-
-                if (ex is IExceptionWithSelfLogging withSelfLogging)
-                {
-                    withSelfLogging.Log(_logger);
-                }
-
-                throw;
+                withSelfLogging.Log(_logger);
             }
+
+            throw;
         }
     }
 }

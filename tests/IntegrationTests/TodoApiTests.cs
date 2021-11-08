@@ -34,6 +34,23 @@
 
             actual?.Items.Should().NotBeEmpty().And.OnlyContain(x => x.Done);
         }
+        
+        [Fact]
+        public async Task Todo_create_with_invalid_values_returns_error()
+        {
+            var response = await _client.PostAsJsonAsync("api/todolist/1/todo",
+                new CreateTodoItemCommand { Title = string.Empty, Note = "Some note" });
+
+            response.EnsureSuccessStatusCode();
+
+            var newTodoResponse = await _client.GetAsync(response.Headers.Location);
+
+            newTodoResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            // var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
+            //
+            // newTodo?.Title.Should().Be(todoTitle);
+        }
 
         [Fact]
         public async Task Todo_create_and_ensure_it_retrieved()

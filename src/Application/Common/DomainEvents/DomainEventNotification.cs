@@ -1,15 +1,13 @@
-﻿namespace Exemplum.Application.Common.DomainEvents
+﻿namespace Exemplum.Application.Common.DomainEvents;
+
+using Domain.Common;
+
+public class DomainEventNotification<TDomainEvent> : INotification where TDomainEvent : DomainEvent
 {
-    using Domain.Common;
-    using MediatR;
-
-    public class DomainEventNotification<TDomainEvent> : INotification where TDomainEvent : DomainEvent
+    public DomainEventNotification(TDomainEvent domainEvent)
     {
-        public DomainEventNotification(TDomainEvent domainEvent)
-        {
-            DomainEvent = domainEvent;
-        }
-
-        public TDomainEvent DomainEvent { get; }
+        DomainEvent = domainEvent;
     }
+
+    public TDomainEvent DomainEvent { get; }
 }

@@ -1,24 +1,21 @@
-﻿namespace Exemplum.Application.WeatherForecasts.Models
+﻿namespace Exemplum.Application.WeatherForecasts.Models;
+
+public class WeatherForecast
 {
-    using System.Collections.Generic;
+    public string Name { get; set; } = string.Empty;
 
-    public class WeatherForecast
-    {
-        public string Name { get; set; } = string.Empty;
+    public List<Weather> Weather { get; set; } = new List<Weather>();
 
-        public List<Weather> Weather { get; set; } = new List<Weather>();
+    public Temperatures Main { get; set; } = new Temperatures();
+}
 
-        public Temperatures Main { get; set; } = new Temperatures();
-    }
+public class Weather
+{
+    public string Main { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+}
 
-    public class Weather
-    {
-        public string Main { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-    }
-
-    public class Temperatures
-    {
-        public double Temp { get; set; }
-    }
+public class Temperatures
+{
+    public double Temp { get; set; }
 }

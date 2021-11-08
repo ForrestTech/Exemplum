@@ -1,10 +1,6 @@
-namespace Exemplum.Application.Common.Security
+namespace Exemplum.Application.Common.Security;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class AllowAnonymousAccessAttribute : Attribute
 {
-    using System;
-
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class AllowAnonymousAccessAttribute : Attribute
-    {
-
-    }
 }

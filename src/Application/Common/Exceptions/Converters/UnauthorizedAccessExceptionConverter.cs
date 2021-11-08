@@ -1,29 +1,23 @@
-namespace Exemplum.Application.Common.Exceptions.Converters
+namespace Exemplum.Application.Common.Exceptions.Converters;
+
+using System.Net;
+
+public class UnauthorizedAccessExceptionConverter : ICustomExceptionErrorConverter
 {
-    using System;
-    using System.Net;
-
-    public class UnauthorizedAccessExceptionConverter : ICustomExceptionErrorConverter
+    public bool CanConvert(Exception exception)
     {
-        public bool CanConvert(Exception exception)
+        return exception is UnauthorizedAccessException;
+    }
+
+    public ErrorInfo Convert(Exception exception, bool includeSensitiveDetails)
+    {
+        if (exception is not UnauthorizedAccessException unauthorizedException)
         {
-            return exception is UnauthorizedAccessException;
+            return new ErrorInfo();
         }
 
-        public ErrorInfo Convert(Exception exception, bool includeSensitiveDetails)
-        {
-            if (exception is not UnauthorizedAccessException unauthorizedException)
-            {
-                return new ErrorInfo();
-            }
+        var info = new ErrorInfo {Message = "Unauthorized", ResponseCode = HttpStatusCode.Unauthorized};
 
-            var info = new ErrorInfo
-            {
-                Message = "Unauthorized",
-                ResponseCode = HttpStatusCode.Unauthorized
-            };
-
-            return info;
-        }
+        return info;
     }
 }

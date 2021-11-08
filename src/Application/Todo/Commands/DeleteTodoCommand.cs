@@ -1,57 +1,54 @@
-﻿namespace Exemplum.Application.Todo.Commands
+﻿namespace Exemplum.Application.Todo.Commands;
+
+using Common.Exceptions;
+using Common.Security;
+using Domain.Todo;
+using FluentValidation;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
+
+[Authorize(Policy = Security.Policy.TodoDeleteAccess)]
+public class DeleteTodoCommand : IRequest
 {
-    using Common.Exceptions;
-    using Common.Security;
-    using Domain.Todo;
-    using FluentValidation;
-    using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Persistence;
-    using System.Threading;
-    using System.Threading.Tasks;
+    public int ListId { get; set; }
 
-    [Authorize(Policy = Security.Policy.TodoDeleteAccess)]
-    public class DeleteTodoCommand : IRequest
+    public int TodoId { get; set; }
+}
+
+public class DeleteTodoCommandValidator : AbstractValidator<DeleteTodoCommand>
+{
+    public DeleteTodoCommandValidator()
     {
-        public int ListId { get; set; }
+        RuleFor(x => x.ListId).GreaterThan(0);
+        RuleFor(x => x.TodoId).GreaterThan(0);
+    }
+}
 
-        public int TodoId { get; set; }
+public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public DeleteTodoCommandHandler(IApplicationDbContext context)
+    {
+        _context = context;
     }
 
-    public class DeleteTodoCommandValidator : AbstractValidator<DeleteTodoCommand>
+    public async Task<Unit> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
     {
-        public DeleteTodoCommandValidator()
-        {
-            RuleFor(x => x.ListId).GreaterThan(0);
-            RuleFor(x => x.TodoId).GreaterThan(0);
-        }
-    }
+        var todo = await _context.TodoItems
+            .SingleOrDefaultAsync(x => x.ListId == request.ListId &&
+                                       x.Id == request.TodoId, cancellationToken);
 
-    public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
-    {
-        private readonly IApplicationDbContext _context;
-
-        public DeleteTodoCommandHandler(IApplicationDbContext context)
+        if (todo == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(TodoItem), new {request.ListId, request.TodoId});
         }
 
-        public async Task<Unit> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
-        {
-            var todo = await _context.TodoItems
-                .SingleOrDefaultAsync(x => x.ListId == request.ListId &&
-                                           x.Id == request.TodoId, cancellationToken);
+        _context.TodoItems.Remove(todo);
 
-            if (todo == null)
-            {
-                throw new NotFoundException(nameof(TodoItem), new { request.ListId, request.TodoId });
-            }
+        await _context.SaveChangesAsync(cancellationToken);
 
-            _context.TodoItems.Remove(todo);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

@@ -1,11 +1,8 @@
-namespace Exemplum.Application.Common.Exceptions
+namespace Exemplum.Application.Common.Exceptions;
+
+public interface ICustomExceptionErrorConverter
 {
-    using System;
+    bool CanConvert(Exception exception);
 
-    public interface ICustomExceptionErrorConverter
-    {
-        bool CanConvert(Exception exception);
-
-        ErrorInfo Convert(Exception exception, bool includeSensitiveDetails);
-    }
+    ErrorInfo Convert(Exception exception, bool includeSensitiveDetails);
 }

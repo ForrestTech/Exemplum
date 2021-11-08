@@ -1,64 +1,60 @@
-﻿namespace Exemplum.Application.Todo.Commands
+﻿namespace Exemplum.Application.Todo.Commands;
+
+using Common.Exceptions;
+using Common.Security;
+using Domain.Todo;
+using FluentValidation;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
+
+[Authorize(Policy = Security.Policy.TodoWriteAccess)]
+public record MarkTodoCompleteCommand(int ListId, int TodoId) : IRequest
 {
-    using Common.Exceptions;
-    using Common.Security;
-    using Domain.Todo;
-    using FluentValidation;
-    using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Persistence;
-    using System.Threading;
-    using System.Threading.Tasks;
+}
 
-    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
-    public record MarkTodoCompleteCommand(int ListId, int TodoId) : IRequest
+public class MarkTodoCompleteCommandValidator : AbstractValidator<MarkTodoCompleteCommand>
+{
+    public MarkTodoCompleteCommandValidator()
     {
+        RuleFor(x => x.ListId).GreaterThan(0);
 
+        RuleFor(x => x.TodoId).GreaterThan(0);
+    }
+}
+
+public class MarkTodoCompleteHandler : IRequestHandler<MarkTodoCompleteCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public MarkTodoCompleteHandler(IApplicationDbContext context)
+    {
+        _context = context;
     }
 
-    public class MarkTodoCompleteCommandValidator : AbstractValidator<MarkTodoCompleteCommand>
+    public async Task<Unit> Handle(MarkTodoCompleteCommand request, CancellationToken cancellationToken)
     {
-        public MarkTodoCompleteCommandValidator()
+        var todo = await _context.TodoItems
+            .SingleOrDefaultAsync(x => x.ListId == request.ListId &&
+                                       x.Id == request.TodoId, cancellationToken);
+
+        if (todo == null)
         {
-            RuleFor(x => x.ListId).GreaterThan(0);
-
-            RuleFor(x => x.TodoId).GreaterThan(0);
-        }
-    }
-
-    public class MarkTodoCompleteHandler : IRequestHandler<MarkTodoCompleteCommand>
-    {
-        private readonly IApplicationDbContext _context;
-
-        public MarkTodoCompleteHandler(IApplicationDbContext context)
-        {
-            _context = context;
+            throw new NotFoundException(nameof(TodoItem), request);
         }
 
-        public async Task<Unit> Handle(MarkTodoCompleteCommand request, CancellationToken cancellationToken)
+        if (todo.Done)
         {
-            var todo = await _context.TodoItems
-                    .SingleOrDefaultAsync(x => x.ListId == request.ListId &&
-                                      x.Id == request.TodoId, cancellationToken: cancellationToken);
-
-            if (todo == null)
-            {
-                throw new NotFoundException(nameof(TodoItem), request);
-            }
-
-            if (todo.Done)
-            {
-                todo.MarkAsIncomplete();
-            }
-            else
-            {
-                todo.MarkAsDone();
-            }
-
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
+            todo.MarkAsIncomplete();
         }
+        else
+        {
+            todo.MarkAsDone();
+        }
+
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }
