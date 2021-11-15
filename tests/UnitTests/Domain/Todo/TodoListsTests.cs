@@ -1,44 +1,39 @@
-﻿namespace Exemplum.UnitTests.Domain.Todo
+﻿namespace Exemplum.UnitTests.Domain.Todo;
+
+using Exemplum.Domain.Todo;
+
+public class TodoListsTests
 {
-    using Exemplum.Domain.Todo;
-    using FluentAssertions;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Xunit;
-
-    public class TodoListsTests
+    [Fact]
+    public void AddToDo_should_update_item_list()
     {
-        [Fact]
-        public void AddToDo_should_update_item_list()
-        {
-            var sut = new TodoList("List", Colour.Blue);
+        var sut = new TodoList("List", Colour.Blue);
 
-            const string todoTitle = "New todo";
-            sut.AddToDo(new TodoItem(todoTitle));
+        const string todoTitle = "New todo";
+        sut.AddToDo(new TodoItem(todoTitle));
 
-            sut.Items.Count().Should().Be(1);
-            sut.Items.First().Title.Should().Be(todoTitle);
-        }
-        
-        [Fact]
-        public void AddToDo_should_raise_domain_event()
-        {
-            var sut = new TodoList("List", Colour.Blue);
+        sut.Items.Count().Should().Be(1);
+        sut.Items.First().Title.Should().Be(todoTitle);
+    }
 
-            sut.AddToDo(new TodoItem("New todo"));
+    [Fact]
+    public void AddToDo_should_raise_domain_event()
+    {
+        var sut = new TodoList("List", Colour.Blue);
 
-            sut.DomainEvents.Count.Should().Be(1);
-        }
+        sut.AddToDo(new TodoItem("New todo"));
 
-        [Fact]
-        public void AddToDo_list_should_raise_domain_event()
-        {
-            var sut = new TodoList("List", Colour.Blue);
+        sut.DomainEvents.Count.Should().Be(1);
+    }
 
-            sut.AddToDo(new List<TodoItem> { new TodoItem("New todo"), new TodoItem("Another todo") });
+    [Fact]
+    public void AddToDo_list_should_raise_domain_event()
+    {
+        var sut = new TodoList("List", Colour.Blue);
 
-            sut.Items.Count().Should().Be(2);
-            sut.DomainEvents.Count.Should().Be(2);
-        }
+        sut.AddToDo(new List<TodoItem> {new TodoItem("New todo"), new TodoItem("Another todo")});
+
+        sut.Items.Count().Should().Be(2);
+        sut.DomainEvents.Count.Should().Be(2);
     }
 }
