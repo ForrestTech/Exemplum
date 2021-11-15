@@ -43,7 +43,7 @@
     async Task AddTodoList()
     {
         await OnAddNewList.InvokeAsync(newTodoList);
-        newTodoList = new();
+        newTodoList = new NewTodoList();
     }
 
     bool CanAdd() => newTodoList.Title.HasValue() && newTodoList.Title.Length > 2;

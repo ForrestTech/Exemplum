@@ -1,22 +1,20 @@
-﻿namespace Exemplum.WebApp.Location
+﻿namespace Exemplum.WebApp.Location;
+
+using Microsoft.JSInterop;
+
+public class LocationService : ILocationService
 {
-    using Microsoft.JSInterop;
-    using System.Threading.Tasks;
+    private readonly IJSRuntime _jsRuntime;
 
-    public class LocationService : ILocationService
+    public LocationService(IJSRuntime jsRuntime)
     {
-        private readonly IJSRuntime _jsRuntime;
+        _jsRuntime = jsRuntime;
+    }
 
-        public LocationService(IJSRuntime jsRuntime)
-        {
-            _jsRuntime = jsRuntime;
-        }
-        
-        public async Task<GeoLocation?> GetCurrentLocation()
-        {
-            var geoLocation = await _jsRuntime.InvokeAsync<GeoLocation>("getCurrentLocation");
+    public async Task<GeoLocation?> GetCurrentLocation()
+    {
+        var geoLocation = await _jsRuntime.InvokeAsync<GeoLocation>("getCurrentLocation");
 
-            return geoLocation;
-        }
+        return geoLocation;
     }
 }
