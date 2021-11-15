@@ -1,7 +1,5 @@
 ﻿namespace Exemplum.WebApi.Controllers;
 
-using Microsoft.AspNetCore.Mvc;
-
 [ApiController]
 [Route("api")]
 [Produces("application/json")]

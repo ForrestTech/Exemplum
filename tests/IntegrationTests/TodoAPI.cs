@@ -10,10 +10,9 @@
     using Microsoft.Extensions.Logging;
     using System;
     using System.IO;
-    using WebApi;
     using Xunit.Abstractions;
 
-    public class TodoAPI : WebApplicationFactory<Startup>
+    public class TodoAPI : WebApplicationFactory<Program>
     {
         public ITestOutputHelper Output { get; set; }
 
@@ -22,9 +21,8 @@
             Output = output;
         }
 
-        protected override IHostBuilder CreateHostBuilder()
+        protected override IHost CreateHost(IHostBuilder builder)
         {
-            var builder = base.CreateHostBuilder();
             builder.ConfigureLogging(logging =>
             {
                 logging.ClearProviders();
@@ -49,7 +47,7 @@
                 config.AddTransient<IWeatherForecastClient, MockWeatherClient>();
             });
 
-            return builder;
+            return base.CreateHost(builder);
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
