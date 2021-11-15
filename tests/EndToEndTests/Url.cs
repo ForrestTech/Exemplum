@@ -1,7 +1,6 @@
-namespace Exemplum.EndToEndTests
+namespace Exemplum.EndToEndTests;
+
+public static class Url
 {
-    public static class Url
-    {
-        public const string Root = "https://localhost:6001";
-    }
+    public const string Root = "https://localhost:6001";
 }
