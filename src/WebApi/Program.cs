@@ -1,42 +1,14 @@
-
-Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-
-var logConfiguration = new LoggerConfiguration()
-#if DEBUG
-    .MinimumLevel.Debug()
-    .WriteTo.Debug()
-    .WriteTo.Seq("http://localhost:5341")
-#else
-                .MinimumLevel.Information()
-#endif
-    // if you want to get rid of some of the noise of asp.net core logging uncomment this line
-    //.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning) 
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .Enrich.WithMachineName()
-    .Enrich.WithEnvironmentName()
-    .Enrich.WithSpan()
-    .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder()
-        .WithDefaultDestructurers()
-        .WithDestructurers(new[] {new SqlExceptionDestructurer()})
-        .WithDestructurers(new[] {new DbUpdateExceptionDestructurer()}))
-    .Enrich.WithProperty("ApplicationName", "Exemplum.Api")
-    .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
-    .WriteTo.Console()
-    .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data\\Logs\\ExemplumApi-Logs.txt",
-        rollingInterval: RollingInterval.Day));
-
-Log.Logger = logConfiguration.CreateLogger();
-
 try
 {
+    Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+
+    Log.Logger = LogConfiguration.CreateLogger();
+    
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog();
 
     Log.Information("Starting API host");
 
-    //start up here
-    //services stuff
     builder.Services.AddApplication(builder.Configuration, builder.Environment);
     builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 
@@ -60,10 +32,7 @@ try
     {
         options.Authority = builder.Configuration["Auth0:Authority"];
         options.Audience = builder.Configuration["Auth0:ApiIdentifier"];
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            NameClaimType = "name", RoleClaimType = "https://schemas.dev-ememplum.com/roles"
-        };
+        options.TokenValidationParameters = new TokenValidationParameters {NameClaimType = "name", RoleClaimType = "https://schemas.dev-ememplum.com/roles"};
     });
 
     var hcBuilder = builder.Services.AddHealthChecks()
@@ -90,6 +59,7 @@ try
         options.LowercaseUrls = true;
     });
 
+    builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v1", new OpenApiInfo {Title = "Exemplum", Version = "v1"});
@@ -97,22 +67,12 @@ try
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);
 
-        c.CustomOperationIds(apiDesc =>
-            apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null);
+        c.TagActionsBy(ApiDescriptor.GetGroupName);
     });
 
     var app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseApiExceptionHandler(true);
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));
-    }
-    else
-    {
-        app.UseApiExceptionHandler(false);
-    }
+    app.UseApiExceptionHandler(app.Environment.IsDevelopment());
 
     app.UseSerilogRequestLogging();
 
@@ -132,10 +92,7 @@ try
     {
         //with a more complex set of health checks we can separate checks by tag
         endpoints.MapHealthChecks("/health/ready",
-            new HealthCheckOptions
-            {
-                Predicate = (_) => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
+            new HealthCheckOptions {Predicate = (_) => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse});
         endpoints.MapHealthChecks("/health/live", new HealthCheckOptions {Predicate = (_) => false});
 
         endpoints.MapHealthChecksUI();
@@ -144,6 +101,11 @@ try
 
         endpoints.MapMetrics();
     });
+
+    app.MapSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));
+
+    app.MapWeatherForecastEndpoints();
 
     await SeedDatabase(app);
 
