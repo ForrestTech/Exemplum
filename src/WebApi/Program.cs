@@ -1,3 +1,4 @@
+
 Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
 var logConfiguration = new LoggerConfiguration()
@@ -43,7 +44,8 @@ try
     {
         options.AddPolicy("Default", policyOptions =>
         {
-            policyOptions.WithOrigins(builder.Configuration.GetServiceUri("webapp")?.ToString() ?? "https://localhost:6001")
+            policyOptions
+                .WithOrigins(builder.Configuration.GetServiceUri("webapp")?.ToString() ?? "https://localhost:6001")
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
@@ -76,10 +78,7 @@ try
     // builder.Services.AddHealthChecksUI()
     //     .AddInMemoryStorage();
 
-    builder.Services.AddControllers(options =>
-    {
-        options.Filters.Add<ApiExceptionFilterAttribute>();
-    }).AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+    builder.Services.AddControllers().AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
     builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
@@ -106,9 +105,13 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        app.UseDeveloperExceptionPage();
+        app.UseApiExceptionHandler(true);
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));
+    }
+    else
+    {
+        app.UseApiExceptionHandler(false);
     }
 
     app.UseSerilogRequestLogging();
@@ -141,7 +144,6 @@ try
 
         endpoints.MapMetrics();
     });
-
 
     await SeedDatabase(app);
 
@@ -186,4 +188,6 @@ static async Task SeedDatabase(IHost host)
 }
 
 // Make the implicit Program class public so test projects can access it
-public partial class Program { }
+public partial class Program
+{
+}

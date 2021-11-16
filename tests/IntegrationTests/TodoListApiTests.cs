@@ -36,7 +36,7 @@ public class TodoListTests
         response.Content.Headers.ContentType?.ToString()
             .Should().Be(successfulResponse
                 ? "application/json; charset=utf-8"
-                : "application/problem+json; charset=utf-8");
+                : "application/problem+json");
     }
 
     [Fact]

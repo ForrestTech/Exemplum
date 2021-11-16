@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Headers;
 
 public class TodoAPI : WebApplicationFactory<Program>
 {
@@ -45,6 +46,14 @@ public class TodoAPI : WebApplicationFactory<Program>
         });
 
         return base.CreateHost(builder);
+    }
+
+    protected override void ConfigureClient(HttpClient client)
+    {
+        base.ConfigureClient(client);
+
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

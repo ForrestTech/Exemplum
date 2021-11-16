@@ -23,6 +23,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.1.0-alpha.20209.5" />
+    <PackageReference Include="MinimalApis.Extensions" Version="0.4.1-pre.20211113.13" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="5.0.1" />
     <PackageReference Include="prometheus-net.AspNetCore.HealthChecks" Version="5.0.1" />    
     <PackageReference Include="Refit" Version="6.1.15" />    
