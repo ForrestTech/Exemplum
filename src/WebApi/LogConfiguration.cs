@@ -2,7 +2,7 @@
 
 using Serilog.Core;
 
-public class LogConfiguration
+public static class LogConfiguration
 {
     public static Logger CreateLogger()
     {

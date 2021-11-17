@@ -47,7 +47,9 @@ public class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand, TodoI
             .SingleOrDefaultAsync(cancellationToken);
 
         if (todo == null)
+        {
             throw new NotFoundException(nameof(TodoItem), new {request.ListId, request.TodoId});
+        }
 
         todo.Title = request.Title;
         todo.Note = request.Note;
