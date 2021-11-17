@@ -5,9 +5,11 @@ using Application.WeatherForecasts.Query;
 
 public static class WeatherForecastEndpoints
 {
+    private static readonly string WeatherForecast = nameof(WeatherForecast);
+    
     public static void MapWeatherForecastEndpoints(this WebApplication app)
     {
-        app.MapGet("api/weatherforecast", GetWeatherForecast());
+        app.MapGet("api/weatherforecast", GetWeatherForecast()).WithTags(WeatherForecast);
     }
 
     private static Func<IMediator, decimal, decimal, Task<WeatherForecast>> GetWeatherForecast()

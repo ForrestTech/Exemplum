@@ -44,8 +44,8 @@ try
     }
 
     //This does not seem to work with dotnet 6            
-    // builder.Services.AddHealthChecksUI()
-    //     .AddInMemoryStorage();
+    builder.Services.AddHealthChecksUI()
+        .AddInMemoryStorage();
 
     builder.Services.AddControllers().AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
@@ -65,9 +65,8 @@ try
         c.SwaggerDoc("v1", new OpenApiInfo {Title = "Exemplum", Version = "v1"});
         var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        
         c.IncludeXmlComments(xmlPath);
-
-        c.TagActionsBy(ApiDescriptor.GetGroupName);
     });
 
     var app = builder.Build();
@@ -105,6 +104,7 @@ try
     app.MapSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));
 
+    //we are using both minimal API and Controllers as examples
     app.MapWeatherForecastEndpoints();
 
     await SeedDatabase(app);
