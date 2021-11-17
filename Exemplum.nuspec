@@ -3,7 +3,7 @@
     <metadata>
         <id>Exemplum.Template</id>
         <title>Exemplum.Template</title>
-        <version>1.2.0</version>
+        <version>2.0.0</version>
         <authors>Forrest Tech</authors>
         <description>
             This is a template for creating a asp.net core applications both services (micro or otherwise and) and web
