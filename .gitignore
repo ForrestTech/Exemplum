@@ -238,6 +238,7 @@ _Pvt_Extensions
 
 
 App_Data/
+.logs/
 TestResults/
 CoverageResults/
 coverage.opencover.xml

@@ -1,0 +1,10 @@
+﻿global using Automatonymous;
+global using FluentEmail.Core;
+global using FluentEmail.Core.Interfaces;
+global using FluentEmail.Smtp;
+global using MassTransit;
+global using OpenTelemetry.Trace;
+global using Serilog;
+global using Serilog.Formatting.Compact;
+global using System.Net.Mail;
+global using System.Reflection;

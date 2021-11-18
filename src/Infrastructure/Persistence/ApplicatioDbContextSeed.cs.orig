@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 public static class ApplicationDbContextSeed
 {
-    public static void SeedDatabase(ApplicationDbContext context)
+    public static void SeedSampleDataAsync(ApplicationDbContext context)
     {
         // Seed, if necessary
         var lists = context.TodoLists
@@ -29,7 +29,12 @@ public static class ApplicationDbContextSeed
 
             context.TodoLists.Add(list);
 
-            context.SaveChangesWithoutPublishing();
+<<<<<<< HEAD
+            context.SaveChanges();
+=======
+                await context.SaveChangesWithNoEventsAsync();
+            }
+>>>>>>> 347cf9a (Add summary event consumer)
         }
     }
 }

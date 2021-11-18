@@ -1,8 +1,7 @@
-Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-
-Log.Logger = LogConfiguration.CreateLogger();
-
 var builder = WebApplication.CreateBuilder(args);
+
+Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+Log.Logger = LogConfiguration.CreateLogger();
 
 builder.Host.UseSerilog();
 
@@ -70,6 +69,19 @@ builder.Services.AddSwaggerGen(c =>
 
     c.IncludeXmlComments(xmlPath);
 });
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context,cfg) =>
+    {
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddOpenTelemetryTracing(options => options
+        .AddAspNetCoreInstrumentation()
+        .AddJaegerExporter()
+);
 
 var app = builder.Build();
 

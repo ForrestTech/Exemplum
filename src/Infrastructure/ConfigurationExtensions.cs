@@ -8,6 +8,11 @@ public static class ConfigurationExtensions
     {
         return bool.Parse(config["UseInMemoryStorage"]);
     }
+    
+    public static bool PublishIntegrationEvents(this IConfiguration config)
+    {
+        return bool.Parse(config["PublishIntegrationEvents"]);
+    }
 
     public static string GetDefaultConnection(this IConfiguration config)
     {

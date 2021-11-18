@@ -92,6 +92,7 @@
     [Parameter]
     public string ListName { get; set; } = string.Empty;
 
+    bool submittting = false;
     List<TodoItem> todoItems = new();
     TodoList list = new();
     NewTodoItem newTodoItem = new();
@@ -104,15 +105,17 @@
         todoItems = pagedList.Items;
     }
 
-    bool CanAdd() => newTodoItem.Title.HasValue() && newTodoItem.Title.Length > 2;
+    bool CanAdd() => !submittting && newTodoItem.Title.HasValue() && newTodoItem.Title.Length > 2;
 
     string ItemTitle(int id) => todoItems.Single(x => x.Id == id).Title;
 
     async Task AddNewItem()
     {
+        submittting = true;
         var todoItem = await Client.CreateTodoItem(list.Id, new CreateTodoItem(newTodoItem.Title));
         todoItems.Add(todoItem);
         newTodoItem = new NewTodoItem();
+        submittting = false;
     }
 
     async Task Enter(int listId, KeyboardEventArgs keyboardEvent)

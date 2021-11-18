@@ -2,6 +2,7 @@
 
 using Application.Common.DomainEvents;
 using Application.Common.Identity;
+using Application.Common.IntegrationEvents;
 using Application.Common.Policies;
 using Application.Persistence;
 using Application.WeatherForecasts;
@@ -11,6 +12,7 @@ using Domain.Common.DateAndTime;
 using DomainEvents;
 using ExecutionPolicies;
 using Identity;
+using IntegrationEvents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +43,15 @@ public static class DependencyInjection
                     builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                     builder.EnableRetryOnFailure();
                 }));
+        }
+
+        if (configuration.PublishIntegrationEvents())
+        {
+            services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
+        }
+        else
+        {
+            services.AddTransient<IIntegrationEventPublisher, NoOpPublisher>();
         }
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);

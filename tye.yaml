@@ -37,7 +37,7 @@ services:
     image: redis
     bindings:
       - port: 6379
-        connectionString: "${host}:${port}"
+        connectionString: "${host}:${port}"  
   - name: mssql
     image: mcr.microsoft.com/mssql/server:2019-latest
     env:
