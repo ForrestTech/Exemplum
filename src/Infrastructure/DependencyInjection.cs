@@ -45,6 +45,15 @@ public static class DependencyInjection
                 }));
         }
 
+        if (configuration.PublishIntegrationEvents())
+        {
+            services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
+        }
+        else
+        {
+            services.AddTransient<IIntegrationEventPublisher, NoOpPublisher>();
+        }
+
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
         services.AddScoped<IEventHandlerDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
@@ -78,8 +87,6 @@ public static class DependencyInjection
 
         services.AddTransient<IUserIdentityService, UserIdentityService>();
         services.AddTransient<IExemplumAuthorizationService, ExemplumAuthorizationService>();
-
-        services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
         return services;
     }
