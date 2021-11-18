@@ -2,6 +2,7 @@
 {
     using Application.WeatherForecasts.Models;
 
+    [Collection("ExemplumApiTests")]
     public class WeatherApiTests  
     {
         private readonly ITestOutputHelper _output;

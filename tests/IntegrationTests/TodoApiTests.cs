@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
+[Collection("ExemplumApiTests")]
 public class TodoApiTests
 {
     private readonly ITestOutputHelper _output;
@@ -98,14 +99,15 @@ public class TodoApiTests
         var client = application.CreateClient();
         const string updatedTitle = "Updated todo";
         const string updatedNote = "updated note";
-        const string todoUrl = "api/todolist/1/todo/1";
+        
+        var todo = await CreateNewTodo(client, "Will update");
 
-        var response = await client.PutAsJsonAsync(todoUrl,
+        var response = await client.PutAsJsonAsync(todo.Headers.Location,
             new UpdateTodoCommand {Title = updatedTitle, Note = updatedNote});
 
         response.EnsureSuccessStatusCode();
 
-        var newTodoResponse = await client.GetAsync(todoUrl);
+        var newTodoResponse = await client.GetAsync(todo.Headers.Location);
 
         var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
 
@@ -121,12 +123,11 @@ public class TodoApiTests
 
         const string todoTitle = "To be deleted";
 
-        var response = await client.PostAsJsonAsync("api/todolist/1/todo",
-            new CreateTodoItemCommand {Title = todoTitle, Note = "Some note"});
+        var todo = await CreateNewTodo(client, todoTitle);
 
-        await client.DeleteAsync(response.Headers.Location);
+        await client.DeleteAsync(todo.Headers.Location);
 
-        var newTodoResponse = await client.GetAsync(response.Headers.Location);
+        var newTodoResponse = await client.GetAsync(todo.Headers.Location);
 
         newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -138,15 +139,16 @@ public class TodoApiTests
         var client = application.CreateClient();
 
         const string todoTitle = "To be completed";
-        var response = await client.PostAsJsonAsync("api/todolist/1/todo",
-            new CreateTodoItemCommand {Title = todoTitle, Note = "Some note"});
+        var response = await CreateNewTodo(client, todoTitle);
 
         var completedResponse = await client.PostAsync($"{response.Headers.Location}/completed",
             new StringContent(string.Empty));
-        completedResponse.EnsureSuccessStatusCode();
+
+        completedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var completedTodo = await client.GetAsync(response.Headers.Location);
-        completedTodo.EnsureSuccessStatusCode();
+        
+        completedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var newTodo = await completedTodo.Content.ReadFromJsonAsync<TodoItemDto>();
 
@@ -159,18 +161,29 @@ public class TodoApiTests
         await using var application = new TodoAPI(_output);
         var client = application.CreateClient();
 
+        var todo = await CreateNewTodo(client, "Will set priority");
+        
+        _output.WriteLine("Location" + todo.Headers.Location);
+
         string priorityLevel = PriorityLevel.High.ToString();
-        var response = await client.PostAsJsonAsync("api/todolist/1/todo/1/priority",
+        var response = await client.PostAsJsonAsync($"{todo.Headers.Location}/priority",
             new SetPriorityCommand {PriorityLevel = priorityLevel});
 
         response.EnsureSuccessStatusCode();
 
-        var newTodoResponse = await client.GetAsync("api/todolist/1/todo/1");
+        var updatedPriorityTodo = await client.GetAsync(todo.Headers.Location);
 
-        newTodoResponse.EnsureSuccessStatusCode();
+        updatedPriorityTodo.EnsureSuccessStatusCode();
 
-        var newTodo = await newTodoResponse.Content.ReadFromJsonAsync<TodoItemDto>();
+        var newTodo = await updatedPriorityTodo.Content.ReadFromJsonAsync<TodoItemDto>();
 
         newTodo?.Priority.Should().Be(priorityLevel);
+    }
+
+    private static async Task<HttpResponseMessage> CreateNewTodo(HttpClient client, string todoTitle)
+    {
+        var response = await client.PostAsJsonAsync("api/todolist/1/todo",
+            new CreateTodoItemCommand {Title = todoTitle, Note = "Some note"});
+        return response;
     }
 }

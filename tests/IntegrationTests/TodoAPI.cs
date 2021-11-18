@@ -44,20 +44,7 @@ public class TodoAPI : WebApplicationFactory<Program>
             //this is a very basic example of how you can mock 3rd party dependencies when running integration tests, this would also work fine with Moq
             config.AddTransient<IWeatherForecastClient, MockWeatherClient>();
         });
-
-        return base.CreateHost(builder);
-    }
-
-    protected override void ConfigureClient(HttpClient client)
-    {
-        base.ConfigureClient(client);
-
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-    }
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
+        
         builder.ConfigureServices(services =>
         {
             var sp = services.BuildServiceProvider();
@@ -70,7 +57,10 @@ public class TodoAPI : WebApplicationFactory<Program>
 
             try
             {
-                ApplicationDbContextSeed.SeedSampleDataAsync(db).Wait();
+                logger.LogInformation("Seeding test data");
+                
+                db.Database.EnsureDeleted();
+                ApplicationDbContextSeed.SeedSampleDataAsync(db);
             }
             catch (Exception ex)
             {
@@ -78,5 +68,17 @@ public class TodoAPI : WebApplicationFactory<Program>
                                     "database with test messages. Error: {Message}", ex.Message);
             }
         });
+
+        return base.CreateHost(builder);
     }
+
+    protected override void ConfigureClient(HttpClient client)
+    {
+        base.ConfigureClient(client);
+
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+    }
+
+  
 }

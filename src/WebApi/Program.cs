@@ -3,8 +3,9 @@ try
     Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
     Log.Logger = LogConfiguration.CreateLogger();
-    
+
     var builder = WebApplication.CreateBuilder(args);
+
     builder.Host.UseSerilog();
 
     Log.Information("Starting API host");
@@ -44,12 +45,17 @@ try
     }
 
     //This does not seem to work with dotnet 6            
-    builder.Services.AddHealthChecksUI()
-        .AddInMemoryStorage();
+    //builder.Services.AddHealthChecksUI()
+    //  .AddInMemoryStorage();
 
     builder.Services.AddControllers().AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
-    builder.Services.Configure<ApiBehaviorOptions>(options =>
+    builder.Services.AddHttpsRedirection(options =>
+    {
+        options.HttpsPort = 5001;
+    });
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
         options.SuppressModelStateInvalidFilter = true;
     });
@@ -71,10 +77,17 @@ try
 
     var app = builder.Build();
 
-    app.UseApiExceptionHandler(app.Environment.IsDevelopment());
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseApiExceptionHandler(true);    
+    }
+    else
+    {
+        app.UseApiExceptionHandler(false);
+        app.UseHsts();
+    }
 
     app.UseSerilogRequestLogging();
-
     app.UseHttpsRedirection();
 
     app.UseRouting();
@@ -108,7 +121,7 @@ try
     app.MapWeatherForecastEndpoints();
 
     await SeedDatabase(app);
-
+    
     await app.RunAsync();
 
     return 0;
@@ -139,7 +152,7 @@ static async Task SeedDatabase(IHost host)
             await context.Database.MigrateAsync();
         }
 
-        await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+        ApplicationDbContextSeed.SeedSampleDataAsync(context);
     }
     catch (Exception ex)
     {

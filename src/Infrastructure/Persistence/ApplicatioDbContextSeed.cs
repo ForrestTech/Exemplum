@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 public static class ApplicationDbContextSeed
 {
-    public static async Task SeedSampleDataAsync(ApplicationDbContext context)
+    public static void SeedSampleDataAsync(ApplicationDbContext context)
     {
         // Seed, if necessary
-        var lists = await context.TodoLists
+        var lists = context.TodoLists
             .IgnoreQueryFilters()
-            .ToListAsync();
+            .ToList();
 
         if (!lists.Any())
         {
@@ -29,7 +29,7 @@ public static class ApplicationDbContextSeed
 
             context.TodoLists.Add(list);
 
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }

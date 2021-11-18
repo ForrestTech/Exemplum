@@ -5,7 +5,7 @@ using Application.TodoList.Commands;
 using Application.TodoList.Models;
 using Domain.Todo;
 
-
+[Collection("ExemplumApiTests")]
 public class TodoListTests
 {
     private readonly ITestOutputHelper _output;
@@ -80,6 +80,8 @@ public class TodoListTests
         await client.DeleteAsync(response.Headers.Location);
 
         var newTodoResponse = await client.GetAsync(response.Headers.Location);
+        
+        _output.WriteLine($"Getting {response.Headers.Location}");
 
         newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -89,10 +91,10 @@ public class TodoListTests
     {
         await using var application = new TodoAPI(_output);
         var client = application.CreateClient();
-
-        const string todoTitle = "New todo";
+        
+        const string todoListTitle = "New todo";
         var response = await client.PostAsJsonAsync("api/todolist",
-            new CreateTodoListCommand {Title = todoTitle, Colour = Colour.Blue});
+            new CreateTodoListCommand {Title = todoListTitle, Colour = Colour.Blue});
 
         response.EnsureSuccessStatusCode();
 
@@ -102,7 +104,7 @@ public class TodoListTests
 
         var newList = await newTodoResponse.Content.ReadFromJsonAsync<TodoListDto>();
 
-        newList?.Title.Should().Be(todoTitle);
+        newList?.Title.Should().Be(todoListTitle);
         newList?.Colour.Should().Be(Colour.Blue);
     }
 }
