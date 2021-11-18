@@ -1,11 +1,7 @@
-﻿namespace Exemplum.UnitTests.Domain.Todo
-{
+﻿namespace Exemplum.UnitTests.Domain.Todo;
+
     using Exemplum.Application.Todo.Queries;
     using Exemplum.Domain.Todo;
-    using FluentAssertions;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Xunit;
 
     public class GetCompletedTodoItemsQueryTests
     {
@@ -14,14 +10,14 @@
         {
             var todos = new List<TodoItem>
             {
-                new TodoItem("Apples") { Done = true },
-                new TodoItem("Milk") { Done = true },
-                new TodoItem("Bread") { Done = true },
-                new TodoItem("Toilet paper"),
-                new TodoItem("Pasta"),
-                new TodoItem("Tissues"),
-                new TodoItem("Tuna"),
-                new TodoItem("Water")
+                new("Apples") { Done = true },
+                new("Milk") { Done = true },
+                new("Bread") { Done = true },
+                new("Toilet paper"),
+                new("Pasta"),
+                new("Tissues"),
+                new("Tuna"),
+                new("Water")
             };
 
             var sut = new GetCompletedTodoItemsQuery();
@@ -32,4 +28,3 @@
             actual.Count.Should().Be(3);
         }
     }
-}

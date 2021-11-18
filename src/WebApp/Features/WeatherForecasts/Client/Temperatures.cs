@@ -1,7 +1,6 @@
-﻿namespace Exemplum.WebApp.Features.WeatherForecasts.Client
+﻿namespace Exemplum.WebApp.Features.WeatherForecasts.Client;
+
+public class Temperatures
 {
-    public class Temperatures
-    {
-        public double Temp { get; set; }
-    }
+    public double Temp { get; set; }
 }

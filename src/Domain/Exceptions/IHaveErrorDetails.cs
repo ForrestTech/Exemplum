@@ -1,7 +1,6 @@
-namespace Exemplum.Domain.Exceptions
+namespace Exemplum.Domain.Exceptions;
+
+public interface IHaveErrorDetails
 {
-    public interface IHaveErrorDetails
-    {
-        string Details { get; }
-    }
+    string Details { get; }
 }

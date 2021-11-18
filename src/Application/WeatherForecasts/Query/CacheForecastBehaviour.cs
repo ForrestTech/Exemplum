@@ -1,28 +1,25 @@
-﻿namespace Exemplum.Application.WeatherForecasts.Query
+﻿namespace Exemplum.Application.WeatherForecasts.Query;
+
+using Common.Caching;
+using MediatR;
+using Models;
+
+public class CacheForecastBehaviour : IPipelineBehavior<GetWeatherForecastQuery, WeatherForecast>
 {
-    using Common.Caching;
-    using MediatR;
-    using Models;
-    using System.Threading;
-    using System.Threading.Tasks;
+    private readonly IApplicationCache<WeatherForecast> _cache;
 
-    public class CacheForecastBehaviour : IPipelineBehavior<GetWeatherForecastQuery, WeatherForecast> 
+    public CacheForecastBehaviour(IApplicationCache<WeatherForecast> cache)
     {
-        private readonly IApplicationCache<WeatherForecast> _cache;
+        _cache = cache;
+    }
 
-        public CacheForecastBehaviour(IApplicationCache<WeatherForecast> cache)
-        {
-            _cache = cache;
-        }
+    public async Task<WeatherForecast> Handle(GetWeatherForecastQuery request, CancellationToken cancellationToken,
+        RequestHandlerDelegate<WeatherForecast> next)
+    {
+        string key = request?.ToString() ?? string.Empty;
 
-        public async Task<WeatherForecast> Handle(GetWeatherForecastQuery request, CancellationToken cancellationToken,
-            RequestHandlerDelegate<WeatherForecast> next)
-        {
-            string key = request?.ToString() ?? string.Empty;
+        var response = await _cache.GetOrAddAsync(key, () => next(), cancellationToken: cancellationToken);
 
-            var response = await _cache.GetOrAddAsync(key, () => next(), cancellationToken: cancellationToken);
-
-            return response;
-        }
+        return response;
     }
 }

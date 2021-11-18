@@ -1,12 +1,11 @@
-﻿namespace Exemplum.WebApp.Extensions
-{
-    using Microsoft.AspNetCore.Components.Web;
+﻿namespace Exemplum.WebApp.Extensions;
 
-    public static class EventArgsExtensions
+using Microsoft.AspNetCore.Components.Web;
+
+public static class EventArgsExtensions
+{
+    public static bool IsEnter(this KeyboardEventArgs args)
     {
-        public static bool IsEnter(this KeyboardEventArgs args)
-        {
-            return args.Code is "Enter" or "NumpadEnter";
-        }
+        return args.Code is "Enter" or "NumpadEnter";
     }
 }

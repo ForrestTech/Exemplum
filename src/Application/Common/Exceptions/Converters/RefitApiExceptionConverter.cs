@@ -1,32 +1,30 @@
-namespace Exemplum.Application.Common.Exceptions.Converters
+namespace Exemplum.Application.Common.Exceptions.Converters;
+
+using Refit;
+
+public class RefitApiExceptionConverter : ICustomExceptionErrorConverter
 {
-    using Refit;
-    using System;
-
-    public class RefitApiExceptionConverter : ICustomExceptionErrorConverter
+    public bool CanConvert(Exception exception)
     {
-        public bool CanConvert(Exception exception)
+        return exception is ApiException;
+    }
+
+    public ErrorInfo Convert(Exception exception, bool includeSensitiveDetails)
+    {
+        if (exception is not ApiException apiException)
         {
-            return exception is ApiException;
+            return new ErrorInfo();
         }
 
-        public ErrorInfo Convert(Exception exception, bool includeSensitiveDetails)
+        var info = new ErrorInfo {Message = "An error occurred while processing your request."};
+
+        if (includeSensitiveDetails)
         {
-            if (exception is not ApiException apiException)
-            {
-                return new ErrorInfo();
-            }
-
-            var info = new ErrorInfo { Message = "An error occurred while processing your request." };
-
-            if (includeSensitiveDetails)
-            {
-                info.Details = $"Exception calling external system.  Uri:'{apiException?.Uri}' " +
-                               $"StatusCode: '{apiException?.StatusCode}' Reason:'{apiException?.ReasonPhrase}' " +
-                               $"Message:'{exception?.Message}'";
-            }
-
-            return info;
+            info.Details = $"Exception calling external system.  Uri:'{apiException?.Uri}' " +
+                           $"StatusCode: '{apiException?.StatusCode}' Reason:'{apiException?.ReasonPhrase}' " +
+                           $"Message:'{exception?.Message}'";
         }
+
+        return info;
     }
 }

@@ -1,16 +1,13 @@
-﻿namespace Exemplum.IntegrationTests
-{
-    using Application.WeatherForecasts;
-    using Application.WeatherForecasts.Models;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿namespace Exemplum.IntegrationTests;
 
-    public class MockWeatherClient : IWeatherForecastClient
+using Application.WeatherForecasts;
+using Application.WeatherForecasts.Models;
+
+public class MockWeatherClient : IWeatherForecastClient
+{
+    public Task<WeatherForecast> GetForecast(decimal lat, decimal lon, string appId,
+        CancellationToken cancellationToken)
     {
-        public Task<WeatherForecast> GetForecast(decimal lat, decimal lon, string appId,
-            CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new WeatherForecast { Name = "MockResult" });
-        }
+        return Task.FromResult(new WeatherForecast {Name = "MockResult"});
     }
 }

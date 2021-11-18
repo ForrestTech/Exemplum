@@ -1,10 +1,9 @@
-﻿namespace Exemplum.Application.WeatherForecasts
+﻿namespace Exemplum.Application.WeatherForecasts;
+
+public class WeatherForecastOptions
 {
-    public class WeatherForecastOptions
-    {
-        public const string Section = "WeatherForecast";
-        public const string BaseAddress = nameof(BaseAddress);
-        
-        public string AppId { get; set; } = string.Empty;
-    }
+    public const string Section = "WeatherForecast";
+    public const string BaseAddress = nameof(BaseAddress);
+
+    public string AppId { get; set; } = string.Empty;
 }

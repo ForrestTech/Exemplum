@@ -1,9 +1,8 @@
-﻿namespace Exemplum.Application.Common.Mapping
-{
-    using AutoMapper;
+﻿namespace Exemplum.Application.Common.Mapping;
 
-    public interface IMapFrom<T>
-    {   
-        void Mapping(Profile profile) => profile.CreateMap(typeof(T), GetType());
-    }
+using AutoMapper;
+
+public interface IMapFrom<T>
+{
+    void Mapping(Profile profile) => profile.CreateMap(typeof(T), GetType());
 }

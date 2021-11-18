@@ -1,9 +1,6 @@
-﻿namespace Exemplum.WebApp.Location
-{
-    using System.Threading.Tasks;
+﻿namespace Exemplum.WebApp.Location;
 
-    public interface ILocationService
-    {
-        Task<GeoLocation?> GetCurrentLocation();
-    }
+public interface ILocationService
+{
+    Task<GeoLocation?> GetCurrentLocation();
 }

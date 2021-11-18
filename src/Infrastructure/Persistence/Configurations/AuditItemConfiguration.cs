@@ -1,19 +1,18 @@
-﻿namespace Exemplum.Infrastructure.Persistence.Configurations
-{
-    using Domain.Audit;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿namespace Exemplum.Infrastructure.Persistence.Configurations;
 
-    public class AuditItemConfiguration : IEntityTypeConfiguration<AuditItem>
+using Domain.Audit;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+public class AuditItemConfiguration : IEntityTypeConfiguration<AuditItem>
+{
+    public void Configure(EntityTypeBuilder<AuditItem> builder)
     {
-        public void Configure(EntityTypeBuilder<AuditItem> builder)
-        {
-            builder.Property(t => t.EventType)
-                .HasMaxLength(500)
-                .IsRequired();
-            
-            builder.Property(t => t.EventData)
-                .IsRequired();
-        }
+        builder.Property(t => t.EventType)
+            .HasMaxLength(500)
+            .IsRequired();
+
+        builder.Property(t => t.EventData)
+            .IsRequired();
     }
 }

@@ -1,53 +1,51 @@
-﻿namespace Exemplum.Infrastructure.Caching
+﻿namespace Exemplum.Infrastructure.Caching;
+
+using Application.Common.Caching;
+using Application.WeatherForecasts.Models;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+public static class CachingInfrastructureExtensions
 {
-    using Application.Common.Caching;
-    using Application.WeatherForecasts.Models;
-    using Microsoft.Extensions.Caching.Distributed;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
-    using System.Collections.Generic;
-
-    public static class CachingInfrastructureExtensions
+    public static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
+        services.AddSingleton(typeof(IApplicationCache<>), typeof(ApplicationCache<>));
+
+        services.AddTransient<ICacheSerializer, Utf8JsonCacheSerializer>();
+        services.AddDistributedMemoryCache();
+
+        if (!configuration.UseInMemoryStorage())
         {
-            services.AddSingleton(typeof(IApplicationCache<>), typeof(ApplicationCache<>));
-            
-            services.AddTransient<ICacheSerializer, Utf8JsonCacheSerializer>();
-            services.AddDistributedMemoryCache();
-            
-            if (!configuration.UseInMemoryStorage())
+            services.AddStackExchangeRedisCache(options =>
             {
-                services.AddStackExchangeRedisCache(options =>
-                {
-                    options.Configuration = "localhost";
-                });
-            }
-
-            services.Configure<CacheOptions>(options =>
-            {
-                options.KeyPrefix = "Exemplum";
-                options.HideErrors = false;
-                options.GlobalCacheEntryOptions = new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                };
-
-                var cacheItemConfigurators = new Dictionary<Type, DistributedCacheEntryOptions?>
-                {
-                    {
-                        typeof(WeatherForecast),
-                        new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) }
-                    }
-                };
-                options.CacheConfigurators.Add(cacheItemType =>
-                    cacheItemConfigurators.TryGetValue(cacheItemType, out DistributedCacheEntryOptions? cacheItemEntryOptions)
-                        ? cacheItemEntryOptions
-                        : null);
+                options.Configuration = "localhost";
             });
-
-            return services;
         }
+
+        services.Configure<CacheOptions>(options =>
+        {
+            options.KeyPrefix = "Exemplum";
+            options.HideErrors = false;
+            options.GlobalCacheEntryOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            };
+
+            var cacheItemConfigurators = new Dictionary<Type, DistributedCacheEntryOptions?>
+            {
+                {
+                    typeof(WeatherForecast),
+                    new DistributedCacheEntryOptions {AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)}
+                }
+            };
+            options.CacheConfigurators.Add(cacheItemType =>
+                cacheItemConfigurators.TryGetValue(cacheItemType,
+                    out DistributedCacheEntryOptions? cacheItemEntryOptions)
+                    ? cacheItemEntryOptions
+                    : null);
+        });
+
+        return services;
     }
 }

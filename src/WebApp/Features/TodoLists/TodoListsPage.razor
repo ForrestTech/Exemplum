@@ -63,7 +63,7 @@
 
 @code{
 
-    List<TodoList> todoLists = new List<TodoList>();
+    List<TodoList> todoLists = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -120,6 +120,6 @@
     }
 
     static string TodoListId(int id) => $"todo-list-text-{id}";
-    static Dictionary<string, object> TodoListAttributes(int id) => new Dictionary<string, object> { { "id", TodoListId(id) } };
+    static Dictionary<string, object> TodoListAttributes(int id) => new() { { "id", TodoListId(id) } };
 
 }

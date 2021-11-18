@@ -1,52 +1,49 @@
-﻿namespace Exemplum.Application.TodoList.Commands
+﻿namespace Exemplum.Application.TodoList.Commands;
+
+using Common.Exceptions;
+using Common.Security;
+using Domain.Todo;
+using FluentValidation;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
+
+[Authorize(Policy = Security.Policy.TodoDeleteAccess)]
+public class DeleteTodoListCommand : IRequest
 {
-    using Common.Exceptions;
-    using Common.Security;
-    using Domain.Todo;
-    using FluentValidation;
-    using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Persistence;
-    using System.Threading;
-    using System.Threading.Tasks;
+    public int ListId { get; set; }
+}
 
-    [Authorize(Policy = Security.Policy.TodoDeleteAccess)]
-    public class DeleteTodoListCommand : IRequest
+public class DeleteTodoListCommandValidator : AbstractValidator<DeleteTodoListCommand>
+{
+    public DeleteTodoListCommandValidator()
     {
-        public int ListId { get; set; }
+        RuleFor(x => x.ListId).GreaterThanOrEqualTo(1);
+    }
+}
+
+public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public DeleteTodoListCommandHandler(IApplicationDbContext context)
+    {
+        _context = context;
     }
 
-    public class DeleteTodoListCommandValidator : AbstractValidator<DeleteTodoListCommand>
+    public async Task<Unit> Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
     {
-        public DeleteTodoListCommandValidator()
-        {
-            RuleFor(x => x.ListId).GreaterThanOrEqualTo(1);
-        }
-    }
+        var list = await _context.TodoLists
+            .SingleOrDefaultAsync(x => x.Id == request.ListId, cancellationToken);
 
-    public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>
-    {
-        private readonly IApplicationDbContext _context;
-
-        public DeleteTodoListCommandHandler(IApplicationDbContext context)
+        if (list == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(TodoList), new {request.ListId});
         }
 
-        public async Task<Unit> Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
-        {
-            var list = await _context.TodoLists
-                .SingleOrDefaultAsync(x => x.Id == request.ListId, cancellationToken);
+        list.IsDeleted = true;
+        await _context.SaveChangesAsync(cancellationToken);
 
-            if (list == null)
-            {
-                throw new NotFoundException(nameof(TodoList), new { request.ListId });
-            }
-
-            list.IsDeleted = true;
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

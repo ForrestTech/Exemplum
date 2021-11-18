@@ -1,21 +1,19 @@
-namespace Exemplum.Application.Common.Security
+namespace Exemplum.Application.Common.Security;
+
+using Domain.Extensions;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class AuthorizeAttribute : Attribute
 {
-    using Domain.Extensions;
-    using System;
-
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class AuthorizeAttribute : Attribute
+    public bool HasAuthenticationRequirements
     {
-        public bool HasAuthenticationRequirements
+        get
         {
-            get
-            {
-                return Roles.HasValue() || Policy.HasValue();
-            }
+            return Roles.HasValue() || Policy.HasValue();
         }
-
-        public string Roles { get; set; } = string.Empty;
-
-        public string Policy { get; set; } = string.Empty;
     }
+
+    public string Roles { get; set; } = string.Empty;
+
+    public string Policy { get; set; } = string.Empty;
 }

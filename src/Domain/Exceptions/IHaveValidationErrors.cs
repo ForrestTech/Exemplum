@@ -1,9 +1,6 @@
-namespace Exemplum.Domain.Exceptions
-{
-    using System.Collections.Generic;
+namespace Exemplum.Domain.Exceptions;
 
-    public interface IHaveValidationErrors
-    {
-        IDictionary<string, string[]> ValidationErrors { get; }
-    }
+public interface IHaveValidationErrors
+{
+    IDictionary<string, string[]> ValidationErrors { get; }
 }

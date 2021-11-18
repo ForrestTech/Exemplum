@@ -1,29 +1,26 @@
-namespace Exemplum.EndToEndTests.Steps
+namespace Exemplum.EndToEndTests.Steps;
+
+using Pages;
+
+[Binding]
+public class TaskListSteps
 {
-    using Pages;
-    using System.Threading.Tasks;
-    using TechTalk.SpecFlow;
+    public TaskListPage TaskListPage { get; }
 
-    [Binding]
-    public class TaskListSteps
+    public TaskListSteps(TaskListPage taskListPage)
     {
-        public TaskListPage TaskListPage { get; }
+        TaskListPage = taskListPage;
+    }
 
-        public TaskListSteps(TaskListPage taskListPage)
-        {
-            TaskListPage = taskListPage;
-        }
+    [When(@"the user navigates to the task lists")]
+    public async Task WhenTheUserNavigatesToTheTaskLists()
+    {
+        await TaskListPage.Navigate();
+    }
 
-        [When(@"the user navigates to the task lists")]
-        public async Task WhenTheUserNavigatesToTheTaskLists()
-        {
-            await TaskListPage.Navigate();
-        }
-
-        [Then(@"the user can access the task lists page")]
-        public async Task ThenTheUserCanAccessTheTaskListsPage()
-        {
-            await TaskListPage.ValidateCanAccessPage();
-        }
+    [Then(@"the user can access the task lists page")]
+    public async Task ThenTheUserCanAccessTheTaskListsPage()
+    {
+        await TaskListPage.ValidateCanAccessPage();
     }
 }

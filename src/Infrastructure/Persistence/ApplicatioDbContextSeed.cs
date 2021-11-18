@@ -1,39 +1,35 @@
-﻿namespace Exemplum.Infrastructure.Persistence
+﻿namespace Exemplum.Infrastructure.Persistence;
+
+using Domain.Todo;
+using Microsoft.EntityFrameworkCore;
+
+public static class ApplicationDbContextSeed
 {
-    using Domain.Todo;
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
-    public static class ApplicationDbContextSeed
+    public static void SeedSampleDataAsync(ApplicationDbContext context)
     {
-        public static async Task SeedSampleDataAsync(ApplicationDbContext context)
+        // Seed, if necessary
+        var lists = context.TodoLists
+            .IgnoreQueryFilters()
+            .ToList();
+
+        if (!lists.Any())
         {
-            // Seed, if necessary
-            var lists = await context.TodoLists
-                .IgnoreQueryFilters()
-                .ToListAsync();
-
-            if (!lists.Any())
+            var list = new TodoList("Shopping", Colour.Blue);
+            list.AddToDo(new List<TodoItem>
             {
-                var list = new TodoList("Shopping", Colour.Blue);
-                list.AddToDo(new List<TodoItem>
-                {
-                    new TodoItem("Apples") { Done = true },
-                    new TodoItem("Milk") { Done = true },
-                    new TodoItem("Bread") { Done = true },
-                    new TodoItem("Toilet paper"),
-                    new TodoItem("Pasta"),
-                    new TodoItem("Tissues"),
-                    new TodoItem("Tuna"),
-                    new TodoItem("Water")
-                });
+                new("Apples") {Done = true},
+                new("Milk") {Done = true},
+                new("Bread") {Done = true},
+                new("Toilet paper"),
+                new("Pasta"),
+                new("Tissues"),
+                new("Tuna"),
+                new("Water")
+            });
 
-                context.TodoLists.Add(list);
+            context.TodoLists.Add(list);
 
-                await context.SaveChangesAsync();
-            }
+            context.SaveChanges();
         }
     }
 }

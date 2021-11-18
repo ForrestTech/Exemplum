@@ -1,20 +1,19 @@
-﻿namespace Exemplum.Infrastructure.Identity
+﻿namespace Exemplum.Infrastructure.Identity;
+
+using Application.Common.Identity;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+
+public class CurrentUser : ICurrentUser
 {
-    using Application.Common.Identity;
-    using Microsoft.AspNetCore.Http;
-    using System.Security.Claims;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public class CurrentUser : ICurrentUser
+    public CurrentUser(IHttpContextAccessor httpContextAccessor)
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public CurrentUser(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
-
-        public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        public ClaimsPrincipal? Principal => _httpContextAccessor.HttpContext?.User;
+        _httpContextAccessor = httpContextAccessor;
     }
+
+    public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    public ClaimsPrincipal? Principal => _httpContextAccessor.HttpContext?.User;
 }

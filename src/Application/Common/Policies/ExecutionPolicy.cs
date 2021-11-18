@@ -1,7 +1,6 @@
-﻿namespace Exemplum.Application.Common.Policies
+﻿namespace Exemplum.Application.Common.Policies;
+
+public static class ExecutionPolicy
 {
-    public static class ExecutionPolicy
-    {
-        public static readonly string RetryPolicy = nameof(RetryPolicy);
-    }
+    public static readonly string RetryPolicy = nameof(RetryPolicy);
 }

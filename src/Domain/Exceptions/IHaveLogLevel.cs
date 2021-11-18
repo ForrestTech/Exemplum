@@ -1,9 +1,6 @@
-namespace Exemplum.Domain.Exceptions
-{
-    using Microsoft.Extensions.Logging;
+namespace Exemplum.Domain.Exceptions;
 
-    public interface IHaveLogLevel
-    {
-        LogLevel LogLevel { get; set; }
-    }
+public interface IHaveLogLevel
+{
+    LogLevel LogLevel { get; set; }
 }

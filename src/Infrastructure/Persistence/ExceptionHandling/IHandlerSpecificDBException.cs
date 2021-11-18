@@ -1,10 +1,7 @@
-﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling
-{
-    using System;
+﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling;
 
-    public interface IHandlerSpecificDBException
-    {
-        bool CanHandle(Exception exception);
-        void HandleException(Exception exception);
-    }
+public interface IHandlerSpecificDBException
+{
+    bool CanHandle(Exception exception);
+    void HandleException(Exception exception);
 }

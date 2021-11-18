@@ -1,19 +1,16 @@
-﻿namespace Exemplum.Application.Persistence
+﻿namespace Exemplum.Application.Persistence;
+
+public static class QueryExtensions
 {
-    using System.Linq;
-
-    public static class QueryExtensions
+    public static IQueryable<T> Query<T>(this IQueryable<T> query, IQueryObject<T> queryObject) where T : class
     {
-        public static IQueryable<T> Query<T>(this IQueryable<T> query, IQueryObject<T> queryObject) where T : class
-        {
-            query = queryObject.ApplyQuery(query);
+        query = queryObject.ApplyQuery(query);
 
-            return query;
-        }
+        return query;
     }
-    
-    public interface IQueryObject<T>
-    {
-        public IQueryable<T> ApplyQuery(IQueryable<T> query);
-    }
+}
+
+public interface IQueryObject<T>
+{
+    public IQueryable<T> ApplyQuery(IQueryable<T> query);
 }

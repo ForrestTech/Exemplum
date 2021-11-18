@@ -1,9 +1,6 @@
-﻿namespace Exemplum.Domain.Common.DateAndTime
-{
-    using System;
+﻿namespace Exemplum.Domain.Common.DateAndTime;
 
-    public interface IClock
-    {
-        public DateTime Now { get; }    
-    }
+public interface IClock
+{
+    public DateTime Now { get; }
 }

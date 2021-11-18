@@ -1,77 +1,71 @@
-﻿namespace Exemplum.Application.TodoList.Commands
+﻿namespace Exemplum.Application.TodoList.Commands;
+
+using Common.Security;
+using Domain.Exceptions;
+using Domain.Todo;
+using Models;
+using System.Net;
+
+[Authorize(Policy = Security.Policy.TodoWriteAccess)]
+public class CreateTodoListCommand : IRequest<TodoListDto>
 {
-    using AutoMapper;
-    using Common.Security;
-    using Domain.Todo;
-    using FluentValidation;
-    using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Models;
-    using Persistence;
-    using System.Threading;
-    using System.Threading.Tasks;
+    public string Title { get; set; } = string.Empty;
 
-    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
-    public class CreateTodoListCommand : IRequest<TodoListDto>
+    public string? Colour { get; set; }
+}
+
+public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public CreateTodoListCommandValidator(IApplicationDbContext context)
     {
-        public string Title { get; set; } = string.Empty;
+        _context = context;
 
-        public string? Colour { get; set; }
+        RuleFor(x => x.Title).NotEmpty()
+            .MaximumLength(300)
+            .MustAsync(BeUniqueTitle)
+            .WithMessage("Todo list title must be unique");
+
+        RuleFor(x => x.Colour)
+            .Must(x => x == null || Colour.IsValidColour(x))
+            .WithMessage("{PropertyName} must be a valid Colour");
     }
 
-    public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
+
+    private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
+        var todo = await _context.TodoLists
+            .SingleOrDefaultAsync(l => l.Title == title, cancellationToken);
 
-        public CreateTodoListCommandValidator(IApplicationDbContext context)
-        {
-            _context = context;
+        return todo == null;
+    }
+}
 
-            RuleFor(x => x.Title).NotEmpty()
-                .MaximumLength(300)
-                .MustAsync(BeUniqueTitle)
-                .WithMessage("Todo list title must be unique");
+public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, TodoListDto>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-            RuleFor(x => x.Colour)
-                .Must(x => x == null || Colour.IsValidColour(x))
-                .WithMessage("{PropertyName} must be a valid Colour");
-        }
-
-
-        private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
-        {
-            var todo = await _context.TodoLists
-                .SingleOrDefaultAsync(l => l.Title == title, cancellationToken: cancellationToken);
-
-            return todo == null;
-        }
+    public CreateTodoListCommandHandler(IApplicationDbContext context, IMapper mapper)
+    {
+        _context = context;
+        _mapper = mapper;
     }
 
-    public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, TodoListDto>
+    public async Task<TodoListDto> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        var list = new TodoList(request.Title);
 
-        public CreateTodoListCommandHandler(IApplicationDbContext context, IMapper mapper)
+        if (request.Colour is not null)
         {
-            _context = context;
-            _mapper = mapper;
+            list.Colour = Colour.From(request.Colour);
         }
 
-        public async Task<TodoListDto> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
-        {
-            var list = new TodoList(request.Title);
+        _context.TodoLists.Add(list);
 
-            if (request.Colour is not null)
-            {
-                list.Colour = Colour.From(request.Colour);
-            }
+        await _context.SaveChangesAsync(cancellationToken);
 
-            _context.TodoLists.Add(list);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return _mapper.Map<TodoListDto>(list);
-        }
+        return _mapper.Map<TodoListDto>(list);
     }
 }

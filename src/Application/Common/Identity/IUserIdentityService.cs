@@ -1,11 +1,10 @@
-namespace Exemplum.Application.Common.Identity
-{
-    public interface IUserIdentityService
-    {
-        string? UserId { get; }
-        
-        string? GetUserNameAsync();
+namespace Exemplum.Application.Common.Identity;
 
-        bool IsInRoleAsync(string role);
-    }
+public interface IUserIdentityService
+{
+    string? UserId { get; }
+
+    string? GetUserNameAsync();
+
+    bool IsInRoleAsync(string role);
 }

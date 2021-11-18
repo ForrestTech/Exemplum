@@ -1,7 +1,6 @@
-namespace Exemplum.Domain.Common
+namespace Exemplum.Domain.Common;
+
+public interface ISoftDelete
 {
-    public interface ISoftDelete
-    {
-        public bool IsDeleted { get; set; }
-    }
+    public bool IsDeleted { get; set; }
 }

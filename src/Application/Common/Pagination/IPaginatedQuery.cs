@@ -1,8 +1,7 @@
-﻿namespace Exemplum.Application.Common.Pagination
+﻿namespace Exemplum.Application.Common.Pagination;
+
+public interface IPaginatedQuery
 {
-    public interface IPaginatedQuery
-    {
-        int PageNumber { get; set; }
-        int PageSize { get; set; }
-    }
+    int PageNumber { get; set; }
+    int PageSize { get; set; }
 }

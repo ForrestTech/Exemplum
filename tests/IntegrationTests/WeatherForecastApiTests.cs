@@ -1,17 +1,24 @@
 ﻿namespace Exemplum.IntegrationTests
 {
     using Application.WeatherForecasts.Models;
-    using FluentAssertions;
-    using System.Net.Http.Json;
-    using System.Threading.Tasks;
-    using Xunit;
 
-    public partial class ExemplumApiTests : IClassFixture<WebHostFixture>
+    [Collection("ExemplumApiTests")]
+    public class WeatherApiTests  
     {
+        private readonly ITestOutputHelper _output;
+
+        public WeatherApiTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+        
         [Fact]
         public async Task WeatherForecast_get_returns_valid_forecast()
         {
-            var response = await _client.GetAsync("api/weatherforecast?lat=11.96&lon=108.43");
+            await using var application = new TodoAPI(_output);
+            var client = application.CreateClient();
+            
+            var response = await client.GetAsync("api/weatherforecast?lat=11.96&lon=108.43");
 
             response.EnsureSuccessStatusCode();
             

@@ -1,40 +1,35 @@
-namespace Exemplum.Application.Common.Security
+namespace Exemplum.Application.Common.Security;
+
+using Domain.Exceptions;
+using Domain.Extensions;
+
+public class ForbiddenAccessException : BusinessException, IExceptionWithSelfLogging
 {
-    using Domain.Exceptions;
-    using Domain.Extensions;
-    using Microsoft.Extensions.Logging;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    private readonly Type _requestType;
 
-    public class ForbiddenAccessException : BusinessException, IExceptionWithSelfLogging
+    public ForbiddenAccessException(Type requestType) : base("Forbidden")
     {
-        private readonly Type _requestType;
+        _requestType = requestType;
+    }
 
-        public ForbiddenAccessException(Type requestType) : base("Forbidden")
+    public IEnumerable<string> Roles { get; init; } = new List<string>();
+
+    public string Policy { get; init; } = string.Empty;
+
+    public void Log(ILogger logger)
+    {
+        if (Policy.HasValue())
         {
-            _requestType = requestType;
+            logger.Log(LogLevel,
+                "User is not authorised to make a '{request}' request they did not comply with the {policy} policy",
+                _requestType.Name, Policy);
         }
 
-        public IEnumerable<string> Roles { get; init; } = new List<string>();
-
-        public string Policy { get; init; } = string.Empty;
-
-        public void Log(ILogger logger)
+        if (Roles.Any())
         {
-            if (Policy.HasValue())
-            {
-                logger.Log(LogLevel,
-                    "User is not authorised to make a '{request}' request they did not comply with the {policy} policy",
-                    _requestType.Name, Policy);
-            }
-
-            if (Roles.Any())
-            {
-                logger.Log(LogLevel,
-                    "User is not authorised to make a '{request}' request they are not a member of one of the following roles '{roles}' ",
-                    _requestType.Name, string.Join(",", Roles));
-            }
+            logger.Log(LogLevel,
+                "User is not authorised to make a '{request}' request they are not a member of one of the following roles '{roles}' ",
+                _requestType.Name, string.Join(",", Roles));
         }
     }
 }

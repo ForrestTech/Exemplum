@@ -92,9 +92,9 @@
     [Parameter]
     public string ListName { get; set; } = string.Empty;
 
-    List<TodoItem> todoItems = new List<TodoItem>();
-    TodoList list = new TodoList();
-    NewTodoItem newTodoItem = new NewTodoItem();
+    List<TodoItem> todoItems = new();
+    TodoList list = new();
+    NewTodoItem newTodoItem = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -160,7 +160,7 @@
     }
 
     static string TodoItemId(int id) => $"todo-item-text-{id}";
-    static Dictionary<string, object> TodoItemAttributes(int id) => new Dictionary<string, object> { { "id", TodoItemId(id) } };
+    static Dictionary<string, object> TodoItemAttributes(int id) => new() { { "id", TodoItemId(id) } };
 
     static string StyleForDone(bool done)
     {

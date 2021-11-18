@@ -1,13 +1,10 @@
-﻿namespace Exemplum.WebApp.Features.WeatherForecasts.Client
+﻿namespace Exemplum.WebApp.Features.WeatherForecasts.Client;
+
+public class WeatherForecast
 {
-    using System.Collections.Generic;
+    public string Name { get; set; } = string.Empty;
 
-    public class WeatherForecast
-    {
-        public string Name { get; set; } = string.Empty;
+    public List<Weather> Weather { get; set; } = new();
 
-        public List<Weather> Weather { get; set; } = new List<Weather>();
-
-        public Temperatures Main { get; set; } = new Temperatures();
-    }
+    public Temperatures Main { get; set; } = new();
 }

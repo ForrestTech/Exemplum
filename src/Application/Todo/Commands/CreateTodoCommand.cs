@@ -1,70 +1,68 @@
-﻿namespace Exemplum.Application.Todo.Commands
+﻿namespace Exemplum.Application.Todo.Commands;
+
+using AutoMapper;
+using Common.Exceptions;
+using Common.Security;
+using Domain.Todo;
+using FluentValidation;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Models;
+using Persistence;
+
+[Authorize(Policy = Security.Policy.TodoWriteAccess)]
+public class CreateTodoItemCommand : IRequest<TodoItemDto>
 {
-    using AutoMapper;
-    using Common.Security;
-    using Domain.Todo;
-    using FluentValidation;
-    using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Models;
-    using Persistence;
-    using System.Linq;
-    using System.Text.Json.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
+    [JsonIgnore]
+    public int ListId { get; set; }
 
-    [Authorize(Policy = Security.Policy.TodoWriteAccess)]
-    public class CreateTodoItemCommand : IRequest<TodoItemDto>
+    public string Title { get; set; } = string.Empty;
+
+    public string Note { get; set; } = string.Empty;
+}
+
+public class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCommand>
+{
+    public CreateTodoItemCommandValidator()
     {
-        [JsonIgnore]
-        public int ListId { get; set; }
+        RuleFor(x => x.ListId).GreaterThan(0);
+        RuleFor(x => x.Title).NotEmpty()
+            .MaximumLength(200)
+            .WithMessage("Title must not exceed 200 characters.");
 
-        public string Title { get; set; } = string.Empty;
+        RuleFor(x => x.Note).NotEmpty()
+            .MaximumLength(2000);
+    }
+}
 
-        public string Note { get; set; } = string.Empty;
+public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, TodoItemDto>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public CreateTodoItemCommandHandler(IApplicationDbContext context, IMapper mapper)
+    {
+        _context = context;
+        _mapper = mapper;
     }
 
-    public class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCommand>
+    public async Task<TodoItemDto> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
     {
-        public CreateTodoItemCommandValidator()
+        var aggregate = await _context.TodoLists
+            .Where(x => x.Id == request.ListId)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (aggregate == null)
         {
-            RuleFor(x => x.ListId).GreaterThan(0);
-            RuleFor(x => x.Title).NotEmpty()
-                .MaximumLength(200)
-                .WithMessage("Title must not exceed 200 characters.");
-
-            RuleFor(x => x.Note).NotEmpty()
-                .MaximumLength(2000);
-        }
-    }
-
-    public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, TodoItemDto>
-    {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-
-        public CreateTodoItemCommandHandler(IApplicationDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
+            throw new NotFoundException(nameof(TodoItem), new {request.ListId});
         }
 
-        public async Task<TodoItemDto> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
-        {
-            var aggregate = await _context.TodoLists
-                .Where(x => x.Id == request.ListId)
-                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+        var entity = new TodoItem(request.Title) {Note = request.Note};
 
-            var entity = new TodoItem(request.Title)
-            {
-                Note = request.Note
-            };
+        aggregate.AddToDo(entity);
 
-            aggregate.AddToDo(entity);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return _mapper.Map<TodoItemDto>(entity);
-        }
+        return _mapper.Map<TodoItemDto>(entity);
     }
 }

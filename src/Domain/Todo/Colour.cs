@@ -30,7 +30,7 @@
                    && code.All(x => Char.IsLetterOrDigit(x) || x == '#');
         }
 
-        public static Colour Blue => new Colour("#6666FF");
+        public static Colour Blue => new("#6666FF");
 
         public string Code { get; private set; }
         

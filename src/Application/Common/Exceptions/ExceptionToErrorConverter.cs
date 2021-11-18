@@ -1,95 +1,91 @@
-namespace Exemplum.Application.Common.Exceptions
+namespace Exemplum.Application.Common.Exceptions;
+
+using Domain.Common.Extensions;
+using Domain.Exceptions;
+using Domain.Extensions;
+using System.Net;
+
+public class ExceptionToErrorConverter : IExceptionToErrorConverter
 {
-    using Domain.Common.Extensions;
-    using Domain.Exceptions;
-    using Domain.Extensions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
+    private readonly IEnumerable<ICustomExceptionErrorConverter> _customConverters;
 
-    public class ExceptionToErrorConverter : IExceptionToErrorConverter
+    public ExceptionToErrorConverter(IEnumerable<ICustomExceptionErrorConverter> customConverters)
     {
-        private readonly IEnumerable<ICustomExceptionErrorConverter> _customConverters;
+        _customConverters = customConverters;
+    }
 
-        public ExceptionToErrorConverter(IEnumerable<ICustomExceptionErrorConverter> customConverters)
+    public ErrorInfo Convert(Exception exception, bool includeSensitiveDetails)
+    {
+        var customConverter = _customConverters.SingleOrDefault(x => x.CanConvert(exception));
+
+        if (customConverter != null)
         {
-            _customConverters = customConverters;
+            var info = customConverter.Convert(exception, includeSensitiveDetails);
+            return info;
         }
 
-        public ErrorInfo Convert(Exception exception, bool includeSensitiveDetails)
+        var code = GetErrorCode(exception);
+        var responseCode = GetResponseCode(exception);
+        var detail = GetErrorDetails(exception, includeSensitiveDetails);
+        var validationErrors = GetValidationErrors(exception);
+
+        return new ErrorInfo
         {
-            var customConverter = _customConverters.SingleOrDefault(x => x.CanConvert(exception));
+            Code = code,
+            ResponseCode = responseCode,
+            Message = exception.Message,
+            Details = detail,
+            Data = exception.Data,
+            ValidationErrors = validationErrors
+        };
+    }
 
-            if (customConverter != null)
-            {
-                var info = customConverter.Convert(exception, includeSensitiveDetails);
-                return info;
-            }
-
-            var code = GetErrorCode(exception);
-            var responseCode = GetResponseCode(exception);
-            var detail = GetErrorDetails(exception, includeSensitiveDetails);
-            var validationErrors = GetValidationErrors(exception);
-
-            return new ErrorInfo
-            {
-                Code = code,
-                ResponseCode = responseCode,
-                Message = exception.Message,
-                Details = detail,
-                Data = exception.Data,
-                ValidationErrors = validationErrors
-            };
+    private static IDictionary<string, string[]> GetValidationErrors(Exception exception)
+    {
+        IDictionary<string, string[]> validationErrors = new Dictionary<string, string[]>();
+        if (exception is IHaveValidationErrors haveValidationErrors)
+        {
+            validationErrors = haveValidationErrors.ValidationErrors;
         }
 
-        private static IDictionary<string, string[]> GetValidationErrors(Exception exception)
-        {
-            IDictionary<string, string[]> validationErrors = new Dictionary<string, string[]>();
-            if (exception is IHaveValidationErrors haveValidationErrors)
-            {
-                validationErrors = haveValidationErrors.ValidationErrors;
-            }
+        return validationErrors;
+    }
 
-            return validationErrors;
+    private static string GetErrorDetails(Exception exception, bool includeSensitiveDetails)
+    {
+        var detail = string.Empty;
+        if (exception is IHaveErrorDetails haveErrorDetails)
+        {
+            detail = haveErrorDetails.Details;
         }
 
-        private static string GetErrorDetails(Exception exception, bool includeSensitiveDetails)
+        if (includeSensitiveDetails && detail.HasNoValue())
         {
-            var detail = string.Empty;
-            if (exception is IHaveErrorDetails haveErrorDetails)
-            {
-                detail = haveErrorDetails.Details;
-            }
-
-            if (includeSensitiveDetails && detail.HasNoValue())
-            {
-                detail = exception.GetAllMessages();
-            }
-
-            return detail;
+            detail = exception.GetAllMessages();
         }
 
-        private static string GetErrorCode(Exception exception)
-        {
-            var code = string.Empty;
-            if (exception is IHaveErrorCode haveErrorCode)
-            {
-                code = haveErrorCode.Code;
-            }
+        return detail;
+    }
 
-            return code;
+    private static string GetErrorCode(Exception exception)
+    {
+        var code = string.Empty;
+        if (exception is IHaveErrorCode haveErrorCode)
+        {
+            code = haveErrorCode.Code;
         }
 
-        private static HttpStatusCode GetResponseCode(Exception exception)
-        {
-            var responseCode = HttpStatusCode.BadRequest;
-            if (exception is IHaveResponseCode haveResponseCode)
-            {
-                responseCode = haveResponseCode.StatusCode;
-            }
+        return code;
+    }
 
-            return responseCode;
+    private static HttpStatusCode GetResponseCode(Exception exception)
+    {
+        var responseCode = HttpStatusCode.BadRequest;
+        if (exception is IHaveResponseCode haveResponseCode)
+        {
+            responseCode = haveResponseCode.StatusCode;
         }
+
+        return responseCode;
     }
 }

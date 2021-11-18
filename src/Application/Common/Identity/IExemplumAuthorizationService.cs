@@ -1,9 +1,6 @@
-namespace Exemplum.Application.Common.Identity
-{
-    using System.Threading.Tasks;
+namespace Exemplum.Application.Common.Identity;
 
-    public interface IExemplumAuthorizationService
-    {
-        Task<bool> AuthorizeAsync(string policyName);
-    }
+public interface IExemplumAuthorizationService
+{
+    Task<bool> AuthorizeAsync(string policyName);
 }
