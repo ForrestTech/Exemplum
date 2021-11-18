@@ -1,8 +1,8 @@
+<<<<<<< HEAD
 ﻿namespace Exemplum.Infrastructure;
 
 using Application.Common.DomainEvents;
 using Application.Common.Identity;
-    using Application.Common.IntegrationEvents;
 using Application.Common.Policies;
 using Application.Persistence;
 using Application.WeatherForecasts;
@@ -12,7 +12,6 @@ using Domain.Common.DateAndTime;
 using DomainEvents;
 using ExecutionPolicies;
 using Identity;
-    using IntegrationEvents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +22,33 @@ using Polly.Registry;
 using Prometheus;
 using Refit;
 using System;
+=======
+﻿namespace Exemplum.Infrastructure
+{
+    using Application.Common.DomainEvents;
+    using Application.Common.Identity;
+    using Application.Common.IntegrationEvents;
+    using Application.Common.Policies;
+    using Application.Persistence;
+    using Application.WeatherForecasts;
+    using Caching;
+    using DateAndTime;
+    using Domain.Common.DateAndTime;
+    using DomainEvents;
+    using ExecutionPolicies;
+    using Identity;
+    using IntegrationEvents;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Persistence;
+    using Persistence.ExceptionHandling;
+    using Polly.Registry;
+    using Prometheus;
+    using Refit;
+    using System;
+>>>>>>> 347cf9a (Add summary event consumer)
 
 public static class DependencyInjection
 {
@@ -79,8 +105,13 @@ public static class DependencyInjection
         services.AddTransient<IUserIdentityService, UserIdentityService>();
         services.AddTransient<IExemplumAuthorizationService, ExemplumAuthorizationService>();
 
+<<<<<<< HEAD
+        return services;
+=======
             services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
-        return services;
+            return services;
+        }
+>>>>>>> 347cf9a (Add summary event consumer)
     }
 }

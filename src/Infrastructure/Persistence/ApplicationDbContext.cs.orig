@@ -34,7 +34,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<TodoList> TodoLists => Set<TodoList>();
 
+<<<<<<< HEAD
     public DbSet<AuditItem> AuditItems => Set<AuditItem>();
+=======
+        public DbSet<AuditItem> AuditItems => Set<AuditItem>();
         
         /// <summary>
         /// A helper function that allows saving changes without publishing domain events.  This function is generally not used but can be useful to infrastructure code like data seeding that dont want to publish events.
@@ -54,12 +57,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 throw;
             }
         }
+>>>>>>> 347cf9a (Add summary event consumer)
 
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         HandleAuditableEntities();
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
-            HandleAuditableEntities();
 
         await DispatchEvents();
 

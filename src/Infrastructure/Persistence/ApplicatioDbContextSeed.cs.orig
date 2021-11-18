@@ -29,7 +29,12 @@ public static class ApplicationDbContextSeed
 
             context.TodoLists.Add(list);
 
+<<<<<<< HEAD
+            context.SaveChanges();
+=======
                 await context.SaveChangesWithNoEventsAsync();
+            }
+>>>>>>> 347cf9a (Add summary event consumer)
         }
     }
 }
