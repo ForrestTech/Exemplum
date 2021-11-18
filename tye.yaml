@@ -37,16 +37,7 @@ services:
     image: redis
     bindings:
       - port: 6379
-        connectionString: "${host}:${port}"
-  - name: smtp4dev
-      image: rnwood/smtp4dev
-      bindings:
-        - name: ui
-          protocol: http
-          port: 3000        
-        - name: email
-          protocol: smtp
-          port: 25
+        connectionString: "${host}:${port}"  
   - name: mssql
     image: mcr.microsoft.com/mssql/server:2019-latest
     env:

@@ -30,8 +30,7 @@ public class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCo
             .MaximumLength(200)
             .WithMessage("Title must not exceed 200 characters.");
 
-        RuleFor(x => x.Note).NotEmpty()
-            .MaximumLength(2000);
+        RuleFor(x => x.Note).MaximumLength(2000);
     }
 }
 
