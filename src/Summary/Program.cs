@@ -1,9 +1,19 @@
+using Exemplum.Summary;
+using FluentEmail.Core.Defaults;
+
 var builder = Host.CreateDefaultBuilder(args)
-    .ConfigureServices((_, services) =>
+    .ConfigureServices((host, services) =>
     {
         services.AddFluentEmail("exemplum@email.com");
 
-        services.AddSingleton<ISender>(x => new SmtpSender(new SmtpClient("localhost", 25)));
+        if (host.Configuration.SendEmailsToSmtp())
+        {
+            services.AddSingleton<ISender>(x => new SmtpSender(new SmtpClient("localhost", 25)));
+        }
+        else
+        {
+            services.AddSingleton<ISender>(x => new SaveToDiskSender(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory?.FullName));
+        }
 
         services.AddMassTransit(x =>
         {

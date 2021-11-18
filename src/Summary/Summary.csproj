@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>    
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Summary-D1FDA966-A84F-4A79-84CF-191DC46DD630</UserSecretsId>
+    <RootNamespace>Exemplum.Summary</RootNamespace>
+    <AssemblyName>Exemplum.Summary</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
