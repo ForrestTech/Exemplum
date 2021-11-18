@@ -6,14 +6,14 @@ using Application.WeatherForecasts.Query;
 public static class WeatherForecastEndpoints
 {
     private static readonly string WeatherForecast = nameof(WeatherForecast);
-    
+
     public static void MapWeatherForecastEndpoints(this WebApplication app)
     {
-        app.MapGet("api/weatherforecast", GetWeatherForecast()).WithTags(WeatherForecast);
+        app.MapGet("api/weatherforecast", GetWeatherForecast).WithTags(WeatherForecast);
     }
 
-    private static Func<IMediator, decimal, decimal, Task<WeatherForecast>> GetWeatherForecast()
+    private static Task<WeatherForecast> GetWeatherForecast(IMediator mediator, decimal lat, decimal lon)
     {
-        return async (mediator, lat, lon) => await mediator.Send(new GetWeatherForecastQuery {Lat = lat, Lon = lon});
+        return mediator.Send(new GetWeatherForecastQuery {Lat = lat, Lon = lon});
     }
 }

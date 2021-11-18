@@ -35,13 +35,34 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<TodoList> TodoLists => Set<TodoList>();
 
     public DbSet<AuditItem> AuditItems => Set<AuditItem>();
-        
-        /// <summary>
-        /// A helper function that allows saving changes without publishing domain events.  This function is generally not used but can be useful to infrastructure code like data seeding that dont want to publish events.
-        /// </summary>
-        public async Task<int> SaveChangesWithNoEventsAsync(CancellationToken cancellationToken = new CancellationToken())
+
+    /// <summary>
+    /// A helper function that allows saving changes without publishing domain events.  This function is generally not used but can be useful to infrastructure code like data seeding that dont want to publish events.
+    /// </summary>
+    public int SaveChangesWithoutPublishing()
+    {
+        HandleAuditableEntities();
+
+        try
+        {
+            var result = base.SaveChanges();
+            return result;
+        }
+        catch (Exception e)
+        {
+            _idbExceptions.HandleException(e);
+            throw;
+        }
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    {
         {
             HandleAuditableEntities();
+
+            HandleAuditableEntities();
+
+            await DispatchEvents();
 
             try
             {
@@ -53,25 +74,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 _idbExceptions.HandleException(e);
                 throw;
             }
-        }
-
-    {
-        HandleAuditableEntities();
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
-            HandleAuditableEntities();
-
-        await DispatchEvents();
-
-        try
-        {
-            var result = await base.SaveChangesAsync(cancellationToken);
-            return result;
-        }
-        catch (Exception e)
-        {
-            _idbExceptions.HandleException(e);
-            throw;
         }
     }
 

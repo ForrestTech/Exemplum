@@ -60,7 +60,7 @@ public class TodoAPI : WebApplicationFactory<Program>
                 logger.LogInformation("Seeding test data");
                 
                 db.Database.EnsureDeleted();
-                ApplicationDbContextSeed.SeedSampleDataAsync(db);
+                ApplicationDbContextSeed.SeedDatabase(db);
             }
             catch (Exception ex)
             {

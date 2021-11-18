@@ -5,6 +5,7 @@ global using Exemplum.WebApi.Endpoints;
 global using Exemplum.Infrastructure.Persistence;
 global using FluentValidation.AspNetCore;
 global using HealthChecks.UI.Client;
+global using MassTransit;
 global using MediatR;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Builder;

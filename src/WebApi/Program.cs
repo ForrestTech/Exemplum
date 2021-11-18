@@ -1,8 +1,7 @@
-Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-
-Log.Logger = LogConfiguration.CreateLogger();
-
 var builder = WebApplication.CreateBuilder(args);
+
+Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+Log.Logger = LogConfiguration.CreateLogger();
 
 builder.Host.UseSerilog();
 
@@ -69,6 +68,14 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 
     c.IncludeXmlComments(xmlPath);
+});
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context,cfg) =>
+    {
+        cfg.ConfigureEndpoints(context);
+    });
 });
 
 var app = builder.Build();

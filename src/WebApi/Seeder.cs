@@ -1,5 +1,7 @@
 ﻿namespace Exemplum.WebApi;
 
+using Microsoft.Extensions.Hosting;
+
 public static class Seeder
 {
     public static async Task SeedDatabase(IHost host)
@@ -17,7 +19,7 @@ public static class Seeder
                 await context.Database.MigrateAsync();
             }
 
-            ApplicationDbContextSeed.SeedSampleDataAsync(context);
+            ApplicationDbContextSeed.SeedDatabase(context);
         }
         catch (Exception ex)
         {
