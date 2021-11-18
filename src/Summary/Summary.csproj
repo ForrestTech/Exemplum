@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>    
+    <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Summary-D1FDA966-A84F-4A79-84CF-191DC46DD630</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.3" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
