@@ -16,6 +16,12 @@ var builder = Host.CreateDefaultBuilder(args)
             });
         });
         services.AddMassTransitHostedService(true);
+        
+        services.AddOpenTelemetryTracing(x =>
+        {
+            x.AddMassTransitInstrumentation();
+            x.AddJaegerExporter();
+        });
     });
 
 builder.UseSerilog((host, log) =>

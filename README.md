@@ -21,8 +21,9 @@ This is a template for creating a asp.net core applications both services (micro
     - [Using the dotnet CLI](#using-the-dotnet-cli)
     - [Using Github](#using-github)
     - [Running locally](#running-locally)
-    - [Running Docker](#running-docker)
     - [Database Migration](#database-migration)
+    - [Running Docker](#running-docker)
+    - [Summary Worker](#summary-worker)
   - [Motivation](#motivation)
     - [Onion Architecture](#onion-architecture)
     - [DDD modelling](#ddd-modelling)
@@ -39,6 +40,8 @@ This is a template for creating a asp.net core applications both services (micro
     - [Domain Events](#domain-events)
     - [Transactional Management](#transactional-management)
     - [Caching](#caching)
+    - [Metrics](#metrics)
+    - [Distributed Tracing](#distributed-tracing)
   - [Patterns not Used](#patterns-not-used)
     - [Shared Kernel](#shared-kernel)
     - [Common Contracts Package](#common-contracts-package)
@@ -81,7 +84,7 @@ To get started using Github just click the big green Use this template button at
 
 By default, the application is configured to run with an in memory database and within memory caching.  
 
-Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to false will configure the application to use SqlServer (which by default is configured to use local DB) and Redis (which is by default using localhost:6379).
+Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to false will configure the application to use SqlServer (which by default is configured to use local DB) and Redis (which is by default using localhost:6379). The  `PublishIntegrationEvents` setting is set to false by defaults and means no Integration style events will be published, if it is set to true events will be published to rabbitmq on default local ports.  Project tye is configured to start RabbitMQ for you but you can easily run your own local instance using docker. 
 
 To use the Weather data feature of Exemplum you will need to provide an API key for [open weather map](https://openweathermap.org/).  Exemplum uses asp.net core build in local * [Secret Management](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows) system to store the API key.  To set this up locally call `dotnet user-secrets init` this will generate a local secrets file that is not stored in the repository.  Then call `dotnet user-secrets set "WeatherForecast:AppId" "{your-api-key-here}"` to add the secret. 
 
@@ -102,6 +105,10 @@ For example, to add a new migration from the root folder:
 ### Running Docker
 
 Exemplum ships with configuration to run using [Project Tye](https://github.com/dotnet/tye) locally.  You can install tye using the details on the project page and run the application using `tye run`.  The project are configured to fall back to local app settings or defaults if tye service discovery information cannot be found.  
+
+### Summary Worker
+
+The summary worker service is a demonstration of using Event driven architecture to integrate services.  When `PublishIntegrationEvents` is set to true the main API project will publish integration events when todo items are created.  These event are published using MassTransit to RabbitMQ.  The summary service consumes there events and has a saga state machine that tracks recent todo items.  It then sends a summary email to when every 3 todo messages are received to test the email sending locally use [smtp4dev](https://github.com/rnwood/smtp4dev).  
 
 ## Motivation
 
@@ -266,6 +273,18 @@ Exemplum has its own `IApplicationCache<T>` interface that supports caching.  Th
 There are libraries that do some of the above but not a one single one that handles them all well to our knowledge. 
 
 Exemplum cache system under the hood is using the asp.net core [distributed cache](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-5.0) system to actually write and read from different cache providers. This is wrapped in a layer that handlers serialization (at the moment using `System.Text.Json` ) and implements GetOrAdd semantic handling.
+
+### Metrics
+
+Exemplum exposes metrics at a `/metrics` endpoints that can be scrapped by tools like [Prometheus](https://prometheus.io/).  This is useful for monitoring and debugging.  Exemplum does not come with configuration for running Prometheus or grafana locally but its easy to follow their [Getting started](https://prometheus.io/docs/prometheus/latest/getting_started/) guide.
+
+### Distributed Tracing
+
+The web api and summary service are setup to support OpenTelemetry and publishing distributed tracing information to [Jaeger](https://www.jaegertracing.io/docs/1.28/getting-started/).  This means you can trace requests from the API to downstream event driven systems.  Jaeger can be ran locally in docker using this command. 
+
+```
+docker run -d --name jaeger -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411 jaegertracing/all-in-one:1.28
+```
 
 ## Patterns not Used
 

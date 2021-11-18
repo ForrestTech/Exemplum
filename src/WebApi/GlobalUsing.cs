@@ -19,6 +19,7 @@ global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.Net.Http.Headers;
 global using Microsoft.OpenApi.Models;
 global using MinimalApis.Extensions.Results;
+global using OpenTelemetry.Trace;
 global using Prometheus;
 global using Serilog;
 global using Serilog.Enrichers.Span;

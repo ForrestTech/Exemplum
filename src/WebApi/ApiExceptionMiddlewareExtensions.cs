@@ -13,7 +13,7 @@ public static class ApiExceptionMiddlewareExtensions
     {
         app.UseExceptionHandler("/error");
 
-        app.Map("/error", Results<Problem, StatusCode>(HttpContext context) =>
+        app.Map("/error", Results<Problem,  MinimalApis.Extensions.Results.StatusCode>(HttpContext context) =>
         {
             var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
             var converter = context.RequestServices.GetService<IExceptionToErrorConverter>();

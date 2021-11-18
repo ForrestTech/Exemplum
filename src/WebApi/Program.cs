@@ -78,6 +78,11 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddOpenTelemetryTracing(options => options
+        .AddAspNetCoreInstrumentation()
+        .AddJaegerExporter()
+);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
