@@ -1,4 +1,4 @@
-﻿namespace Summary.Todo;
+﻿namespace Exemplum.Summary.Todo;
 
 public class TodoSummary
 {

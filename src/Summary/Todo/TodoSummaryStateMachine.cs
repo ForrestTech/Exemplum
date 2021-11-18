@@ -1,4 +1,6 @@
-﻿namespace Summary.Todo;
+﻿namespace Exemplum.Summary.Todo;
+
+using Domain.Todo.Events;
 
 public class TodoSummaryStateMachine : MassTransitStateMachine<TodoState>
 {
