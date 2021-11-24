@@ -78,7 +78,7 @@ To get started using Github just click the big green Use this template button at
 
 ### Running locally
 
-1. [.NET 5 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
+1. [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 1. Run dotnet restore on the Exemplum.sln solution 
 1. Run the WebApi and WebApp project either with dotnet run or from your IDE
 
