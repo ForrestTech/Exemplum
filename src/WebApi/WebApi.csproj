@@ -22,8 +22,8 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="6.0.1-rc2.4" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
-    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.3" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.3" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
     <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.1.0-alpha.20209.5" />
     <PackageReference Include="MinimalApis.Extensions" Version="0.4.1-pre.20211113.13" />
     <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.1.0" />
