@@ -83,10 +83,18 @@ builder.Services.AddOpenTelemetryTracing(options => options
         .AddJaegerExporter()
 );
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddMemoryCache();
+    builder.Services.AddMiniProfiler(options => options.RouteBasePath = "/profiler")
+        .AddEntityFramework();
+}
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseMiniProfiler();
     app.UseApiExceptionHandler(true);
 }
 else
