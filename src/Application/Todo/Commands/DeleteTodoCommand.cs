@@ -8,7 +8,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-[Authorize(Policy = Security.Policy.TodoDeleteAccess)]
 public class DeleteTodoCommand : IRequest
 {
     public int ListId { get; set; }
@@ -27,23 +26,28 @@ public class DeleteTodoCommandValidator : AbstractValidator<DeleteTodoCommand>
 
 public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
 {
+    private readonly IRequestAuthorizationService _authorizationService;
     private readonly IApplicationDbContext _context;
 
-    public DeleteTodoCommandHandler(IApplicationDbContext context)
+    public DeleteTodoCommandHandler(IRequestAuthorizationService authorizationService,
+        IApplicationDbContext context)
     {
+        _authorizationService = authorizationService;
         _context = context;
     }
 
     public async Task<Unit> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
     {
         var todo = await _context.TodoItems
-            .SingleOrDefaultAsync(x => x.ListId == request.ListId &&
-                                       x.Id == request.TodoId, cancellationToken);
+            .SingleOrDefaultAsync(x => x.ListId == request.ListId && 
+            x.Id == request.TodoId, cancellationToken);
 
         if (todo == null)
         {
-            throw new NotFoundException(nameof(TodoItem), new {request.ListId, request.TodoId});
+            throw new NotFoundException(nameof(TodoItem), new { request.ListId, request.TodoId });
         }
+
+        await _authorizationService.AuthorizeRequestAsync<DeleteTodoCommand>(todo, Security.Policy.CanDeleteTodo);
 
         _context.TodoItems.Remove(todo);
 

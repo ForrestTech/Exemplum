@@ -1,3 +1,6 @@
 {
-    "razor.disableBlazorDebugPrompt": true
+    "razor.disableBlazorDebugPrompt": true,
+    "cSpell.words": [
+        "Behaviour"
+    ]
 }
