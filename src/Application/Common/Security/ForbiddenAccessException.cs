@@ -12,18 +12,21 @@ public class ForbiddenAccessException : BusinessException, IExceptionWithSelfLog
         _requestType = requestType;
     }
 
+    public ForbiddenAccessException(Type requestType, string details) : base("Forbidden", details: details)
+    {
+        _requestType = requestType;
+    }
+
     public IEnumerable<string> Roles { get; init; } = new List<string>();
 
-    public string Policy { get; init; } = string.Empty;
-
-    public string ForbiddenReason { get; set; } = string.Empty;
+    public string Policy { get; init; } = string.Empty;    
 
     public void Log(ILogger logger)
     {
-        if(ForbiddenReason.HasValue())
+        if (Details.HasValue())
         {
             logger.Log(LogLevel,
-                ForbiddenReason);
+                Details);
         }
 
         if (Policy.HasValue())

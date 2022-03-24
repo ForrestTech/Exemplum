@@ -1,14 +1,13 @@
 ﻿namespace Exemplum.Application.TodoList.Commands;
 
 using Common.Exceptions;
-using Common.Security;
 using Domain.Todo;
+using Exemplum.Application.Common.Security;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-[Authorize(Policy = Security.Policy.CanDeleteTodo)]
 public class DeleteTodoListCommand : IRequest
 {
     public int ListId { get; set; }
@@ -26,9 +25,13 @@ public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListComman
 {
     private readonly IApplicationDbContext _context;
 
-    public DeleteTodoListCommandHandler(IApplicationDbContext context)
+    private readonly IRequestAuthorizationService _authorizationService;
+
+    public DeleteTodoListCommandHandler(IRequestAuthorizationService authorizationService,
+        IApplicationDbContext context)
     {
         _context = context;
+        _authorizationService = authorizationService;
     }
 
     public async Task<Unit> Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
@@ -40,6 +43,8 @@ public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListComman
         {
             throw new NotFoundException(nameof(TodoList), new {request.ListId});
         }
+
+        await _authorizationService.AuthorizeRequestAsync<DeleteTodoListCommand>(list, Security.Policy.CanDeleteTodo);
 
         list.IsDeleted = true;
         await _context.SaveChangesAsync(cancellationToken);

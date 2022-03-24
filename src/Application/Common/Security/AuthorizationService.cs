@@ -29,10 +29,7 @@ public class RequestAuthorizationService : IRequestAuthorizationService
         {
             if (result.Failure != null && result.Failure.FailureReasons.Any())
             {
-                throw new ForbiddenAccessException(typeof(TRequest))
-                {
-                    ForbiddenReason = string.Join("\r\n", result.Failure.FailureReasons.Select(x => x.Message))
-                };
+                throw new ForbiddenAccessException(typeof(TRequest), string.Join("\r\n", result.Failure.FailureReasons.Select(x => x.Message)));
             }
             else
             {
