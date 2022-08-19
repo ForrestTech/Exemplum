@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-[Authorize(Policy = Security.Policy.TodoWriteAccess)]
+[Authorize(Policy = Security.Policy.CanWriteTodo)]
 public class UpdateTodoCommand : IRequest<TodoItem>
 {
     [JsonIgnore]

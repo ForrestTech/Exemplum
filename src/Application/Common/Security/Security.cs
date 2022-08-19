@@ -9,8 +9,8 @@ public static class Security
 
     public static class Policy
     {
-        public const string TodoWriteAccess = nameof(TodoWriteAccess);
-        public const string TodoDeleteAccess = nameof(TodoDeleteAccess);
+        public const string CanWriteTodo = nameof(CanWriteTodo);
+        public const string CanDeleteTodo = nameof(CanDeleteTodo);
     }
 
     public static class ClaimTypes

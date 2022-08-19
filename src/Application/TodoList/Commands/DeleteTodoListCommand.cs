@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-[Authorize(Policy = Security.Policy.TodoDeleteAccess)]
+[Authorize(Policy = Security.Policy.CanDeleteTodo)]
 public class DeleteTodoListCommand : IRequest
 {
     public int ListId { get; set; }

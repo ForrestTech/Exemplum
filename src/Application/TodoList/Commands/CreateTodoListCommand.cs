@@ -6,7 +6,7 @@ using Domain.Todo;
 using Models;
 using System.Net;
 
-[Authorize(Policy = Security.Policy.TodoWriteAccess)]
+[Authorize(Policy = Security.Policy.CanWriteTodo)]
 public class CreateTodoListCommand : IRequest<TodoListDto>
 {
     public string Title { get; set; } = string.Empty;

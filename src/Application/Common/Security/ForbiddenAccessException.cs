@@ -16,8 +16,16 @@ public class ForbiddenAccessException : BusinessException, IExceptionWithSelfLog
 
     public string Policy { get; init; } = string.Empty;
 
+    public string ForbiddenReason { get; set; } = string.Empty;
+
     public void Log(ILogger logger)
     {
+        if(ForbiddenReason.HasValue())
+        {
+            logger.Log(LogLevel,
+                ForbiddenReason);
+        }
+
         if (Policy.HasValue())
         {
             logger.Log(LogLevel,

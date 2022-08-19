@@ -40,8 +40,8 @@ if (!builder.Configuration.UseInMemoryStorage())
 }
 
 //This does not seem to work with dotnet 6            
-//builder.Services.AddHealthChecksUI()
-//  .AddInMemoryStorage();
+builder.Services.AddHealthChecksUI()
+  .AddInMemoryStorage();
 
 builder.Services.AddControllers().AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 

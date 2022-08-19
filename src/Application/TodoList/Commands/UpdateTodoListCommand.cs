@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Persistence;
 
-[Authorize(Policy = Security.Policy.TodoWriteAccess)]
+[Authorize(Policy = Security.Policy.CanWriteTodo)]
 public class UpdateTodoListCommand : IRequest<TodoListDto>
 {
     public int ListId { get; set; }

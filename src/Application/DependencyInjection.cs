@@ -7,6 +7,7 @@ using Common.Security;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -39,12 +40,18 @@ public static class DependencyInjection
 
         services.Configure<WeatherForecastOptions>(configuration.GetSection(WeatherForecastOptions.Section));
 
+        services.AddTransient<IRequestAuthorizationService, RequestAuthorizationService>();
+        services.AddSingleton<IAuthorizationHandler, OwnsResourceHandler>();
+
         services.AddAuthorizationCore(options =>
         {
-            options.AddPolicy(Security.Policy.TodoWriteAccess,
+            //permissions based policy
+            options.AddPolicy(Security.Policy.CanWriteTodo,
                 policy => policy.RequireClaim(Security.ClaimTypes.Permission, Security.Permissions.WriteTodo));
-            options.AddPolicy(Security.Policy.TodoDeleteAccess,
-                policy => policy.RequireClaim(Security.ClaimTypes.Permission, Security.Permissions.DeleteTodo));
+            
+            //complex business logic policy
+            options.AddPolicy(Security.Policy.CanDeleteTodo,
+                policy => policy.Requirements.Add(new OwnsResourceRequirement()));
         });
 
         return services;

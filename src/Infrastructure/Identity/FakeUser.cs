@@ -25,6 +25,7 @@ public class FakeUser : ICurrentUser
             ? _httpContextAccessor.HttpContext?.User
             : new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
             {
+                new(ClaimTypes.Name, UserId!),
                 new(ClaimTypes.NameIdentifier, UserId!),
                 new(ClaimTypes.Role, Security.Roles.Forecaster),
                 new(Security.ClaimTypes.Permission, Security.Permissions.WriteTodo),
