@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using System.Reflection;
 
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+    where TRequest : IRequest<TResponse>
 {
     private readonly IUserIdentityService _identityServiceService;
     private readonly IExemplumAuthorizationService _authorizationService;

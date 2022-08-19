@@ -3,7 +3,7 @@
 using Domain.Exceptions;
 
 public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+    where TRequest : IRequest<TResponse>
 {
     private readonly ILogger<UnhandledExceptionBehaviour<TRequest, TResponse>> _logger;
 
