@@ -16,30 +16,16 @@ public class CreateTodoListCommand : IRequest<TodoListDto>
 
 public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
 {
-    private readonly IApplicationDbContext _context;
-
-    public CreateTodoListCommandValidator(IApplicationDbContext context)
+    public CreateTodoListCommandValidator()
     {
-        _context = context;
-
         RuleFor(x => x.Title).NotEmpty()
-            .MaximumLength(300)
-            .MustAsync(BeUniqueTitle)
+            .MaximumLength(300)            
             .WithMessage("Todo list title must be unique");
 
         RuleFor(x => x.Colour)
             .Must(x => x == null || Colour.IsValidColour(x))
             .WithMessage("{PropertyName} must be a valid Colour");
-    }
-
-
-    private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
-    {
-        var todo = await _context.TodoLists
-            .SingleOrDefaultAsync(l => l.Title == title, cancellationToken);
-
-        return todo == null;
-    }
+    }    
 }
 
 public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, TodoListDto>
