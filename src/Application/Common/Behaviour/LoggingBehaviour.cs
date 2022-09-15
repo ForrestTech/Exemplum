@@ -3,7 +3,7 @@
 using Identity;
 using MediatR.Pipeline;
 
-public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
+public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : IRequest
 {
     private readonly ILogger<TRequest> _logger;
     private readonly IUserIdentityService _userIdentityService;
