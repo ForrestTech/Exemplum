@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout project
       - uses: actions/checkout@v2
       - name: Build and Test .net Solution
         uses: actions/setup-dotnet@v1
@@ -23,16 +22,3 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build  --filter FullyQualifiedName!~Exemplum.EndToEndTests --verbosity normal /p:CollectCoverage=true /p:Exclude="[Exemplum.Infrastructure]*" /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute="CompilerGeneratedAttribute" /p:Threshold=15
-      - name: Setup Node.js
-        uses: actions/setup-node@v2.1.4
-        with:
-          node-version: 16
-      - name: Install SPA modules
-        run: yarn install
-        working-directory: ./src/SPA
-      - name: Test SPA modules
-        run: yarn test
-        working-directory: ./src/SPA
-      - name: Build SPA module
-        run: yarn export
-        working-directory: ./src/SPA
