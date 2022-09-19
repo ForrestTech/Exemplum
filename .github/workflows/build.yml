@@ -2,9 +2,9 @@ name: Build Solution
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -22,3 +22,12 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build  --filter FullyQualifiedName!~Exemplum.EndToEndTests --verbosity normal /p:CollectCoverage=true /p:Exclude="[Exemplum.Infrastructure]*" /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute="CompilerGeneratedAttribute" /p:Threshold=15
+      - name: Install SPA modules
+        run: yarn install
+        working-directory: ./src/SPA
+      - name: Test SPA modules
+        run: yarn test
+        working-directory: ./src/SPA
+      - name: Build SPA module
+        run: yarn export
+        working-directory: ./src/SPA
