@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Text, Grid, Button } from '@mantine/core';
 import { Tasks } from '@components/Tasks/Tasks';
 import useStyles from './Welcome.styles';
@@ -13,7 +12,7 @@ export function Welcome() {
       <Grid className={classes.welcome}>
         <Grid.Col span={12}>
           <div id="logo-wrapper" style={{ justifyContent: 'center', display: 'flex' }}>
-            <Image src="/exemplum-logo.svg" alt="Exemplum Logo" width="400" height="260" />
+            <img src="exemplum-logo.svg" alt="Exemplum Logo" width="400" height="260" />
           </div>
         </Grid.Col>
         <Grid.Col span={12}>

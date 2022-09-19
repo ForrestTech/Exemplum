@@ -1,7 +1,7 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { Grid, Title, Text, Container, createStyles } from '@mantine/core';
 
-import { WeatherForecastsTable } from '@features/weather/WeatherForecasts/WeatherForecastsTable';
+import WeatherForecastsTable from '@features/weather/WeatherForecasts/WeatherForecastsTable';
 import { hasRole } from '@features/common/authUtils';
 
 import LoginRedirect from '@components/LoginRedirect/LoginRedirect';

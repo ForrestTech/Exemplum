@@ -4,7 +4,7 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { testRender } from '@features/common/testing/testRenderer';
 import { apiPath } from '@features/common/httpClient';
-import { WeatherForecastsTable } from './WeatherForecastsTable';
+import WeatherForecastsTable from '@features/weather/WeatherForecasts/WeatherForecastsTable';
 import { WeatherForecast } from '../weather';
 
 const dummyWeatherForecasts: WeatherForecast = {

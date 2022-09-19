@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import LoadingWrapper from '@components/LoadingWrapper/LoadingWrapper';
 import { useWeatherForecast } from '../weather-api';
 
-export const WeatherForecastsTable = () => {
+const WeatherForecastsTable = () => {
   const [lat, setLat] = useState<string | undefined>(undefined);
   const [long, setLong] = useState<string | undefined>(undefined);
 
@@ -41,3 +41,5 @@ export const WeatherForecastsTable = () => {
     </LoadingWrapper>
   );
 };
+
+export default WeatherForecastsTable;

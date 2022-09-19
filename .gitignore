@@ -246,3 +246,4 @@ TestResults/
 CoverageResults/
 coverage.opencover.xml
 coverage.json
+out/
