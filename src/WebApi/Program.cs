@@ -135,6 +135,7 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"))
 
 //we are using both minimal API and Controllers as examples
 app.MapWeatherForecastEndpoints();
+app.MapElementsEndpoinst();
 
 await Seeder.SeedDatabase(app);
 
