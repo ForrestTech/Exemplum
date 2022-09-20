@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="refit" Version="6.1.15" />
+    <PackageReference Include="refit" Version="6.3.2" />
   </ItemGroup>
 
   <ItemGroup>
