@@ -1,6 +1,6 @@
 ﻿@page "/elements"
 
-@inject HttpClient httpClient
+@inject HttpClient HttpClient
 @using System.Net.Http.Json
 
 <MudMainContent>
@@ -11,7 +11,7 @@
                      SortMode="SortMode.Multiple"
                      Filterable="true"
                      FilterMode="DataGridFilterMode.Simple"
-                     QuickFilter="@_quickFilter"
+                     QuickFilter="@QuickFilter"
                      Hideable="true"
                      RowClick="@RowClicked"
                      SelectedItemsChanged="@SelectedItemsChanged"
@@ -26,7 +26,7 @@
                 <SelectColumn T="Element" />
                 <Column T="Element" Field="Number" Title="Nr" Sortable="false" Filterable="false" />
                 <Column T="Element" Field="Small" Title="Sign" Filterable="false" />
-                <Column T="Element" Field="Name" SortBy="@_sortBy" Filterable="false" />
+                <Column T="Element" Field="Name" SortBy="@SortBy" Filterable="false" />
                 <Column T="Element" Field="Position" Filterable="false" />
                 <Column T="Element" Field="Molar" Title="Molar mass" Filterable="false" />
                 <Column T="Element" Field="Group" Title="Category" />
@@ -60,10 +60,10 @@
 @code {
 
     private IEnumerable<Element> Elements = new List<Element>();
-    private string _searchString;
+    private string _searchString = string.Empty;
     private bool _sortNameByLength;
-    private List<string> _events = new();
-    private Func<Element, object> _sortBy => x =>
+    private readonly List<string> _events = new();
+    private Func<Element, object> SortBy => x =>
       {
           if (_sortNameByLength)
               return x.Name.Length;
@@ -71,7 +71,7 @@
               return x.Name;
       };
     
-    private Func<Element, bool> _quickFilter => x =>
+    private Func<Element, bool> QuickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
@@ -82,15 +82,12 @@
         if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if ($"{x.Number} {x.Position} {x.Molar}".Contains(_searchString))
-            return true;
-
-        return false;
+        return $"{x.Number} {x.Position} {x.Molar}".Contains(_searchString);
     };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await httpClient.GetFromJsonAsync<List<Element>>("https://localhost:5001/api/elements");
+        Elements = await HttpClient.GetFromJsonAsync<List<Element>>("https://localhost:5001/api/elements") ?? new List<Element>();
     }
 
     void RowClicked(DataGridRowClickEventArgs<Element> args)
@@ -105,11 +102,11 @@
 
     public record Element
     {
-        public string Group { get; set; }
+        public string Group { get; set; } = string.Empty;
         public int Position { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Number { get; set; }
-        public string Small { get; set; }
+        public string Small { get; set; } = string.Empty;
         public double Molar { get; set; }
     }
 }

@@ -13,8 +13,7 @@ public class CacheForecastBehaviour : IPipelineBehavior<GetWeatherForecastQuery,
         _cache = cache;
     }
 
-    public async Task<WeatherForecast> Handle(GetWeatherForecastQuery request, CancellationToken cancellationToken,
-        RequestHandlerDelegate<WeatherForecast> next)
+    public async Task<WeatherForecast> Handle(GetWeatherForecastQuery request, RequestHandlerDelegate<WeatherForecast> next, CancellationToken cancellationToken)
     {
         string key = request?.ToString() ?? string.Empty;
 

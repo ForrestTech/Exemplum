@@ -72,7 +72,7 @@ public static class DependencyInjection
 
         services.AddRefitClient<IWeatherForecastClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration
-                .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value))
+                .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value ?? throw new InvalidOperationException()))
             .UseHttpClientMetrics()
             .AddPolicyHandlerFromRegistry(ExecutionPolicy.RetryPolicy);
 

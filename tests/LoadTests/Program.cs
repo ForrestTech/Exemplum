@@ -1,22 +1,24 @@
 ﻿using NBomber.CSharp;
-using NBomber.Plugins.Http.CSharp;
+using NBomber.Http.CSharp;
 using NBomber.Plugins.Network.Ping;
 
-var step = Step.Create("get_task_list",
-    clientFactory: HttpClientFactory.Create(),
-    execute: context =>
+var httpClient = new HttpClient();
+
+var scenario =  Scenario.Create("get_task_list",
+    async context =>
     {
         var request = Http.CreateRequest("GET", "https://localhost:5001/api/todolist")
             .WithHeader("Accept", "application/json");
 
-        return Http.Send(request, context);
-    });
-
-var scenario = ScenarioBuilder
-    .CreateScenario("task_list", step)
+        var response = await Http.Send(httpClient, request);
+            
+        return response;
+    })
     .WithWarmUpDuration(TimeSpan.FromSeconds(5))
     .WithLoadSimulations(
-        Simulation.InjectPerSec(rate: 50, during: TimeSpan.FromSeconds(10))
+        Simulation.Inject(rate: 100,
+            interval: TimeSpan.FromSeconds(1),
+            during: TimeSpan.FromMinutes(3))
     );
 
 // creates ping plugin that brings additional reporting data
