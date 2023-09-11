@@ -284,17 +284,9 @@ There are libraries that do some of the above but not a one single one that hand
 
 Exemplum cache system under the hood is using the asp.net core [distributed cache](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-5.0) system to actually write and read from different cache providers. This is wrapped in a layer that handlers serialization (at the moment using `System.Text.Json` ) and implements GetOrAdd semantic handling.
 
-### Metrics
-
-Exemplum exposes metrics at a `/metrics` endpoints that can be scrapped by tools like [Prometheus](https://prometheus.io/). This is useful for monitoring and debugging. Exemplum does not come with configuration for running Prometheus or grafana locally but its easy to follow their [Getting started](https://prometheus.io/docs/prometheus/latest/getting_started/) guide.
-
 ### Distributed Tracing
 
-The web api and summary service are setup to support OpenTelemetry and publishing distributed tracing information to [Jaeger](https://www.jaegertracing.io/docs/1.28/getting-started/). This means you can trace requests from the API to downstream event driven systems. Jaeger can be ran locally in docker using this command.
-
-```
-docker run -d --name jaeger -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411 jaegertracing/all-in-one:1.28
-```
+The web api and summary service are setup to support OpenTelemetry and publishing distributed tracing information.
 
 ## Patterns not Used
 

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
-public record MarkTodoCompleteCommand(int ListId, int TodoId) : IRequest
+public record MarkTodoCompleteCommand(int ListId, int TodoId) : IRequest<Unit>
 {
 }
 
@@ -23,7 +23,7 @@ public class MarkTodoCompleteCommandValidator : AbstractValidator<MarkTodoComple
     }
 }
 
-public class MarkTodoCompleteHandler : IRequestHandler<MarkTodoCompleteCommand>
+public class MarkTodoCompleteHandler : IRequestHandler<MarkTodoCompleteCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
 

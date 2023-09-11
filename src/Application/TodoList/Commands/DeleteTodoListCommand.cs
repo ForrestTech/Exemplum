@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-public class DeleteTodoListCommand : IRequest
+public class DeleteTodoListCommand : IRequest<Unit>
 {
     public int ListId { get; set; }
 }
@@ -21,7 +21,7 @@ public class DeleteTodoListCommandValidator : AbstractValidator<DeleteTodoListCo
     }
 }
 
-public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>
+public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
 
