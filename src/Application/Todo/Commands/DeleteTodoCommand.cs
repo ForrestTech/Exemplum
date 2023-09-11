@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-public class DeleteTodoCommand : IRequest
+public class DeleteTodoCommand : IRequest<Unit>
 {
     public int ListId { get; set; }
 
@@ -24,7 +24,7 @@ public class DeleteTodoCommandValidator : AbstractValidator<DeleteTodoCommand>
     }
 }
 
-public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
+public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand, Unit>
 {
     private readonly IRequestAuthorizationService _authorizationService;
     private readonly IApplicationDbContext _context;

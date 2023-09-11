@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
-public class SetPriorityCommand : IRequest
+public class SetPriorityCommand : IRequest<Unit>
 {
     [JsonIgnore]
     public int ListId { get; set; }
@@ -32,7 +32,7 @@ public class SetPriorityCommandValidator : AbstractValidator<SetPriorityCommand>
     }
 }
 
-public class SetPriorityCommandHandler : IRequestHandler<SetPriorityCommand>
+public class SetPriorityCommandHandler : IRequestHandler<SetPriorityCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
     private readonly IClock _clock;

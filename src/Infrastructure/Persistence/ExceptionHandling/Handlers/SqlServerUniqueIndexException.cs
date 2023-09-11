@@ -6,7 +6,7 @@
     using System;
     using static SqlUniqueIndexExceptionGrammar;
 
-    public partial class SqlServerUniqueIndexException : IHandlerSpecificDBException
+    public class SqlServerUniqueIndexException : IHandlerSpecificDBException
     {
         private const int ErrorNumber = 2601;
 

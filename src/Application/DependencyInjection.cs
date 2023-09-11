@@ -23,16 +23,18 @@ public static class DependencyInjection
         IHostEnvironment environment)
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(options =>
+        {
+            options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            options.AddOpenRequestPreProcessor(typeof(LoggingBehaviour<>));
+            options.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
+            options.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
+            options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+        });
 
         services.AddTransient<IExceptionToErrorConverter, ExceptionToErrorConverter>();
         services.AddTransient<ICustomExceptionErrorConverter, RefitApiExceptionConverter>();
         services.AddTransient<ICustomExceptionErrorConverter, UnauthorizedAccessExceptionConverter>();
-
-        services.AddTransient(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
         services.AddTransient(typeof(IPipelineBehavior<GetWeatherForecastQuery, WeatherForecast>),
             typeof(CacheForecastBehaviour));

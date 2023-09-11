@@ -20,7 +20,6 @@ using Microsoft.Extensions.Hosting;
 using Persistence;
 using Persistence.ExceptionHandling;
 using Polly.Registry;
-using Prometheus;
 using Refit;
 using System;
 
@@ -73,7 +72,6 @@ public static class DependencyInjection
         services.AddRefitClient<IWeatherForecastClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration
                 .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value ?? throw new InvalidOperationException()))
-            .UseHttpClientMetrics()
             .AddPolicyHandlerFromRegistry(ExecutionPolicy.RetryPolicy);
 
         if (environment.IsDevelopment())
