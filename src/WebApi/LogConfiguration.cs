@@ -4,6 +4,8 @@ using Serilog.Core;
 
 public static class LogConfiguration
 {
+    private const string ExemplumApi = "Exemplum.Api";
+
     public static Logger CreateLogger()
     {
         var logConfiguration = new LoggerConfiguration()
@@ -25,8 +27,8 @@ public static class LogConfiguration
                 .WithDefaultDestructurers()
                 .WithDestructurers(new[] {new SqlExceptionDestructurer()})
                 .WithDestructurers(new[] {new DbUpdateExceptionDestructurer()}))
-            .Enrich.WithProperty("ApplicationName", "Exemplum.Api")
-            .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName)
+            .Enrich.WithProperty("ApplicationName", ExemplumApi)
+            .Enrich.WithProperty("Assembly", Assembly.GetExecutingAssembly().FullName ?? ExemplumApi)
             .WriteTo.Console()
             .WriteTo.Async(c => c.File(new RenderedCompactJsonFormatter(), $"App_Data\\Logs\\ExemplumApi-Logs.txt",
                 rollingInterval: RollingInterval.Day));

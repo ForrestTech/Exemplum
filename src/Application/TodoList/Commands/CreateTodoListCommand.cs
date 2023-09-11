@@ -4,6 +4,7 @@ using Common.Security;
 using Domain.Exceptions;
 using Domain.Todo;
 using Models;
+using System.ComponentModel;
 using System.Net;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
@@ -31,12 +32,10 @@ public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCo
 public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, TodoListDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public CreateTodoListCommandHandler(IApplicationDbContext context, IMapper mapper)
+    public CreateTodoListCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<TodoListDto> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
@@ -52,6 +51,6 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListComman
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<TodoListDto>(list);
+        return list.MapToDto();
     }
 }

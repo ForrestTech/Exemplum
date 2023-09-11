@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.Application.Todo.Commands;
 
-using AutoMapper;
 using Common.Exceptions;
 using Common.Security;
 using Domain.Todo;
@@ -37,12 +36,10 @@ public class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCo
 public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, TodoItemDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public CreateTodoItemCommandHandler(IApplicationDbContext context, IMapper mapper)
+    public CreateTodoItemCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<TodoItemDto> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
@@ -62,6 +59,6 @@ public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemComman
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<TodoItemDto>(entity);
+        return entity.MapToDto();
     }
 }

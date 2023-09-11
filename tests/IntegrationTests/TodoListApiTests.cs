@@ -28,6 +28,8 @@ public class TodoListTests
         var client = application.CreateClient();
 
         var response = await client.GetAsync(url);
+        
+        _output.WriteLine(response.Content.ReadAsStringAsync().Result);
 
         response.StatusCode.Should().Be((HttpStatusCode)statusCode);
 

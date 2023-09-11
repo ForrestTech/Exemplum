@@ -21,8 +21,9 @@ public class Hooks
     public static void GlobalSetup()
     {
         _resultsRoot = Directory.CreateDirectory("Results");
-        Report.AttachReporter(new ExtentHtmlReporter(_resultsRoot.FullName,
-            AventStack.ExtentReports.Reporter.Configuration.ViewStyle.SPA));
+        var reporter = new ExtentSparkReporter(_resultsRoot.FullName);
+        Report.AttachReporter(reporter);
+
     }
 
     [AfterTestRun]

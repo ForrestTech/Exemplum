@@ -1,6 +1,15 @@
 using Exemplum.Summary;
 using Exemplum.Summary.Todo;
 using FluentEmail.Core.Defaults;
+using MassTransit.Logging;
+using OpenTelemetry.Resources;
+
+void ConfigureResource(ResourceBuilder r)
+{
+    r.AddService("Summary",
+        serviceVersion: "3.0.0",
+        serviceInstanceId: Environment.MachineName);
+}
 
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((host, services) =>
@@ -28,11 +37,12 @@ var builder = Host.CreateDefaultBuilder(args)
         });
         services.AddMassTransitHostedService(true);
         
-        services.AddOpenTelemetryTracing(x =>
-        {
-            x.AddMassTransitInstrumentation();
-            x.AddJaegerExporter();
-        });
+        services.AddOpenTelemetry()
+            .ConfigureResource(ConfigureResource)
+            .WithTracing(b => b
+                    .AddSource(DiagnosticHeaders.DefaultListenerName) // MassTransit ActivitySource
+                    .AddConsoleExporter() // Any OTEL suportable exporter can be used here
+            );;
     });
 
 builder.UseSerilog((host, log) =>

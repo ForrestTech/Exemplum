@@ -1,7 +1,5 @@
 ﻿namespace Exemplum.Application.TodoList.Queries;
 
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Common.Exceptions;
 using FluentValidation;
 using MediatR;
@@ -25,12 +23,10 @@ public class GetTodoListQueryValidator : AbstractValidator<GetTodoListByIdQuery>
 public class GetTodoListQueryHandler : IRequestHandler<GetTodoListByIdQuery, TodoListDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetTodoListQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetTodoListQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<TodoListDto> Handle(GetTodoListByIdQuery request,
@@ -39,7 +35,7 @@ public class GetTodoListQueryHandler : IRequestHandler<GetTodoListByIdQuery, Tod
         var todoList = await _context.TodoLists
             .AsNoTracking()
             .Where(x => x.Id == request.ListId)
-            .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
+            .Select(x => x.MapToDto())
             .SingleOrDefaultAsync(cancellationToken);
 
         if (todoList == null)

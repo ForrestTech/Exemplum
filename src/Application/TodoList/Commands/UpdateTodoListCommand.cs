@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.Application.TodoList.Commands;
 
-using AutoMapper;
 using Common.Exceptions;
 using Common.Security;
 using Domain.Todo;
@@ -39,12 +38,10 @@ public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCo
 public class UpdateTodoListCommandValidatorHandler : IRequestHandler<UpdateTodoListCommand, TodoListDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public UpdateTodoListCommandValidatorHandler(IApplicationDbContext context, IMapper mapper)
+    public UpdateTodoListCommandValidatorHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<TodoListDto> Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
@@ -66,6 +63,6 @@ public class UpdateTodoListCommandValidatorHandler : IRequestHandler<UpdateTodoL
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<TodoListDto>(list);
+        return list.MapToDto();
     }
 }

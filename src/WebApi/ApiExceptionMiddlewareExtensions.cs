@@ -13,15 +13,14 @@ public static class ApiExceptionMiddlewareExtensions
     {
         app.UseExceptionHandler("/error");
 
-        app.Map("/error", Results<Problem,  MinimalApis.Extensions.Results.StatusCode>(HttpContext context) =>
+        app.Map("/error", IResult(HttpContext context) =>
         {
             var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
             var converter = context.RequestServices.GetService<IExceptionToErrorConverter>();
 
             if (error == null || converter == null)
             {
-                return Results.Extensions.StatusCode(StatusCodes.Status500InternalServerError,
-                    "An unhandled exception occurred while processing the request.");
+                return Results.StatusCode(StatusCodes.Status500InternalServerError);
             }
 
             var errorInfo = converter.Convert(error, includeDetails);
@@ -52,18 +51,17 @@ public static class ApiExceptionMiddlewareExtensions
 
             if (context.Request.GetTypedHeaders().Accept?.Any(h => ProblemJsonMediaType.IsSubsetOf(h)) == true)
             {
-                var extensions = new Dictionary<string, object> {{"requestId", Activity.Current?.Id ?? context.TraceIdentifier}};
+                var extensions = new Dictionary<string, object?> {{"requestId", Activity.Current?.Id ?? context.TraceIdentifier}};
 
                 return error switch
                 {
-                    BadHttpRequestException ex => Results.Extensions.Problem(ex.Message, statusCode: ex.StatusCode,
+                    BadHttpRequestException ex => Results.Problem(ex.Message, statusCode: ex.StatusCode,
                         extensions: extensions),
-                    _ => Results.Extensions.Problem(details)
+                    _ => Results.Problem(details)
                 };
             }
 
-            return Results.Extensions.StatusCode(details.Status ?? StatusCodes.Status500InternalServerError,
-                details.Title);
+            return Results.StatusCode(details.Status ?? StatusCodes.Status500InternalServerError);
         }).ExcludeFromDescription();
     }
 }

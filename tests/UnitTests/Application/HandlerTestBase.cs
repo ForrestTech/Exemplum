@@ -1,9 +1,7 @@
 ﻿namespace Exemplum.UnitTests.Application;
 
-using AutoMapper;
 using Exemplum.Application.Common.DomainEvents;
 using Exemplum.Application.Common.Identity;
-using Exemplum.Application.Common.Mapping;
 using Exemplum.Application.Persistence;
 using Infrastructure.DateAndTime;
 using Infrastructure.Persistence;
@@ -30,11 +28,6 @@ public class HandlerTestBase
         context.Database.EnsureCreated();
 
         fixture.Inject<IApplicationDbContext>(context);
-
-        var mappingConfiguration = new MapperConfiguration(config =>
-            config.AddMaps(Assembly.GetAssembly(typeof(MappingProfile))));
-
-        fixture.Inject(mappingConfiguration.CreateMapper());
 
         return fixture;
     }

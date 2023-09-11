@@ -31,19 +31,16 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters {NameClaimType = "name", RoleClaimType = "https://schemas.dev-ememplum.com/roles"};
 });
 
-var hcBuilder = builder.Services.AddHealthChecks()
-    .ForwardToPrometheus();
+var hcBuilder = builder.Services.AddHealthChecks();
 
 if (!builder.Configuration.UseInMemoryStorage())
 {
     hcBuilder.AddSqlServer(builder.Configuration.GetDefaultConnection());
 }
 
-//This does not seem to work with dotnet 6            
-builder.Services.AddHealthChecksUI()
-  .AddInMemoryStorage();
+builder.Services.AddControllers();
 
-builder.Services.AddControllers().AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddHttpsRedirection(options =>
 {
@@ -72,29 +69,33 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingRabbitMq((context,cfg) =>
+    if (builder.Configuration.UseInMemoryStorage())
     {
-        cfg.ConfigureEndpoints(context);
-    });
+        x.UsingInMemory();
+    }
+    else
+    {
+        x.UsingRabbitMq((context,cfg) =>
+        {
+            cfg.ConfigureEndpoints(context);
+        });    
+    }
 });
 
-builder.Services.AddOpenTelemetryTracing(options => options
+builder.Services.AddOpenTelemetry()
+    .WithTracing(builder => builder
         .AddAspNetCoreInstrumentation()
-        .AddJaegerExporter()
-);
+        .AddConsoleExporter());
 
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddMemoryCache();
-    builder.Services.AddMiniProfiler(options => options.RouteBasePath = "/profiler")
-        .AddEntityFramework();
 }
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseMiniProfiler();
     app.UseApiExceptionHandler(true);
 }
 else
@@ -107,28 +108,15 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseRouting();
-app.UseHttpMetrics();
 
 app.UseCors("Default");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMetricServer();
+app.MapControllers();
 
-app.UseEndpoints(endpoints =>
-{
-    //with a more complex set of health checks we can separate checks by tag
-    endpoints.MapHealthChecks("/health/ready",
-        new HealthCheckOptions {Predicate = (_) => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse});
-    endpoints.MapHealthChecks("/health/live", new HealthCheckOptions {Predicate = (_) => false});
-
-    endpoints.MapHealthChecksUI();
-
-    endpoints.MapControllers();
-
-    endpoints.MapMetrics();
-});
+app.MapHealthChecks("/healthz");
 
 app.MapSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));

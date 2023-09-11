@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>Exemplum.LoadTests</RootNamespace>
     <AssemblyName>Exemplum.LoadTests</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NBomber" Version="2.1.0" />
-    <PackageReference Include="NBomber.Http" Version="2.0.1" />
+    <PackageReference Include="NBomber" Version="5.2.2" />
+    <PackageReference Include="NBomber.Http" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

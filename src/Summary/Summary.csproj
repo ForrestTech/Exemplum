@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>    
+    <TargetFramework>net7.0</TargetFramework>    
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Summary-D1FDA966-A84F-4A79-84CF-191DC46DD630</UserSecretsId>
     <RootNamespace>Exemplum.Summary</RootNamespace>
@@ -12,15 +12,15 @@
     <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="OpenTelemetry.Contrib.Instrumentation.MassTransit" Version="1.0.0-beta2" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.3.0" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9.4" />    
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.6.0" />    
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.6.0" />    
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
   </ItemGroup>
 </Project>
