@@ -1,7 +1,5 @@
 ﻿namespace Exemplum.Application.TodoList.Queries;
 
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Common.Mapping;
 using Common.Pagination;
 using Common.Validation;
@@ -29,12 +27,10 @@ public class GetTodoListsQueryValidator : AbstractValidator<GetTodoListsQuery>
 public class GetTodoListsQueryHandler : IRequestHandler<GetTodoListsQuery, PaginatedList<TodoListDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetTodoListsQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetTodoListsQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<PaginatedList<TodoListDto>> Handle(GetTodoListsQuery request,
@@ -43,7 +39,7 @@ public class GetTodoListsQueryHandler : IRequestHandler<GetTodoListsQuery, Pagin
         return await _context.TodoLists
             .AsNoTracking()
             .OrderBy(x => x.Title)
-            .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
+            .Select(x => x.MapToDto())
             .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
     }
 }

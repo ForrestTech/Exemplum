@@ -1,15 +1,6 @@
 ﻿namespace Exemplum.Application.Todo.Queries;
 
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Common.Mapping;
-using Common.Pagination;
-using Common.Validation;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using Persistence;
 
 public class GetTodoItemsInListQuery : IRequest<PaginatedList<TodoItemDto>>,
     IPaginatedQuery
@@ -33,12 +24,10 @@ public class GetTodoItemsQueryValidator : AbstractValidator<GetTodoItemsInListQu
 public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsInListQuery, PaginatedList<TodoItemDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetTodoItemsQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetTodoItemsQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoItemsInListQuery request,
@@ -48,7 +37,7 @@ public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsInListQuery,
             .AsNoTracking()
             .Where(x => x.ListId == request.ListId)
             .OrderBy(x => x.Title)
-            .ProjectTo<TodoItemDto>(_mapper.ConfigurationProvider)
+            .Select(x => x.MapToDto())
             .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 
         return list;

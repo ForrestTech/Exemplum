@@ -1,26 +1,31 @@
 ﻿namespace Exemplum.Application.Todo.Models;
 
-using AutoMapper;
-using Common.Mapping;
 using Domain.Todo;
 
-public class TodoItemDto : IMapFrom<TodoItem>
+public class TodoItemDto 
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
 
-    public string Note { get; set; } = string.Empty;
+    public string Note { get; init; } = string.Empty;
 
-    public string Priority { get; set; } = string.Empty;
+    public string Priority { get; init; } = string.Empty;
 
-    public bool Done { get; set; }
+    public bool Done { get; init; }
+}
 
-    public void Mapping(Profile profile)
+public static class TodoItemExtensions
+{
+    public static TodoItemDto MapToDto(this TodoItem item)
     {
-        profile.CreateMap<TodoItem, TodoItemDto>()
-            .ForMember(dest => dest.Priority,
-                opt => opt.MapFrom(source =>
-                    source.Priority != null ? source.Priority.ToString() : PriorityLevel.None));
+        return new TodoItemDto
+        {
+            Id = item.Id,
+            Title = item.Title,
+            Note = item.Note,
+            Priority = item.Priority?.Name ?? string.Empty,
+            Done = item.Done
+        };
     }
 }
