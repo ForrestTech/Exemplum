@@ -42,7 +42,7 @@ var builder = Host.CreateDefaultBuilder(args)
             .WithTracing(b => b
                     .AddSource(DiagnosticHeaders.DefaultListenerName) // MassTransit ActivitySource
                     .AddConsoleExporter() // Any OTEL suportable exporter can be used here
-            );;
+            );
     });
 
 builder.UseSerilog((host, log) =>

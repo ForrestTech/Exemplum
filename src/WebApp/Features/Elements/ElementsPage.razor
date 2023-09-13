@@ -24,12 +24,12 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn T="Element" />
-                <Column T="Element" Field="Number" Title="Nr" Sortable="false" Filterable="false" />
-                <Column T="Element" Field="Small" Title="Sign" Filterable="false" />
-                <Column T="Element" Field="Name" SortBy="@SortBy" Filterable="false" />
-                <Column T="Element" Field="Position" Filterable="false" />
-                <Column T="Element" Field="Molar" Title="Molar mass" Filterable="false" />
-                <Column T="Element" Field="Group" Title="Category" />
+                <PropertyColumn Property="x => x.Number" Title="Nr" Sortable="false" Filterable="false" />
+                <PropertyColumn Property="x => x.Small" Title="Sign" Filterable="false" />
+                <PropertyColumn Property="x=> x.Name" SortBy="@SortBy" Filterable="false" />
+                <PropertyColumn Property="x => x.Position" Filterable="false" />
+                <PropertyColumn Property="x => x.Molar" Title="Molar mass" Filterable="false" />
+                <PropertyColumn Property="x => x.Group" Title="Category" />
             </Columns>
             <PagerContent>
                 <MudDataGridPager T="Element" />

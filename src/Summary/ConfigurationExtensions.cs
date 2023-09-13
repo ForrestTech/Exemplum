@@ -6,6 +6,6 @@ public static class ConfigurationExtensions
 {
     public static bool SendEmailsToSmtp(this IConfiguration config)
     {
-        return bool.Parse(config["SendEmailsToSmtp"]);
+        return bool.Parse(config["SendEmailsToSmtp"] ?? string.Empty);
     }
 }

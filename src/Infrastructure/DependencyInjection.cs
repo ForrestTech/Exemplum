@@ -32,26 +32,15 @@ public static class DependencyInjection
         if (configuration.UseInMemoryStorage())
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("Exemplum"));
+                options.UseSqlite($"Data Source={GetDbPath()}"));
         }
         else
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetDefaultConnection(), builder =>
-                {
-                    builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                    builder.EnableRetryOnFailure();
-                }));
+                options.UseNpgsql(configuration.GetDefaultConnection()));
         }
 
-        if (configuration.PublishIntegrationEvents())
-        {
-            services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
-        }
-        else
-        {
-            services.AddTransient<IIntegrationEventPublisher, NoOpPublisher>();
-        }
+        services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
         services.AddScoped<IEventHandlerDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
@@ -71,7 +60,10 @@ public static class DependencyInjection
 
         services.AddRefitClient<IWeatherForecastClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration
-                .GetSection($"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}").Value ?? throw new InvalidOperationException()))
+                                                                  .GetSection(
+                                                                      $"{WeatherForecastOptions.Section}:{WeatherForecastOptions.BaseAddress}")
+                                                                  .Value ??
+                                                              throw new InvalidOperationException()))
             .AddPolicyHandlerFromRegistry(ExecutionPolicy.RetryPolicy);
 
         if (environment.IsDevelopment())
@@ -87,5 +79,13 @@ public static class DependencyInjection
         services.AddTransient<IExemplumAuthorizationService, ExemplumAuthorizationService>();
 
         return services;
+    }
+
+    private static string GetDbPath()
+    {
+        var folder = Environment.SpecialFolder.LocalApplicationData;
+        var path = Environment.GetFolderPath(folder);
+        var dbPath = Path.Join(path, "Exemplum.db");
+        return dbPath;
     }
 }

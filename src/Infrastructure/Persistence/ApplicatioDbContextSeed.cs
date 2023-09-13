@@ -3,7 +3,7 @@
 using Domain.Todo;
 using Microsoft.EntityFrameworkCore;
 
-public static class ApplicationDbContextSeed
+internal static class ApplicationDbContextSeed
 {
     public static void SeedDatabase(ApplicationDbContext context)
     {

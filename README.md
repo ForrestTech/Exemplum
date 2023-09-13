@@ -83,9 +83,9 @@ To get started using Github just click the big green Use this template button at
 1. Run dotnet restore on the Exemplum.sln solution
 1. Run the WebApi and WebApp project either with dotnet run or from your IDE
 
-By default, the application is configured to run with an in memory database and within memory caching.
+By default, the application is configured to run with sqlLite database, in memory caching and with masstransit in in memory mode.  Unit tests are configured to always run with an InMemory version of the primary db context.  This is only important for testing handlers.
 
-Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to false will configure the application to use SqlServer (which by default is configured to use local DB) and Redis (which is by default using localhost:6379). The `PublishIntegrationEvents` setting is set to false by defaults and means no Integration style events will be published, if it is set to true events will be published to rabbitmq on default local ports. Project tye is configured to start RabbitMQ for you but you can easily run your own local instance using docker.
+Setting the `UseInMemoryStorage` setting in the WebApi app.settings folder to false will configure the application to use PostgreSQL and Redis (which is by default using localhost:6379). 
 
 To use the Weather data feature of Exemplum you will need to provide an API key for [open weather map](https://openweathermap.org/). Exemplum uses asp.net core build in local \* [Secret Management](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows) system to store the API key. To set this up locally call `dotnet user-secrets init` this will generate a local secrets file that is not stored in the repository. Then call `dotnet user-secrets set "WeatherForecast:AppId" "{your-api-key-here}"` to add the secret.
 
@@ -104,15 +104,18 @@ The React SPA can be ran as the application front end instead of the Blazor Web 
 
 ### Database Migration
 
+
+Install the `dotnet-ef` tool using the command `dotnet tool install --global dotnet-ef`.
 To use `dotnet-ef` for your migrations please add the following flags to your command (values assume you are executing from repository root)
 
-- `--project src/Infrastructure` (optional if in this folder)
+- `--project src/Infrastructure` (when running from the root of the repo)
 - `--startup-project src/WebAPI`
 - `--output-dir Persistence/Migrations`
+- `-- --UseInMemoryStorage false` (override default setting so migrations are created for PostgreSQL)
 
 For example, to add a new migration from the root folder:
 
-`dotnet ef migrations add "NewMigration" --project src\Infrastructure --startup-project src\WebAPI --output-dir Persistence\Migrations`
+`dotnet ef migrations add "NewMigration" --project src\Infrastructure --startup-project src\WebAPI --output-dir Persistence\Migrations -- --UseInMemoryStorage false`
 
 ### Running Docker
 

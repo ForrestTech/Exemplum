@@ -2,5 +2,5 @@
 
 public class TodoSummary
 {
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
 }

@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Default", policyOptions =>
     {
         policyOptions
-            .WithOrigins(builder.Configuration.GetServiceUri("webapp")?.ToString() ?? "https://localhost:6001")
+            .WithOrigins(builder.Configuration.GetValue<string>("WebAppUrl") ?? "https://localhost:6001")
             .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -125,7 +125,7 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"))
 app.MapWeatherForecastEndpoints();
 app.MapElementsEndpoinst();
 
-await Seeder.SeedDatabase(app);
+await Seeder.SeedDatabase(app.Services);
 
 await app.RunAsync();
 
