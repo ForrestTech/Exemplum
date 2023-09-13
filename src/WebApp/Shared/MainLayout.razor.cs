@@ -12,7 +12,7 @@
         bool drawerOpen = false;
         MudTheme currentTheme = new();
 
-        readonly MudTheme defaultTheme = new() { Palette = new Palette
+        readonly MudTheme defaultTheme = new() { Palette = new PaletteLight
         {
             Primary = "#009688",
             Black = "#272c34",
@@ -56,7 +56,7 @@
         readonly MudTheme darkTheme =
             new()
             {
-                Palette = new Palette
+                Palette = new PaletteDark
                 {
                     Primary = "#776be7",
                     Black = "#27272f",

@@ -52,7 +52,7 @@ static void ConfigureServices(WebAssemblyHostBuilder builder)
             policy.RequireClaim("permissions", "delete:todo"));
     });
 
-    var apiHostUri = builder.Configuration.GetServiceUri("webapi") ?? new Uri("https://localhost:5001");
+    var apiHostUri = new Uri("https://localhost:5001");
 
     builder.Services.AddRefitClient<ITodoClient>()
         .ConfigureHttpClient(c => c.BaseAddress = apiHostUri)

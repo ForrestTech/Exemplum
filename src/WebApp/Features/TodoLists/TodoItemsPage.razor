@@ -147,7 +147,7 @@
         var dialogText = $"Do you really want to delete {listTitle}? This process cannot be undone.";
         var result = await ConfirmationDialog.ShowDeleteDialog(DialogService, dialogText);
 
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             await Client.DeleteTodoItem(list.Id, id);
             Snackbar.Add($"{listTitle} deleted", Severity.Error);

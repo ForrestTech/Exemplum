@@ -7,12 +7,10 @@ using Handlers;
 /// </summary>
 public class HandleDbExceptions : IHandleDbExceptions
 {
-    private readonly List<IHandlerSpecificDBException> _handlers;
-
-    public HandleDbExceptions()
+    private readonly List<IHandlerSpecificDBException> _handlers = new()
     {
-        _handlers = new List<IHandlerSpecificDBException> {new SqlServerUniqueIndexException()};
-    }
+       //new SqlServerUniqueIndexException()
+    };
 
     public void HandleException(Exception exception)
     {

@@ -4,19 +4,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 
-public static class Seeder
+public class Seeder
 {
-    public static async Task SeedDatabase(IServiceProvider appServices)
+    public static async Task SeedDatabase(IServiceProvider appServices, bool deleteDatabase = false)
     {
         using var scope = appServices.CreateScope();
 
         var serviceProvider = scope.ServiceProvider;
+        var logger = serviceProvider.GetRequiredService<ILogger<Seeder>>();
 
         try
         {
-            
-            var logger = serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger>();
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+            if (deleteDatabase)
+            {
+                logger.LogInformation("Deleting existing database");
+
+                await context.Database.EnsureDeletedAsync();
+            }
             
             logger.LogInformation("Ensure database is created");
             
@@ -39,7 +45,7 @@ public static class Seeder
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "An error occurred while migrating or seeding the database");
+            logger.LogError(ex, "An error occurred while migrating or seeding the database");
 
             throw;
         }
