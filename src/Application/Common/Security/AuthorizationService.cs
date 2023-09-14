@@ -1,6 +1,6 @@
 ﻿namespace Exemplum.Application.Common.Security;
 
-using Exemplum.Application.Common.Identity;
+using Identity;
 using Microsoft.AspNetCore.Authorization;
 
 public class RequestAuthorizationService : IRequestAuthorizationService

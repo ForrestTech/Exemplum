@@ -26,10 +26,10 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_get_returns_paginated_list_of_todos()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
-        var response = await client.GetAsync("api/todolist/1/todo");
+        var response = await client.GetAsync(Api.Items(1));
 
         var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
 
@@ -41,10 +41,10 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_get_completed_should_only_returns_completed_todos()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
-        var response = await client.GetAsync("api/todolist/1/todo/completed");
+        var response = await client.GetAsync(Api.Completed(1));
 
         var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoItemDto>>();
 
@@ -54,10 +54,10 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_create_with_invalid_values_returns_error()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
-        var response = await client.PostAsJsonAsync("api/todolist/1/todo",
+        var response = await client.PostAsJsonAsync(Api.Items(1),
             new CreateTodoItemCommand {Title = string.Empty, Note = "Some note"});
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -74,11 +74,11 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_create_and_ensure_it_retrieved()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "New todo";
-        var response = await client.PostAsJsonAsync("api/todolist/1/todo",
+        var response = await client.PostAsJsonAsync(Api.Items(1),
             new CreateTodoItemCommand {Title = todoTitle, Note = "Some note"});
 
         response.EnsureSuccessStatusCode();
@@ -95,7 +95,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_update_and_ensure_its_updated()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
         const string updatedTitle = "Updated todo";
         const string updatedNote = "updated note";
@@ -118,7 +118,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_delete_item_and_ensure_its_removed()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "To be deleted";
@@ -135,7 +135,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_complete_item_and_ensure_state()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "To be completed";
@@ -158,7 +158,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_set_priority_and_ensure_state()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
         var todo = await CreateNewTodo(client, "Will set priority");
@@ -182,7 +182,7 @@ public class TodoApiTests
 
     private static async Task<HttpResponseMessage> CreateNewTodo(HttpClient client, string todoTitle)
     {
-        var response = await client.PostAsJsonAsync("api/todolist/1/todo",
+        var response = await client.PostAsJsonAsync(Api.Items(1),
             new CreateTodoItemCommand {Title = todoTitle, Note = "Some note"});
         return response;
     }

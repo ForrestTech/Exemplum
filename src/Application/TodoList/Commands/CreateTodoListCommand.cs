@@ -1,11 +1,8 @@
 ﻿namespace Exemplum.Application.TodoList.Commands;
 
 using Common.Security;
-using Domain.Exceptions;
 using Domain.Todo;
 using Models;
-using System.ComponentModel;
-using System.Net;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
 public class CreateTodoListCommand : IRequest<TodoListDto>

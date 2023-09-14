@@ -12,13 +12,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 
-public class TodoAPI : WebApplicationFactory<Program>
+public class WebApi : WebApplicationFactory<Program>
 {
-    private IConfigurationRoot _configuration;
-
     public ITestOutputHelper Output { get; set; }
 
-    public TodoAPI(ITestOutputHelper output)
+    public WebApi(ITestOutputHelper output)
     {
         Output = output;
     }
@@ -38,9 +36,9 @@ public class TodoAPI : WebApplicationFactory<Program>
                 .AddJsonFile("appsettings.json", true, true)
                 .AddEnvironmentVariables();
 
-            _configuration = configBuilder.Build();
+            var configuration = configBuilder.Build();
 
-            config.AddConfiguration(_configuration);
+            config.AddConfiguration(configuration);
         });
 
         builder.ConfigureServices(config =>

@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
 using Persistence.ExceptionHandling;
+using Persistence.ExceptionHandling.Handlers;
 using Polly.Registry;
 using Refit;
 using System;
@@ -46,6 +47,9 @@ public static class DependencyInjection
         services.AddScoped<IEventHandlerDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
         services.AddTransient<IHandleDbExceptions, HandleDbExceptions>();
+        services.AddTransient<IHandlerSpecificDBException, SqlLiteUniqueIndexException>();
+        services.AddTransient<IHandlerSpecificDBException, PostgreSQLUniqueIndexException>();
+        
         services.AddTransient<IPublishDomainEvents, DomainEventsPublisher>();
         services.AddTransient<IClock, Clock>();
 

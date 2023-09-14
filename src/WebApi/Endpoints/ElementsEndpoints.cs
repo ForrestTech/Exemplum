@@ -1,12 +1,11 @@
 ﻿namespace Exemplum.WebApi.Endpoints
 {
-    using Bogus;
-
-    public static class ElementsEndpoints
+    public class ElementsEndpoints : IEndpoints
     {
-        public static void MapElementsEndpoinst(this WebApplication app)
+        public void MapEndpoints(WebApplication app)
         {
-            app.MapGet("api/elements", GetElements);
+            app.MapGet("api/elements", GetElements)
+                .WithTags("Chemical Elements");
         }
 
         private static Task<List<Element>> GetElements()
