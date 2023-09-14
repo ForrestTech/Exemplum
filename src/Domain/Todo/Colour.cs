@@ -1,17 +1,17 @@
 ﻿namespace Exemplum.Domain.Todo
 {
-    using Common;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public class Colour : ValueObject
+    public record Colour 
     {
+        public string Code { get; }
+
         private Colour(string code)
         {
             Code = code;
         }
-
+        
         public static Colour From(string code)
         {
             if (!IsValidColour(code))
@@ -25,33 +25,20 @@
 
         public static bool IsValidColour(string code)
         {
-            return code.Length == 7 &&
-                   code[0] == '#'
+            return code is ['#', _, _, _, _, _, _]
                    && code.All(x => Char.IsLetterOrDigit(x) || x == '#');
         }
 
         public static Colour Blue => new("#6666FF");
-
-        public string Code { get; private set; }
         
         public static implicit operator string(Colour colour)
         {
-            return colour.ToString();
+            return colour.Code ?? throw new InvalidOperationException();
         }
 
         public static explicit operator Colour(string code)
         {
             return From(code);
-        }
-
-        public override string ToString()
-        {
-            return Code;
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Code;
         }
     }
 }
