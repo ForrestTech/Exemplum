@@ -35,7 +35,7 @@ var hcBuilder = builder.Services.AddHealthChecks();
 
 if (!builder.Configuration.UseInMemoryStorage())
 {
-    hcBuilder.AddSqlServer(builder.Configuration.GetDefaultConnection());
+    hcBuilder.AddNpgSql(builder.Configuration.GetDefaultConnection());
 }
 
 builder.Services.AddControllers();
@@ -61,10 +61,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo {Title = "Exemplum", Version = "v1"});
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-    c.IncludeXmlComments(xmlPath);
 });
 
 builder.Services.AddMassTransit(x =>
@@ -114,16 +110,12 @@ app.UseCors("Default");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.MapHealthChecks("/healthz");
 
 app.MapSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exemplum"));
 
-//we are using both minimal API and Controllers as examples
-app.MapWeatherForecastEndpoints();
-app.MapElementsEndpoinst();
+app.MapEndpoints();
 
 await Seeder.SeedDatabase(app.Services);
 

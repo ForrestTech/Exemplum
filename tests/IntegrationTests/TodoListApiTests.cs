@@ -16,19 +16,20 @@ public class TodoListTests
     }
 
     [Theory]
-    [InlineData("api/todolist")]
-    [InlineData("api/todolist/1/todo")]
-    [InlineData("api/todolist/1/todo/1")]
-    [InlineData("api/todolist/1/todo/completed")]
-    [InlineData("api/todolist/999", 404)]
-    [InlineData("api/todolist/1/todo/999", 404)]
+    
+    [InlineData(Api.List)]
+    [InlineData(Api.List + "/1/todo")]
+    [InlineData(Api.List + "/1/todo/1")]
+    [InlineData(Api.List + "/1/todo/completed")]
+    [InlineData(Api.List + "/999", 404)]
+    [InlineData(Api.List + "/1/todo/999", 404)]
     public async Task Routes_table_tests(string url, int statusCode = 200)
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
         var response = await client.GetAsync(url);
-        
+
         _output.WriteLine(response.Content.ReadAsStringAsync().Result);
 
         response.StatusCode.Should().Be((HttpStatusCode)statusCode);
@@ -44,10 +45,10 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_get_returns_paginated_list()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
-        var response = await client.GetAsync("api/todolist");
+        var response = await client.GetAsync(Api.List);
 
         var actual = await response.Content.ReadFromJsonAsync<PaginatedList<TodoListDto>>();
 
@@ -59,10 +60,10 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_get_by_id_should_return_single_list()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
-        var response = await client.GetAsync("api/todolist/1");
+        var response = await client.GetAsync(Api.Items(1));
 
         var actual = await response.Content.ReadFromJsonAsync<TodoListDto>();
 
@@ -72,17 +73,17 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_delete_and_ensure_its_removed()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "To be deleted";
-        var response = await client.PostAsJsonAsync("api/todolist",
-            new CreateTodoListCommand {Title = todoTitle, Colour = Colour.Blue});
+        var response = await client.PostAsJsonAsync(Api.List,
+            new CreateTodoListCommand { Title = todoTitle, Colour = Colour.Blue });
 
         await client.DeleteAsync(response.Headers.Location);
 
         var newTodoResponse = await client.GetAsync(response.Headers.Location);
-        
+
         _output.WriteLine($"Getting {response.Headers.Location}");
 
         newTodoResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -91,12 +92,12 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_create_and_ensure_it_retrieved()
     {
-        await using var application = new TodoAPI(_output);
+        await using var application = new WebApi(_output);
         var client = application.CreateClient();
-        
+
         const string todoListTitle = "New todo";
-        var response = await client.PostAsJsonAsync("api/todolist",
-            new CreateTodoListCommand {Title = todoListTitle, Colour = Colour.Blue});
+        var response = await client.PostAsJsonAsync(Api.List,
+            new CreateTodoListCommand { Title = todoListTitle, Colour = Colour.Blue });
 
         response.EnsureSuccessStatusCode();
 

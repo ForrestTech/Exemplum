@@ -2,7 +2,7 @@
 
 using Common.Exceptions;
 using Domain.Todo;
-using Exemplum.Application.Common.Security;
+using Common.Security;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

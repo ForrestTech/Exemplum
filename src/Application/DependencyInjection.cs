@@ -6,7 +6,6 @@ using Common.Exceptions.Converters;
 using Common.Security;
 using FluentValidation;
 using MediatR;
-using MediatR.Pipeline;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
