@@ -58,7 +58,7 @@ public class TodoApiTests
         var client = application.CreateClient();
 
         var response = await client.PostAsJsonAsync(Api.Items(1),
-            new CreateTodoItemCommand {Title = string.Empty, Note = "Some note"});
+            new CreateTodoItemCommand { Title = string.Empty, Note = "Some note" });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
@@ -79,7 +79,7 @@ public class TodoApiTests
 
         const string todoTitle = "New todo";
         var response = await client.PostAsJsonAsync(Api.Items(1),
-            new CreateTodoItemCommand {Title = todoTitle, Note = "Some note"});
+            new CreateTodoItemCommand { Title = todoTitle, Note = "Some note" });
 
         response.EnsureSuccessStatusCode();
 
@@ -99,11 +99,11 @@ public class TodoApiTests
         var client = application.CreateClient();
         const string updatedTitle = "Updated todo";
         const string updatedNote = "updated note";
-        
+
         var todo = await CreateNewTodo(client, "Will update");
 
         var response = await client.PutAsJsonAsync(todo.Headers.Location,
-            new UpdateTodoCommand {Title = updatedTitle, Note = updatedNote});
+            new UpdateTodoCommand { Title = updatedTitle, Note = updatedNote });
 
         response.EnsureSuccessStatusCode();
 
@@ -147,7 +147,7 @@ public class TodoApiTests
         completedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var completedTodo = await client.GetAsync(response.Headers.Location);
-        
+
         completedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var newTodo = await completedTodo.Content.ReadFromJsonAsync<TodoItemDto>();
@@ -162,12 +162,12 @@ public class TodoApiTests
         var client = application.CreateClient();
 
         var todo = await CreateNewTodo(client, "Will set priority");
-        
-        _output.WriteLine("Location" + todo.Headers.Location);
 
-        string priorityLevel = PriorityLevel.High.ToString();
+        _output.WriteLine("Location " + todo.Headers.Location);
+
+        var priorityLevel = PriorityLevel.High.ToString();
         var response = await client.PostAsJsonAsync($"{todo.Headers.Location}/priority",
-            new SetPriorityCommand {PriorityLevel = priorityLevel});
+            new SetPriorityCommand { PriorityLevel = priorityLevel });
 
         response.EnsureSuccessStatusCode();
 
@@ -183,7 +183,7 @@ public class TodoApiTests
     private static async Task<HttpResponseMessage> CreateNewTodo(HttpClient client, string todoTitle)
     {
         var response = await client.PostAsJsonAsync(Api.Items(1),
-            new CreateTodoItemCommand {Title = todoTitle, Note = "Some note"});
+            new CreateTodoItemCommand { Title = todoTitle, Note = "Some note" });
         return response;
     }
 }

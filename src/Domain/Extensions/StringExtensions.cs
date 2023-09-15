@@ -11,4 +11,12 @@ public static class StringExtensions
     {
         return !value.HasValue();
     }
+
+    /// <summary>
+    /// Check if string match ignoring culture and case
+    /// </summary>
+    public static bool IsTheSameAs(this string value, string toCompare)
+    {
+        return string.Equals(value, toCompare, StringComparison.InvariantCultureIgnoreCase);
+    }
 }

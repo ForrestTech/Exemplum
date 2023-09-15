@@ -6,6 +6,8 @@ using Events;
 
 public class TodoItem : BaseEntity
 {
+    private bool _done;
+
     public TodoItem(string title)
     {
         Title = title;
@@ -15,22 +17,21 @@ public class TodoItem : BaseEntity
     public int ListId { get; private set; }
     public TodoList List { get; set; } = null!;
 
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
     public string Note { get; set; } = string.Empty;
 
-    public PriorityLevel? Priority { get; private set; }
+    public PriorityLevel Priority { get; private set; }
 
     public DateTime? Reminder { get; private set; }
 
-    private bool _done;
 
-    // Example of a property that can be set on init and also via behaviour on the entity
+    // Example of a property that can be set on init and also via behaviour on the entity, this format makes it easier to setup test data but also protect invariance 
     public bool Done { get => _done; init => _done = value; }
 
     public void MarkAsDone()
     {
-        if (_done != false)
+        if (_done)
         {
             return;
         }

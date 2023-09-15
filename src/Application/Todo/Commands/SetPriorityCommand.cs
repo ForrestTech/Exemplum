@@ -3,6 +3,7 @@
 using Common.Exceptions;
 using Common.Security;
 using Domain.Common.DateAndTime;
+using Domain.Extensions;
 using Domain.Todo;
 using FluentValidation;
 using MediatR;
@@ -27,7 +28,7 @@ public class SetPriorityCommandValidator : AbstractValidator<SetPriorityCommand>
     {
         RuleFor(x => x.ListId).GreaterThan(0);
         RuleFor(x => x.TodoId).GreaterThan(0);
-        RuleFor(x => x.PriorityLevel).Must(x => PriorityLevel.TryFromValue(x, out _))
+        RuleFor(x => x.PriorityLevel).Must(x => x.HasNoValue() || PriorityLevel.IsValid(x))
             .WithMessage("PriorityLevel is not a valid value");
     }
 }
@@ -54,8 +55,8 @@ public class SetPriorityCommandHandler : IRequestHandler<SetPriorityCommand, Uni
         {
             throw new NotFoundException(nameof(TodoItem), new {request.ListId, request.TodoId});
         }
-
-        todo.SetPriority(PriorityLevel.FromValue(request.PriorityLevel), _clock);
+        
+        todo.SetPriority(PriorityLevel.Parse(request.PriorityLevel), _clock);
 
         await _context.SaveChangesAsync(cancellationToken);
 
