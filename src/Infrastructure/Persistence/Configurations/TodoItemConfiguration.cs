@@ -16,6 +16,6 @@ public class TodoItemConfiguration : IEntityTypeConfiguration<TodoItem>
         builder.Property(t => t.Priority)
             .HasConversion(
                 x => x!.ToString(),
-                x => PriorityLevel.FromValue(x));
+                x => PriorityLevel.Parse(x));
     }
 }

@@ -1,58 +1,40 @@
 ﻿namespace Exemplum.Domain.Todo;
 
-using Ardalis.SmartEnum;
+using Common;
+using Extensions;
 
-public abstract class PriorityLevel : SmartEnum<PriorityLevel, string>
+/// <summary>
+/// Example of using a clean way to model tagged enums in c# without using the limited built in enum class
+/// The options for PriorityLevel have to be implemented as private sub types
+/// The only way to create one is to either parse for the tag or use the factory properties e.g. PriorityLevel.High  
+/// </summary>
+public abstract record PriorityLevel(string Name, TimeSpan ReminderTime) : TaggedEnum<PriorityLevel>(Name)
 {
-    public static readonly PriorityLevel None = new NoPriority();
-    public static readonly PriorityLevel Low = new LowPriorityLevel();
-    public static readonly PriorityLevel Medium = new MediumPriority();
-    public static readonly PriorityLevel High = new HighPriority();
+    public static bool IsValid(string name) => Levels.Any(x => x.Name.IsTheSameAs(name));
 
-    // You could change this so that the priority level had a method that took in IConfiguration or an Option set and returned a configurable value so this was not hard coded e.g  
-    //public abstract TimeSpan GetReminderTime(IConfiguration configuration)
-
-    public abstract TimeSpan ReminderTime { get; }
-
-    private PriorityLevel(string name, string value) : base(name, value)
+    public static PriorityLevel Parse(string name) => Levels.First(x => x.Name.IsTheSameAs(name));
+    
+    public static (bool Success, PriorityLevel? Level) TryParse(string name)
     {
+        var level = Levels.FirstOrDefault(x => x.Name.IsTheSameAs(name));
+        return level is null ? (false, null) : (true, Level: level);
     }
 
-    // You can split these up into different files by creating extra partial versions of the PriorityLevel class
-    private sealed class HighPriority : PriorityLevel
-    {
-        public HighPriority() : base(nameof(High), nameof(High))
-        {
-        }
+    // You could do this via reflection on the base class but its has performance implications if not done correctly
+    private static IEnumerable<PriorityLevel> Levels => new List<PriorityLevel> { None, Low, Medium, High };
 
-        public override TimeSpan ReminderTime { get; } = TimeSpan.FromDays(1);
-    }
+    public static PriorityLevel None { get; } = new NoPriority();
+    public static PriorityLevel Low { get; } = new LowPriority();
+    public static PriorityLevel Medium { get; } = new MediumPriority();
+    public static PriorityLevel High { get; } = new HighPriority();
 
-    private sealed class MediumPriority : PriorityLevel
-    {
-        public MediumPriority() : base(nameof(Medium), nameof(Medium))
-        {
-        }
+    private record NoPriority() : PriorityLevel(nameof(None), TimeSpan.FromDays(1));
 
-        public override TimeSpan ReminderTime { get; } = TimeSpan.FromDays(3);
-    }
+    private record LowPriority() : PriorityLevel(nameof(Low), TimeSpan.FromDays(1));
 
+    private record MediumPriority() : PriorityLevel(nameof(Medium), TimeSpan.FromDays(1));
 
-    private sealed class LowPriorityLevel : PriorityLevel
-    {
-        public LowPriorityLevel() : base(nameof(Low), nameof(Low))
-        {
-        }
-
-        public override TimeSpan ReminderTime { get; } = TimeSpan.FromDays(5);
-    }
-
-    private sealed class NoPriority : PriorityLevel
-    {
-        public NoPriority() : base(nameof(None), nameof(None))
-        {
-        }
-
-        public override TimeSpan ReminderTime { get; } = TimeSpan.Zero;
-    }
+    private record HighPriority()  : PriorityLevel(nameof(Medium), TimeSpan.FromDays(1));
 }
+
+

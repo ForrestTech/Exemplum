@@ -37,3 +37,10 @@ public class CreateTodoListCommandHandlerTests : HandlerTestBase
         await act.Should().ThrowAsync<UnsupportedColourException>();
     }
 }
+
+public class TestStub
+{
+    public string Name { get; set; }
+
+    public PriorityLevel PriorityLevel { get; set; }
+}

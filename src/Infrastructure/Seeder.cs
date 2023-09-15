@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Serilog;
+using System.ComponentModel.Design;
 
 public static class Seeder
 {
-    public static async Task SeedDatabase(IServiceProvider appServices, bool deleteDatabase = false)
+    public static async Task SeedDatabase(IServiceProvider appServices, bool forceDeleteDatabase = false)
     {
         using var scope = appServices.CreateScope();
 
@@ -17,7 +18,7 @@ public static class Seeder
         {
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-            if (deleteDatabase)
+            if (forceDeleteDatabase || context.Database.IsSqlite())
             {
                 Log.Information("Deleting existing database");
 

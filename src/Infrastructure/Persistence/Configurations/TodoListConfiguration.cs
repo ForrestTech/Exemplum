@@ -16,7 +16,7 @@ public class TodoListConfiguration : IEntityTypeConfiguration<TodoList>
 
         builder.Property(x => x.Colour)
             .HasConversion(
-                x => x.Code.ToString(),
+                x => x!.Code.ToString(),
                 x => Colour.From(x));
     }
 }
