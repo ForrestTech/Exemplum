@@ -2,15 +2,14 @@
 global using Exemplum.Infrastructure;
 global using Exemplum.WebApi;
 global using Exemplum.WebApi.Endpoints;
-global using Exemplum.Infrastructure.Persistence;
 global using FluentValidation.AspNetCore;
 global using MassTransit;
 global using MediatR;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.Mvc;
-global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.IdentityModel.Tokens;

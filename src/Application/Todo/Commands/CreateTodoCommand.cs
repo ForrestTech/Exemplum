@@ -1,16 +1,15 @@
 ﻿namespace Exemplum.Application.Todo.Commands;
 
-using Common.Exceptions;
 using Common.Security;
 using Domain.Todo;
-using FluentValidation;
-using MediatR;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Persistence;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
-public class CreateTodoItemCommand : IRequest<TodoItemDto>
+public class CreateTodoItemCommand : 
+    IRequest<OneOf<TodoItemDto, NotFound, ValidationFailed>>
 {
     [JsonIgnore]
     public int ListId { get; set; }
@@ -33,24 +32,34 @@ public class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCo
     }
 }
 
-public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, TodoItemDto>
+public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, 
+    OneOf<TodoItemDto, NotFound, ValidationFailed>>
 {
+    private readonly IValidator<CreateTodoItemCommand> _validator;
     private readonly IApplicationDbContext _context;
 
-    public CreateTodoItemCommandHandler(IApplicationDbContext context)
+    public CreateTodoItemCommandHandler(IValidator<CreateTodoItemCommand> validator,
+        IApplicationDbContext context)
     {
+        _validator = validator;
         _context = context;
     }
 
-    public async Task<TodoItemDto> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<TodoItemDto, NotFound, ValidationFailed>> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(request, cancellationToken);
+        if (validation.IsInvalid())
+        {
+            return validation.ToFailure();
+        }
+        
         var aggregate = await _context.TodoLists
             .Where(x => x.Id == request.ListId)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (aggregate == null)
         {
-            throw new NotFoundException(nameof(TodoItem), new {request.ListId});
+            return new NotFound();
         }
 
         var entity = new TodoItem(request.Title) {Note = request.Note};

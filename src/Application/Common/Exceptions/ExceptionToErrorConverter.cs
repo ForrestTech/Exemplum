@@ -27,7 +27,6 @@ public class ExceptionToErrorConverter : IExceptionToErrorConverter
         var code = GetErrorCode(exception);
         var responseCode = GetResponseCode(exception);
         var detail = GetErrorDetails(exception, includeSensitiveDetails);
-        var validationErrors = GetValidationErrors(exception);
 
         return new ErrorInfo
         {
@@ -36,19 +35,7 @@ public class ExceptionToErrorConverter : IExceptionToErrorConverter
             Message = exception.Message,
             Details = detail,
             Data = exception.Data,
-            ValidationErrors = validationErrors
         };
-    }
-
-    private static IDictionary<string, string[]> GetValidationErrors(Exception exception)
-    {
-        IDictionary<string, string[]> validationErrors = new Dictionary<string, string[]>();
-        if (exception is IHaveValidationErrors haveValidationErrors)
-        {
-            validationErrors = haveValidationErrors.ValidationErrors;
-        }
-
-        return validationErrors;
     }
 
     private static string GetErrorDetails(Exception exception, bool includeSensitiveDetails)

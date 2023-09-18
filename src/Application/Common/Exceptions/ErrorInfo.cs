@@ -14,6 +14,4 @@ public class ErrorInfo
     public HttpStatusCode ResponseCode { get; set; } = HttpStatusCode.InternalServerError;
 
     public IDictionary Data { get; set; } = new Dictionary<string, string>();
-
-    public IDictionary<string, string[]> ValidationErrors { get; set; } = new Dictionary<string, string[]>();
 }

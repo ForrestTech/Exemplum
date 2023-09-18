@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.UnitTests.Domain.Todo;
 
-using Exemplum.Domain.Common;
 using Exemplum.Domain.Todo;
 
 public class ColourTests

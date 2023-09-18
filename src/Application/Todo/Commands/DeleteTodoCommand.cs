@@ -1,14 +1,11 @@
 ﻿namespace Exemplum.Application.Todo.Commands;
 
-using Common.Exceptions;
 using Common.Security;
 using Domain.Todo;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-public class DeleteTodoCommand : IRequest<Unit>
+public class DeleteTodoCommand : 
+    IRequest<OneOf<Success, NotFound, ValidationFailed>>
 {
     public int ListId { get; set; }
 
@@ -24,27 +21,36 @@ public class DeleteTodoCommandValidator : AbstractValidator<DeleteTodoCommand>
     }
 }
 
-public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand, Unit>
+public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand, OneOf<Success, NotFound, ValidationFailed>>
 {
     private readonly IRequestAuthorizationService _authorizationService;
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<DeleteTodoCommand> _validator;
 
     public DeleteTodoCommandHandler(IRequestAuthorizationService authorizationService,
-        IApplicationDbContext context)
+        IApplicationDbContext context, 
+        IValidator<DeleteTodoCommand> validator)
     {
         _authorizationService = authorizationService;
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<Unit> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, NotFound, ValidationFailed>> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(request, cancellationToken);
+        if (validation.IsInvalid())
+        {
+            return validation.ToFailure();
+        }
+        
         var todo = await _context.TodoItems
             .SingleOrDefaultAsync(x => x.ListId == request.ListId && 
             x.Id == request.TodoId, cancellationToken);
 
         if (todo == null)
         {
-            throw new NotFoundException(nameof(TodoItem), new { request.ListId, request.TodoId });
+            return new NotFound();
         }
 
         await _authorizationService.AuthorizeRequestAsync<DeleteTodoCommand>(todo, Security.Policy.CanDeleteTodo);
@@ -53,6 +59,6 @@ public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand, Unit>
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return new Success();
     }
 }

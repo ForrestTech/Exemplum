@@ -28,7 +28,6 @@ public static class DependencyInjection
             options.AddOpenRequestPreProcessor(typeof(LoggingBehaviour<>));
             options.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
             options.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
-            options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
         });
 
         services.AddTransient<IExceptionToErrorConverter, ExceptionToErrorConverter>();

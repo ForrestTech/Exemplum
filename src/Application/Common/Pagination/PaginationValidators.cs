@@ -1,7 +1,4 @@
-﻿namespace Exemplum.Application.Common.Validation;
-
-using FluentValidation;
-using Pagination;
+﻿namespace Exemplum.Application.Common.Pagination;
 
 /// <summary>
 /// Example of reusable fluent validation rules 

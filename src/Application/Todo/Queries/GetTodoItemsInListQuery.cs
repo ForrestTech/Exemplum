@@ -2,7 +2,8 @@
 
 using Models;
 
-public class GetTodoItemsInListQuery : IRequest<PaginatedList<TodoItemDto>>,
+public class GetTodoItemsInListQuery : 
+    IRequest<OneOf<PaginatedList<TodoItemDto>, ValidationFailed>>,
     IPaginatedQuery
 {
     [JsonIgnore]
@@ -21,18 +22,27 @@ public class GetTodoItemsQueryValidator : AbstractValidator<GetTodoItemsInListQu
     }
 }
 
-public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsInListQuery, PaginatedList<TodoItemDto>>
+public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsInListQuery, OneOf<PaginatedList<TodoItemDto>, ValidationFailed>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<GetTodoItemsInListQuery> _validator;
 
-    public GetTodoItemsQueryHandler(IApplicationDbContext context)
+    public GetTodoItemsQueryHandler(IApplicationDbContext context, 
+        IValidator<GetTodoItemsInListQuery> validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<PaginatedList<TodoItemDto>> Handle(GetTodoItemsInListQuery request,
+    public async Task<OneOf<PaginatedList<TodoItemDto>, ValidationFailed>> Handle(GetTodoItemsInListQuery request,
         CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(request, cancellationToken);
+        if (validation.IsInvalid())
+        {
+            return validation.ToFailure();
+        }
+        
         var list = await _context.TodoItems
             .AsNoTracking()
             .Where(x => x.ListId == request.ListId)

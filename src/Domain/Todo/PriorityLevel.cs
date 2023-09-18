@@ -14,7 +14,7 @@ public abstract record PriorityLevel(string Name, TimeSpan ReminderTime) : Tagge
 
     public static PriorityLevel Parse(string name) => Levels.First(x => x.Name.IsTheSameAs(name));
     
-    public static (bool Success, PriorityLevel? Level) TryParse(string name)
+    public static (bool success, PriorityLevel? level) TryParse(string name)
     {
         var level = Levels.FirstOrDefault(x => x.Name.IsTheSameAs(name));
         return level is null ? (false, null) : (true, Level: level);
@@ -34,7 +34,7 @@ public abstract record PriorityLevel(string Name, TimeSpan ReminderTime) : Tagge
 
     private record MediumPriority() : PriorityLevel(nameof(Medium), TimeSpan.FromDays(1));
 
-    private record HighPriority()  : PriorityLevel(nameof(Medium), TimeSpan.FromDays(1));
+    private record HighPriority()  : PriorityLevel(nameof(High), TimeSpan.FromDays(1));
 }
 
 

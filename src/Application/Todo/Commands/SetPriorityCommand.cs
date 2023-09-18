@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.Application.Todo.Commands;
 
-using Common.Exceptions;
 using Common.Security;
 using Domain.Common.DateAndTime;
 using Domain.Extensions;
@@ -11,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
-public class SetPriorityCommand : IRequest<Unit>
+public class SetPriorityCommand : 
+    IRequest<OneOf<Success, NotFound, ValidationFailed>>
 {
     [JsonIgnore]
     public int ListId { get; set; }
@@ -33,33 +33,43 @@ public class SetPriorityCommandValidator : AbstractValidator<SetPriorityCommand>
     }
 }
 
-public class SetPriorityCommandHandler : IRequestHandler<SetPriorityCommand, Unit>
+public class SetPriorityCommandHandler : 
+    IRequestHandler<SetPriorityCommand, OneOf<Success, NotFound, ValidationFailed>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IClock _clock;
+    private readonly IValidator<SetPriorityCommand> _validator;
 
     public SetPriorityCommandHandler(IApplicationDbContext context,
-        IClock clock)
+        IClock clock, 
+        IValidator<SetPriorityCommand> validator)
     {
         _context = context;
         _clock = clock;
+        _validator = validator;
     }
 
-    public async Task<Unit> Handle(SetPriorityCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, NotFound, ValidationFailed>> Handle(SetPriorityCommand request, CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(request, cancellationToken);
+        if (validation.IsInvalid())
+        {
+            return validation.ToFailure();
+        }
+        
         var todo = await _context.TodoItems
             .Where(x => x.ListId == request.ListId && x.Id == request.TodoId)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (todo == null)
         {
-            throw new NotFoundException(nameof(TodoItem), new {request.ListId, request.TodoId});
+            return new NotFound();
         }
         
         todo.SetPriority(PriorityLevel.Parse(request.PriorityLevel), _clock);
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return new Success();
     }
 }
