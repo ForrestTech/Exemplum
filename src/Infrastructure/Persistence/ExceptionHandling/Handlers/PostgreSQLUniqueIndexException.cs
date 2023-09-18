@@ -1,6 +1,6 @@
 ﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling.Handlers;
 
-using Application.Common.Validation;
+using Domain.Exceptions;
 using Npgsql;
 using Sprache;
 
@@ -24,7 +24,8 @@ public class PostgreSQLUniqueIndexException : IHandlerSpecificDBException
         {
             var field  = FieldParser.Parse(postgresException.ConstraintName);
 
-            throw new ValidationException(field,
+            //todo update this so that this error is returned
+            throw new BusinessException(field,
                 $"Duplicate entry. An item already exists that has the same '{field}'.");
         }
         catch (ParseException)

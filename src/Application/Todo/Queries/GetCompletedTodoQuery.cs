@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Persistence;
 
-public class GetCompletedTodoItemsQuery : IRequest<PaginatedList<TodoItemDto>>,
+public class GetCompletedTodoItemsQuery :
+    IRequest<OneOf<PaginatedList<TodoItemDto>, ValidationFailed>>,
     IPaginatedQuery,
     IQueryObject<TodoItem>
 {
@@ -37,18 +38,27 @@ public class GetCompletedTodoItemsQueryValidator : AbstractValidator<GetComplete
     }
 }
 
-public class GetCompletedTodoQueryHandler : IRequestHandler<GetCompletedTodoItemsQuery, PaginatedList<TodoItemDto>>
+public class GetCompletedTodoQueryHandler : IRequestHandler<GetCompletedTodoItemsQuery, OneOf<PaginatedList<TodoItemDto>, ValidationFailed>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<GetCompletedTodoItemsQuery> _validator;
 
-    public GetCompletedTodoQueryHandler(IApplicationDbContext context)
+    public GetCompletedTodoQueryHandler(IApplicationDbContext context,
+        IValidator<GetCompletedTodoItemsQuery> validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<PaginatedList<TodoItemDto>> Handle(GetCompletedTodoItemsQuery request,
+    public async Task<OneOf<PaginatedList<TodoItemDto>, ValidationFailed>> Handle(GetCompletedTodoItemsQuery request,
         CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(request, cancellationToken);
+        if (validation.IsInvalid())
+        {
+            return validation.ToFailure();
+        }
+        
         return await _context.TodoItems
             .AsNoTracking()
             .Query(request)

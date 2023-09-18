@@ -14,12 +14,14 @@ public class GetTodoListsQueryHandlerTests : HandlerTestBase
         {
             context.TodoLists.Add(new TodoList("Shopping", Colour.Blue));
         });
+        
+        fixture.InjectDefaultValidator<GetTodoListsQuery>();
 
         var query = new GetTodoListsQuery();
         var sut = fixture.Create<GetTodoListsQueryHandler>();
 
         var result = await sut.Handle(query, CancellationToken.None);
 
-        result.Items?.Count.Should().Be(1);
+        result.AsT0.Items?.Count.Should().Be(1);
     }
 }

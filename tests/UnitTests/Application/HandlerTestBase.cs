@@ -8,7 +8,7 @@ using Infrastructure.Persistence;
 using Infrastructure.Persistence.ExceptionHandling;
 using Microsoft.EntityFrameworkCore;
 
-public class HandlerTestBase
+public abstract class HandlerTestBase
 {
     protected virtual IFixture CreateFixture()
     {

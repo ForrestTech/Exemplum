@@ -1,7 +1,6 @@
 namespace Exemplum.UnitTests.Application.Exceptions;
 
 using Exemplum.Application.Common.Exceptions;
-using Exemplum.Application.Common.Validation;
 using Exemplum.Domain.Exceptions;
 
 public class ExceptionToErrorConverterTests
@@ -37,20 +36,5 @@ public class ExceptionToErrorConverterTests
         var errorInfo = sut.Convert(exception, true);
 
         errorInfo.Data.Should().Be(exception.Data);
-    }
-
-    [Fact]
-    public void Convert_validation_exception_should_map_errors()
-    {
-        var fixture = new Fixture();
-
-        var sut = new ExceptionToErrorConverter(new List<ICustomExceptionErrorConverter>());
-
-        var exception = fixture.Create<ValidationException>();
-
-        var errorInfo = sut.Convert(exception, true);
-
-        errorInfo.Message.Should().Be(exception.Message);
-        errorInfo.ValidationErrors.Should().BeEquivalentTo(exception.ValidationErrors);
     }
 }

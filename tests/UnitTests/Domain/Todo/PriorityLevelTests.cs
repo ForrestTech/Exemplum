@@ -5,13 +5,16 @@ using Exemplum.Domain.Todo;
 public class PriorityLevelTests
 {
     [Theory]
-    [InlineData("High")]
-    public void TryParse(string name)
+    [InlineData("High", true)]
+    [InlineData("Medium", true)]
+    [InlineData("Low", true)]
+    [InlineData("None", true)]
+    [InlineData("Failed", false)]
+    [InlineData("", false)]
+    public void TryParse(string name, bool pass)
     {
-        var foo = PriorityLevel.High;
-        
-        Thread.Sleep(5000);
+        var (success, _) = PriorityLevel.TryParse(name);
 
-        foo.Should().Be(PriorityLevel.High);
+        success.Should().Be(pass);
     }
 }

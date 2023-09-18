@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Serilog;
-using System.ComponentModel.Design;
 
 public static class Seeder
 {

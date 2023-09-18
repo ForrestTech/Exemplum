@@ -1,20 +1,9 @@
 ﻿namespace Exemplum.Application.Common.Exceptions;
 
-using Domain.Exceptions;
-using System.Net;
-
-public class NotFoundException :
-    Exception,
-    IHaveResponseCode
+public class NotFoundException : Exception
 {
-    public NotFoundException()
+    public NotFoundException(string item, object data)
     {
+        throw new NotImplementedException();
     }
-
-    public NotFoundException(string name, object key)
-        : base($"The resource does not exist. Resource Type '{name}' with key '{key}' was not found.")
-    {
-    }
-
-    public HttpStatusCode StatusCode { get; } = HttpStatusCode.NotFound;
 }

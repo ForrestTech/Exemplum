@@ -180,10 +180,12 @@ public class TodoApiTests
         newTodo?.Priority.Should().Be(priorityLevel);
     }
 
-    private static async Task<HttpResponseMessage> CreateNewTodo(HttpClient client, string todoTitle)
+    private async Task<HttpResponseMessage> CreateNewTodo(HttpClient client, string todoTitle)
     {
         var response = await client.PostAsJsonAsync(Api.Items(1),
             new CreateTodoItemCommand { Title = todoTitle, Note = "Some note" });
+        
+        _output.WriteLine("Todo created at " + response.Headers.Location);
         return response;
     }
 }

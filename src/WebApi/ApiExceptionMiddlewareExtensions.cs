@@ -3,7 +3,6 @@
 using Application.Common.Exceptions;
 using Domain.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
-using System.Net;
 
 public static class ApiExceptionMiddlewareExtensions
 {
@@ -13,47 +12,44 @@ public static class ApiExceptionMiddlewareExtensions
     {
         app.UseExceptionHandler("/error");
 
-        app.Map("/error", IResult(HttpContext context) =>
+        app.Map("/error", IResult (HttpContext context) =>
         {
-            var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+            var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
             var converter = context.RequestServices.GetService<IExceptionToErrorConverter>();
 
-            if (error == null || converter == null)
+            if (exception == null || converter == null)
             {
                 return Results.StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            var errorInfo = converter.Convert(error, includeDetails);
+            var errorInfo = converter.Convert(exception, includeDetails);
 
-            ProblemDetails details;
-
-            if (errorInfo.ValidationErrors.Any())
+            var details = new ProblemDetails()
             {
-                details = new ValidationProblemDetails(errorInfo.ValidationErrors);
-                details.Status = (int?)HttpStatusCode.BadRequest;
-            }
-            else
+                Title = errorInfo.Message, Detail = errorInfo.Details, Status = (int?)errorInfo.ResponseCode
+            };
+
+            if (errorInfo.Code.HasValue())
             {
-                details = new ProblemDetails {Title = errorInfo.Message, Detail = errorInfo.Details, Status = (int?)errorInfo.ResponseCode};
-
-                if (errorInfo.Code.HasValue())
-                {
-                    details.Extensions.Add("code", errorInfo.Code);
-                }
-
-                foreach (DictionaryEntry data in errorInfo.Data)
-                {
-                    details.Extensions.Add(data.Key.ToString()?.ToLowerInvariant() ?? string.Empty, data.Value);
-                }
+                details.Extensions.Add("code", errorInfo.Code);
             }
+
+            foreach (DictionaryEntry data in errorInfo.Data)
+            {
+                details.Extensions.Add(data.Key.ToString()?.ToLowerInvariant() ?? string.Empty, data.Value);
+            }
+
 
             details.Extensions.Add("requestId", Activity.Current?.Id ?? context.TraceIdentifier);
 
             if (context.Request.GetTypedHeaders().Accept?.Any(h => ProblemJsonMediaType.IsSubsetOf(h)) == true)
             {
-                var extensions = new Dictionary<string, object?> {{"requestId", Activity.Current?.Id ?? context.TraceIdentifier}};
+                var extensions = new Dictionary<string, object?>
+                {
+                    { "requestId", Activity.Current?.Id ?? context.TraceIdentifier }
+                };
 
-                return error switch
+                return exception switch
                 {
                     BadHttpRequestException ex => Results.Problem(ex.Message, statusCode: ex.StatusCode,
                         extensions: extensions),

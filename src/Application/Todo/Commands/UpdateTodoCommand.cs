@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.Application.Todo.Commands;
 
-using Common.Exceptions;
 using Common.Security;
 using Domain.Todo;
 using FluentValidation;
@@ -9,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
-public class UpdateTodoCommand : IRequest<TodoItem>
+public class UpdateTodoCommand :
+    IRequest<OneOf<TodoItem, NotFound, ValidationFailed>>
 {
     [JsonIgnore]
     public int ListId { get; set; }
@@ -31,24 +31,33 @@ public class UpdateTodoCommandValidator : AbstractValidator<UpdateTodoCommand>
     }
 }
 
-public class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand, TodoItem>
+public class UpdateTodoCommandHandler :
+    IRequestHandler<UpdateTodoCommand, OneOf<TodoItem, NotFound, ValidationFailed>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<UpdateTodoCommand> _validator;
 
-    public UpdateTodoCommandHandler(IApplicationDbContext context)
+    public UpdateTodoCommandHandler(IApplicationDbContext context, IValidator<UpdateTodoCommand> validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<TodoItem> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<TodoItem, NotFound, ValidationFailed>> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(request, cancellationToken);
+        if (validation.IsInvalid())
+        {
+            return validation.ToFailure();
+        }
+        
         var todo = await _context.TodoItems
             .Where(x => x.ListId == request.ListId && x.Id == request.TodoId)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (todo == null)
         {
-            throw new NotFoundException(nameof(TodoItem), new {request.ListId, request.TodoId});
+            return new NotFound();
         }
 
         todo.Title = request.Title;

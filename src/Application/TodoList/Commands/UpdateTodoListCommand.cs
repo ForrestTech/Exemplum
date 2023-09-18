@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.Application.TodoList.Commands;
 
-using Common.Exceptions;
 using Common.Security;
 using Domain.Todo;
 using FluentValidation;
@@ -10,7 +9,8 @@ using Models;
 using Persistence;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]
-public class UpdateTodoListCommand : IRequest<TodoListDto>
+public class UpdateTodoListCommand : 
+    IRequest<OneOf<TodoListDto, NotFound, ValidationFailed>>
 {
     public int ListId { get; set; }
 
@@ -35,23 +35,33 @@ public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCo
     }
 }
 
-public class UpdateTodoListCommandValidatorHandler : IRequestHandler<UpdateTodoListCommand, TodoListDto>
+public class UpdateTodoListCommandValidatorHandler :
+    IRequestHandler<UpdateTodoListCommand, OneOf<TodoListDto, NotFound, ValidationFailed>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<UpdateTodoListCommand> _validator;
 
-    public UpdateTodoListCommandValidatorHandler(IApplicationDbContext context)
+    public UpdateTodoListCommandValidatorHandler(IApplicationDbContext context, 
+        IValidator<UpdateTodoListCommand> validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<TodoListDto> Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<TodoListDto, NotFound, ValidationFailed>> Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
     {
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        if (validationResult.IsInvalid())
+        {
+            return validationResult.ToFailure();
+        }
+        
         var list = await _context.TodoLists
             .SingleOrDefaultAsync(x => x.Id == request.ListId, cancellationToken);
 
-        if (list == null)
+        if (list is null)
         {
-            throw new NotFoundException();
+            return new NotFound();
         }
 
         list.Title = request.Title;

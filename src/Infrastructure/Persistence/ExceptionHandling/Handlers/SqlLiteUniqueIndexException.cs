@@ -1,6 +1,6 @@
 ﻿namespace Exemplum.Infrastructure.Persistence.ExceptionHandling.Handlers;
 
-using Application.Common.Validation;
+using Domain.Exceptions;
 using Microsoft.Data.Sqlite;
 using Sprache;
 using System;
@@ -25,7 +25,7 @@ public class SqlLiteUniqueIndexException : IHandlerSpecificDBException
         {
             var (_, field) = SqlLiteUniqueIndexExceptionGrammar.ErrorMessage.Parse(sqliteException.Message);
 
-            throw new ValidationException(field,
+            throw new BusinessException(field,
                 $"Duplicate entry. An item already exists that has the same '{field}'.");
         }
         catch (ParseException)

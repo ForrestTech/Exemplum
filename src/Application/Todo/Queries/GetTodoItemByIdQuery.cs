@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.Application.Todo.Queries;
 
-using Common.Exceptions;
 using Domain.Todo;
 using FluentValidation;
 using MediatR;
@@ -8,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Persistence;
 
-public class GetTodoItemByIdQuery : IRequest<TodoItemDto>
+public class GetTodoItemByIdQuery :
+    IRequest<OneOf<TodoItemDto, NotFound, ValidationFailed>>
 {
     public int ListId { get; set; }
 
@@ -25,17 +25,26 @@ public class GetTodoItemInListQueryValidator : AbstractValidator<GetTodoItemById
     }
 }
 
-public class GetTodoItemInListQueryHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
+public class GetTodoItemInListQueryHandler : IRequestHandler<GetTodoItemByIdQuery, OneOf<TodoItemDto, NotFound, ValidationFailed>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<GetTodoItemByIdQuery> _validator;
 
-    public GetTodoItemInListQueryHandler(IApplicationDbContext context)
+    public GetTodoItemInListQueryHandler(IApplicationDbContext context,
+        IValidator<GetTodoItemByIdQuery> validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<TodoItemDto> Handle(GetTodoItemByIdQuery request, CancellationToken cancellationToken)
+    public async Task<OneOf<TodoItemDto, NotFound, ValidationFailed>> Handle(GetTodoItemByIdQuery request, CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(request, cancellationToken);
+        if (validation.IsInvalid())
+        {
+            return validation.ToFailure();
+        }
+        
         var todo = await _context.TodoItems
             .AsNoTracking()
             .Where(x => x.ListId == request.ListId && x.Id == request.TodoId)
@@ -44,7 +53,7 @@ public class GetTodoItemInListQueryHandler : IRequestHandler<GetTodoItemByIdQuer
 
         if (todo == null)
         {
-            throw new NotFoundException(nameof(TodoItem), new {listId = request.ListId, taskId = request.TodoId});
+            return new NotFound();
         }
 
         return todo;
