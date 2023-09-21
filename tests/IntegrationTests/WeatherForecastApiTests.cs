@@ -15,7 +15,7 @@
         [Fact]
         public async Task WeatherForecast_get_returns_valid_forecast()
         {
-            await using var application = new WebApi(_output);
+            await using var application = new ExemplumApi(_output);
             var client = application.CreateClient();
             
             var response = await client.GetAsync("api/weatherforecast?lat=11.96&lon=108.43");

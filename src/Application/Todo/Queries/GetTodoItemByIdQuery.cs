@@ -1,6 +1,5 @@
 ﻿namespace Exemplum.Application.Todo.Queries;
 
-using Domain.Todo;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

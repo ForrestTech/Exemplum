@@ -1,14 +1,15 @@
-namespace Exemplum.Infrastructure.Identity;
+namespace Exemplum.Infrastructure.Security;
 
 using Application.Common.Identity;
+using Application.Common.Security;
 using Microsoft.AspNetCore.Authorization;
 
-public class ExemplumAuthorizationService : IExemplumAuthorizationService
+public class UserAuthorizationService : IUserAuthorizationService
 {
     private readonly IAuthorizationService _authorizationService;
     private readonly ICurrentUser _currentUser;
 
-    public ExemplumAuthorizationService(
+    public UserAuthorizationService(
         IAuthorizationService authorizationService,
         ICurrentUser currentUser)
     {
@@ -16,14 +17,14 @@ public class ExemplumAuthorizationService : IExemplumAuthorizationService
         _currentUser = currentUser;
     }
 
-    public async Task<bool> AuthorizeAsync(string policyName)
+    public async Task<bool> AuthorizeAsync(string policyToCheck)
     {
         if (_currentUser.Principal == null)
         {
             return false;
         }
 
-        var result = await _authorizationService.AuthorizeAsync(_currentUser.Principal, policyName);
+        var result = await _authorizationService.AuthorizeAsync(_currentUser.Principal, policyToCheck);
 
         return result.Succeeded;
     }

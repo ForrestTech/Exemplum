@@ -4,9 +4,6 @@ using Common.Security;
 using Domain.Common.DateAndTime;
 using Domain.Extensions;
 using Domain.Todo;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 [Authorize(Policy = Security.Policy.CanWriteTodo)]

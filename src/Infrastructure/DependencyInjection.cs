@@ -4,6 +4,7 @@ using Application.Common.DomainEvents;
 using Application.Common.Identity;
 using Application.Common.IntegrationEvents;
 using Application.Common.Policies;
+using Application.Common.Security;
 using Application.Persistence;
 using Application.WeatherForecasts;
 using Caching;
@@ -22,6 +23,7 @@ using Persistence.ExceptionHandling;
 using Persistence.ExceptionHandling.Handlers;
 using Polly.Registry;
 using Refit;
+using Security;
 using System;
 
 public static class DependencyInjection
@@ -80,7 +82,7 @@ public static class DependencyInjection
         }
 
         services.AddTransient<IUserIdentityService, UserIdentityService>();
-        services.AddTransient<IExemplumAuthorizationService, ExemplumAuthorizationService>();
+        services.AddTransient<IUserAuthorizationService, UserAuthorizationService>();
 
         return services;
     }

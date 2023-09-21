@@ -2,9 +2,6 @@
 
 using Common.Security;
 using Domain.Todo;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Models;
 using Persistence;
 

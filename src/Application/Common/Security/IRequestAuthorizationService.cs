@@ -2,5 +2,5 @@ namespace Exemplum.Application.Common.Security;
 
 public interface IRequestAuthorizationService
 {
-    Task AuthorizeRequestAsync<TRequest>(object resource, string policyName);
+    Task<(bool Allowed, string DeniedReason)> AuthorizeRequestAsync<TRequest>(TRequest request, object resource, string policyName);
 }

@@ -1,14 +1,18 @@
 ﻿namespace Exemplum.IntegrationTests;
 
+using Application.Common.Identity;
 using Application.Common.Pagination;
 using Application.Todo.Commands;
 using Application.Todo.Models;
 using Domain.Todo;
 using FluentAssertions;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,7 +30,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_get_returns_paginated_list_of_todos()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         var response = await client.GetAsync(Api.Items(1));
@@ -41,7 +45,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_get_completed_should_only_returns_completed_todos()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         var response = await client.GetAsync(Api.Completed(1));
@@ -54,7 +58,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_create_with_invalid_values_returns_error()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         var response = await client.PostAsJsonAsync(Api.Items(1),
@@ -74,7 +78,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_create_and_ensure_it_retrieved()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "New todo";
@@ -95,7 +99,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_update_and_ensure_its_updated()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
         const string updatedTitle = "Updated todo";
         const string updatedNote = "updated note";
@@ -114,11 +118,30 @@ public class TodoApiTests
         newTodo?.Title.Should().Be(updatedTitle);
         newTodo?.Note.Should().Be(updatedNote);
     }
+    
+    [Fact]
+    public async Task Todo_create_user_must_have_permission()
+    {
+        await using var application = new ExemplumApi(_output, services =>
+        {
+            //set user to have no permissions
+            services.AddTransient<ICurrentUser>(_ => new FakeUser(new List<Claim>()));
+        });
+        
+        var client = application.CreateClient();
+
+        const string todoTitle = "Not allowed";
+
+        var todo = await CreateNewTodo(client, todoTitle);
+
+        todo.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+    
 
     [Fact]
     public async Task Todo_delete_item_and_ensure_its_removed()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "To be deleted";
@@ -135,7 +158,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_complete_item_and_ensure_state()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "To be completed";
@@ -158,7 +181,7 @@ public class TodoApiTests
     [Fact]
     public async Task Todo_set_priority_and_ensure_state()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         var todo = await CreateNewTodo(client, "Will set priority");

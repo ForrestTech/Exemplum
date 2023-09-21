@@ -1,11 +1,10 @@
 ﻿namespace Exemplum.Application.Todo.Commands;
 
 using Common.Security;
-using Domain.Todo;
 using Persistence;
 
-public class DeleteTodoCommand : 
-    IRequest<OneOf<Success, NotFound, ValidationFailed>>
+public class DeleteTodoCommand :
+    IRequest<OneOf<Success, NotFound, Denied, ValidationFailed>>
 {
     public int ListId { get; set; }
 
@@ -21,14 +20,15 @@ public class DeleteTodoCommandValidator : AbstractValidator<DeleteTodoCommand>
     }
 }
 
-public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand, OneOf<Success, NotFound, ValidationFailed>>
+public class
+    DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand, OneOf<Success, NotFound, Denied, ValidationFailed>>
 {
     private readonly IRequestAuthorizationService _authorizationService;
     private readonly IApplicationDbContext _context;
     private readonly IValidator<DeleteTodoCommand> _validator;
 
     public DeleteTodoCommandHandler(IRequestAuthorizationService authorizationService,
-        IApplicationDbContext context, 
+        IApplicationDbContext context,
         IValidator<DeleteTodoCommand> validator)
     {
         _authorizationService = authorizationService;
@@ -36,24 +36,31 @@ public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand, OneOf
         _validator = validator;
     }
 
-    public async Task<OneOf<Success, NotFound, ValidationFailed>> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, NotFound, Denied, ValidationFailed>> Handle(DeleteTodoCommand request,
+        CancellationToken cancellationToken)
     {
         var validation = await _validator.ValidateAsync(request, cancellationToken);
         if (validation.IsInvalid())
         {
             return validation.ToFailure();
         }
-        
+
         var todo = await _context.TodoItems
-            .SingleOrDefaultAsync(x => x.ListId == request.ListId && 
-            x.Id == request.TodoId, cancellationToken);
+            .SingleOrDefaultAsync(x => x.ListId == request.ListId &&
+                                       x.Id == request.TodoId, cancellationToken);
 
         if (todo == null)
         {
             return new NotFound();
         }
 
-        await _authorizationService.AuthorizeRequestAsync<DeleteTodoCommand>(todo, Security.Policy.CanDeleteTodo);
+        var authorised =
+            await _authorizationService.AuthorizeRequestAsync(request, todo, Security.Policy.CanDeleteTodo);
+
+        if (!authorised.Allowed)
+        {
+            return new Denied(authorised.DeniedReason);
+        }
 
         _context.TodoItems.Remove(todo);
 

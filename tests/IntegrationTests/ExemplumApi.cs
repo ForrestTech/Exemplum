@@ -2,22 +2,21 @@
 
 using Application.WeatherForecasts;
 using Infrastructure;
-using Infrastructure.Persistence;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 
-public class WebApi : WebApplicationFactory<Program>
+public class ExemplumApi : WebApplicationFactory<Program>
 {
-    public ITestOutputHelper Output { get; set; }
+    private readonly Action<IServiceCollection>? _configFunction;
+    protected ITestOutputHelper Output { get; set; }
 
-    public WebApi(ITestOutputHelper output)
+    public ExemplumApi(ITestOutputHelper output, Action<IServiceCollection>? configFunction = null)
     {
+        _configFunction = configFunction;
         Output = output;
     }
 
@@ -45,6 +44,8 @@ public class WebApi : WebApplicationFactory<Program>
         {
             //this is a very basic example of how you can mock 3rd party dependencies when running integration tests, this would also work fine with Moq
             config.AddTransient<IWeatherForecastClient, MockWeatherClient>();
+
+            _configFunction?.Invoke(config);
         });
 
         builder.ConfigureServices(services =>

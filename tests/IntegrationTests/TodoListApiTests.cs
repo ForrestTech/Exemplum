@@ -25,7 +25,7 @@ public class TodoListTests
     [InlineData(Api.List + "/1/todo/999", 404)]
     public async Task Routes_table_tests(string url, int statusCode = 200)
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         var response = await client.GetAsync(url);
@@ -45,7 +45,7 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_get_returns_paginated_list()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         var response = await client.GetAsync(Api.List);
@@ -60,7 +60,7 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_get_by_id_should_return_single_list()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         var response = await client.GetAsync(Api.Items(1));
@@ -73,7 +73,7 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_delete_and_ensure_its_removed()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         const string todoTitle = "To be deleted";
@@ -92,7 +92,7 @@ public class TodoListTests
     [Fact]
     public async Task Todolist_create_and_ensure_it_retrieved()
     {
-        await using var application = new WebApi(_output);
+        await using var application = new ExemplumApi(_output);
         var client = application.CreateClient();
 
         const string todoListTitle = "New todo";

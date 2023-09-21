@@ -10,12 +10,12 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
     where TRequest : IRequest<TResponse>
 {
     private readonly IUserIdentityService _identityServiceService;
-    private readonly IExemplumAuthorizationService _authorizationService;
+    private readonly IUserAuthorizationService _authorizationService;
     private readonly AuthorizationOptions _authorizationOptions;
 
     public AuthorizationBehaviour(IOptions<AuthorizationOptions> options,
         IUserIdentityService identityServiceService,
-        IExemplumAuthorizationService authorizationService)
+        IUserAuthorizationService authorizationService)
     {
         _identityServiceService = identityServiceService;
         _authorizationService = authorizationService;
@@ -45,6 +45,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
 
         var requestRequiresAuthenticatedUser =
             _authorizationOptions.RequireAuthorizationByDefault || authorizeAttributes.Any();
+        
         if (requestRequiresAuthenticatedUser)
         {
             var unAuthenticatedUser = _identityServiceService.UserId == null;

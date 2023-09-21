@@ -90,16 +90,17 @@ public class TodoListEndpoints : IEndpoints
             failed => failed.ToValidationProblem());
     }
 
-    private static async Task<Results<Ok, NotFound, ValidationProblem>> DeleteTodoList(ISender mediator,
+    private static async Task<Results<Ok, NotFound, UnauthorizedHttpResult, ValidationProblem>> DeleteTodoList(
+        ISender mediator,
         int listId,
         CancellationToken cancellationToken = default)
     {
         var result = await mediator.Send(new DeleteTodoListCommand { ListId = listId }, cancellationToken);
 
-        return result.Match<Results<Ok, NotFound, ValidationProblem>>(
+        return result.Match<Results<Ok, NotFound, UnauthorizedHttpResult, ValidationProblem>>(
             _ => TypedResults.Ok(),
             _ => TypedResults.NotFound(),
+            _ => TypedResults.Unauthorized(),
             failed => failed.ToValidationProblem());
-        return TypedResults.Ok();
     }
 }

@@ -54,13 +54,14 @@ public class TodoEndpoints : IEndpoints
             .WithOpenApi();
     }
 
-    private static async Task<Results<Ok<PaginatedList<TodoItemDto>>, ValidationProblem>> GetTodoItemsInList(ISender mediator,
+    private static async Task<Results<Ok<PaginatedList<TodoItemDto>>, ValidationProblem>> GetTodoItemsInList(
+        ISender mediator,
         int listId,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        var result =  await mediator.Send(
+        var result = await mediator.Send(
             new GetTodoItemsInListQuery { ListId = listId, PageNumber = pageNumber, PageSize = pageSize },
             cancellationToken);
 
@@ -85,13 +86,14 @@ public class TodoEndpoints : IEndpoints
             failed => TypedResults.ValidationProblem(failed.Errors));
     }
 
-    private static async Task<Results<Ok<PaginatedList<TodoItemDto>>, ValidationProblem>> GetCompletedTodoItems(ISender mediator,
+    private static async Task<Results<Ok<PaginatedList<TodoItemDto>>, ValidationProblem>> GetCompletedTodoItems(
+        ISender mediator,
         int listId,
         int pageNumber = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        var result =  await mediator.Send(
+        var result = await mediator.Send(
             new GetCompletedTodoItemsQuery { ListId = listId, PageNumber = pageNumber, PageSize = pageSize },
             cancellationToken);
 
@@ -105,7 +107,8 @@ public class TodoEndpoints : IEndpoints
         int todoId,
         CancellationToken cancellationToken = default)
     {
-        var result =  await mediator.Send(new GetTodoItemByIdQuery { ListId = listId, TodoId = todoId }, cancellationToken);
+        var result = await mediator.Send(new GetTodoItemByIdQuery { ListId = listId, TodoId = todoId },
+            cancellationToken);
 
         return result.Match<Results<Ok<TodoItemDto>, NotFound, ValidationProblem>>(
             dto => TypedResults.Ok(dto),
@@ -123,23 +126,25 @@ public class TodoEndpoints : IEndpoints
         command.TodoId = todoId;
 
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match<Results<Ok<TodoItem>, NotFound, ValidationProblem>>(
             dto => TypedResults.Ok(dto),
             _ => TypedResults.NotFound(),
             failed => failed.ToValidationProblem());
     }
 
-    private static async Task<Results<Ok, NotFound, ValidationProblem>> DeleteTodoItem(ISender mediator,
+    private static async Task<Results<Ok, NotFound, UnauthorizedHttpResult, ValidationProblem>> DeleteTodoItem(
+        ISender mediator,
         int listId,
         int todoId,
         CancellationToken cancellationToken = default)
     {
         var result = await mediator.Send(new DeleteTodoCommand { ListId = listId, TodoId = todoId }, cancellationToken);
 
-        return result.Match<Results<Ok, NotFound, ValidationProblem>>(
+        return result.Match<Results<Ok, NotFound, UnauthorizedHttpResult, ValidationProblem>>(
             _ => TypedResults.Ok(),
             _ => TypedResults.NotFound(),
+            denied => TypedResults.Unauthorized(),
             failed => failed.ToValidationProblem());
     }
 
@@ -149,7 +154,7 @@ public class TodoEndpoints : IEndpoints
         CancellationToken cancellationToken = default)
     {
         var result = await mediator.Send(new MarkTodoCompleteCommand(listId, todoId), cancellationToken);
-        
+
         return result.Match<Results<Ok, NotFound, ValidationProblem>>(
             _ => TypedResults.Ok(),
             _ => TypedResults.NotFound(),
@@ -166,7 +171,7 @@ public class TodoEndpoints : IEndpoints
         command.TodoId = todoId;
 
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match<Results<Ok, NotFound, ValidationProblem>>(
             _ => TypedResults.Ok(),
             _ => TypedResults.NotFound(),

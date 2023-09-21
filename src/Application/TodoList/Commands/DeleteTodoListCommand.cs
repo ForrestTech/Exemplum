@@ -1,14 +1,10 @@
 ﻿namespace Exemplum.Application.TodoList.Commands;
 
-using Domain.Todo;
 using Common.Security;
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 public class DeleteTodoListCommand :
-    IRequest<OneOf<Success, NotFound, ValidationFailed>>
+    IRequest<OneOf<Success, NotFound, Denied, ValidationFailed>>
 {
     public int ListId { get; set; }
 }
@@ -22,7 +18,7 @@ public class DeleteTodoListCommandValidator : AbstractValidator<DeleteTodoListCo
 }
 
 public class DeleteTodoListCommandHandler :
-    IRequestHandler<DeleteTodoListCommand, OneOf<Success, NotFound, ValidationFailed>>
+    IRequestHandler<DeleteTodoListCommand, OneOf<Success, NotFound, Denied, ValidationFailed>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IValidator<DeleteTodoListCommand> _validator;
@@ -38,7 +34,7 @@ public class DeleteTodoListCommandHandler :
         _authorizationService = authorizationService;
     }
 
-    public async Task<OneOf<Success, NotFound, ValidationFailed>> Handle(DeleteTodoListCommand request,
+    public async Task<OneOf<Success, NotFound, Denied, ValidationFailed>> Handle(DeleteTodoListCommand request,
         CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
@@ -55,7 +51,13 @@ public class DeleteTodoListCommandHandler :
             return new NotFound();
         }
 
-        await _authorizationService.AuthorizeRequestAsync<DeleteTodoListCommand>(list, Security.Policy.CanDeleteTodo);
+        var authorised =
+            await _authorizationService.AuthorizeRequestAsync(request, list, Security.Policy.CanDeleteTodo);
+
+        if (authorised.Allowed is false)
+        {
+            return new Denied(authorised.DeniedReason);
+        }
 
         list.IsDeleted = true;
         await _context.SaveChangesAsync(cancellationToken);

@@ -5,6 +5,7 @@
         <RootNamespace>Exemplum.IntegrationTests</RootNamespace>
         <AssemblyName>Exemplum.IntegrationTests</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

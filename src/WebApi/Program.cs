@@ -31,14 +31,14 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters {NameClaimType = "name", RoleClaimType = "https://schemas.dev-ememplum.com/roles"};
 });
 
+builder.Services.AddAuthorization();
+
 var hcBuilder = builder.Services.AddHealthChecks();
 
 if (!builder.Configuration.UseInMemoryStorage())
 {
     hcBuilder.AddNpgSql(builder.Configuration.GetDefaultConnection());
 }
-
-builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationClientsideAdapters();
 
