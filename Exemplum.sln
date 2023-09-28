@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		Exemplum.nuspec = Exemplum.nuspec
 		.dockerignore = .dockerignore
 		docker-compose.yml = docker-compose.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exemplum.UnitTests", "tests\UnitTests\UnitTests.csproj", "{7A57D0E9-D9A5-4DFE-BAAF-275B9501D14B}"

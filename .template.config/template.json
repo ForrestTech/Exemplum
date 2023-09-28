@@ -13,7 +13,8 @@
     "hexagonal"
   ],
   "tags": {
-    "language": "C#"
+    "language": "C#",
+    "type": "solution"
   },
   "identity": "Exemplum",
   "name": "Forrest Tech",
